@@ -3,6 +3,14 @@ import Link from "next/link";
 
 const sections = [
   {
+    href: "/ecology",
+    label: "Ecology",
+    description:
+      "Ecology consulting, field research, and academic publications. Conservation at the intersection of science and practice.",
+    accent: "border-sage-400 hover:bg-sage-100",
+    labelColor: "text-sage-600",
+  },
+  {
     href: "/photography",
     label: "Photography & Prints",
     description:
@@ -17,14 +25,6 @@ const sections = [
       "Freelance software development and IT consulting. Infrastructure, automation, and bespoke solutions.",
     accent: "border-plum-400 hover:bg-plum-100",
     labelColor: "text-plum-600",
-  },
-  {
-    href: "/ecology",
-    label: "Ecology",
-    description:
-      "Ecology consulting, field research, and academic publications. Conservation at the intersection of science and practice.",
-    accent: "border-sage-400 hover:bg-sage-100",
-    labelColor: "text-sage-600",
   },
   {
     href: "/blog",
@@ -54,14 +54,13 @@ export default function Home() {
         {/* Text */}
         <div className="absolute bottom-0 left-0 px-8 pb-10 md:px-16 md:pb-14">
           <p className="mb-2 text-xs font-medium uppercase tracking-widest text-white/70">
-            Photographer · Ecologist · IT Consultant
+            Ecologist · IT Consultant · Photographer
           </p>
           <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
             Julian Ruiz Burgos
           </h1>
           <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/80 md:text-base">
-            Based in the UK. I photograph wild landscapes, consult on ecological
-            projects, and build software.
+            Based in the Netherlands. I study Ecology, build software and photography stuff.
           </p>
         </div>
       </section>

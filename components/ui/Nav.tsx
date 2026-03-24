@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 const navLinks = [
+  { href: "/ecology",     label: "Ecology",      hover: "hover:text-sage-600" },
   { href: "/photography", label: "Photography", hover: "hover:text-amber-600" },
   { href: "/it",          label: "IT",           hover: "hover:text-plum-500" },
-  { href: "/ecology",     label: "Ecology",      hover: "hover:text-sage-600" },
   { href: "/blog",        label: "Blog",         hover: "hover:text-stone-500" },
 ];
 

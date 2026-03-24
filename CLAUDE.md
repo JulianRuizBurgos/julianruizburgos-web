@@ -12,8 +12,8 @@ Secondary sections: Ecology (professional identity — consulting, research, pub
 - **Styling**: Tailwind CSS
 - **Content**: Markdown files in `/content` (no CMS — see content strategy below)
 - **Version control**: GitHub/GitLab
-- **Hosting**: Hetzner VPS (pending — awaiting response from current host GreenNet)
-- **Deployment**: Coolify (Git-based auto-deploy, to be set up once VPS is ready)
+- **Hosting**: Hetzner CX23 VPS (Helsinki) — live at https://julianruizburgos.net
+- **Deployment**: Coolify — auto-deploy on push to `main`, active
 - **Payments**: Stripe (for print shop, not yet implemented)
 
 ## Visual direction
@@ -97,26 +97,30 @@ Key principle: page components never read markdown directly. They call functions
 - `julianruizburgos-web` — this repo (public-facing website)
 - Obsidian vault repo (private, separate) — version control for Julian's notes, no coupling to this repo
 
-## Hosting plan (pending)
-Currently waiting for GreenNet UK to respond about downgrading from dedicated WordPress to Domain Service only (email + DNS). Once confirmed:
-1. Spin up Hetzner VPS (~€4–6/month)
-2. Install Coolify
-3. Connect this repo to Coolify for auto-deploy on push to main
-4. Point DNS to Hetzner
+## Infrastructure (live as of March 2026)
+- Hetzner CX23 VPS at 204.168.183.129 (Helsinki), Ubuntu 24.04
+- Docker + Coolify installed and running
+- Traefik proxy on ports 80/443
+- Site live at https://julianruizburgos.net
+- GitHub repo connected to Coolify — auto-deploy on push to `main` is active
+- SSL via Let's Encrypt (may still be pending validation)
+- GreenNet managing DNS and email (@julianruizburgos.net)
+- Nextcloud 500GB on hosting.de (separate, unrelated)
 
 ## Current status
 - [x] Next.js 15 scaffolded with TypeScript, Tailwind, App Router
 - [x] Folder structure created
-- [ ] Root layout with nav and footer
-- [ ] Homepage
+- [x] Root layout with nav and footer
+- [x] Homepage with hero banner + section cards
+- [x] Hetzner VPS + Coolify setup
+- [x] Auto-deploy on push to main
+- [ ] Configure health check in Coolify
 - [ ] Photography gallery
 - [ ] Print shop + Stripe integration
 - [ ] IT freelancing page
 - [ ] Ecology section
 - [ ] Blog with markdown rendering
 - [ ] About page
-- [ ] Hetzner VPS + Coolify setup
-- [ ] DNS configuration
 
 ## Dev workflow
 ```bash
