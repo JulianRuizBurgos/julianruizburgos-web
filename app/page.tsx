@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 
@@ -41,13 +42,14 @@ export default function Home() {
     <>
       {/* Full-screen hero */}
       <section className="relative h-screen w-full overflow-hidden">
-        <video
-          src="/videos/website-mainpage-background-video.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover object-center"
+        <Image
+          src="/images/main-page-backgound-crop-ultrawide.jpg"
+          alt="Landscape photograph"
+          fill
+          sizes="100vw"
+          quality={90}
+          className="object-cover object-center animate-kenburns"
+          priority
         />
         {/* Uniform dark overlay — ensures text is readable against bright sky/snow */}
         <div className="absolute inset-0 bg-black/30" />
