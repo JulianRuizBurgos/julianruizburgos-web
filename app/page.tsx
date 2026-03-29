@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <>
       {/* Hero banner */}
-      <section className="relative h-[55vh] min-h-72 w-full overflow-hidden">
+      <section className="relative min-h-72 w-full h-full overflow-hidden">
         <Image
           src="/images/main-page-backgound.jpg"
           alt="Landscape photograph"
@@ -50,10 +50,9 @@ export default function Home() {
         />
         {/* gradient overlay so text is legible */}
         <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/20 to-transparent" />
-
         {/* Text */}
         <div className="absolute bottom-0 left-0 px-8 pb-10 md:px-16 md:pb-14">
-          <h1 className="align-middle font-serif text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
+          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
             Julian Ruiz Burgos
           </h1>
           <p className="mb-2 text-xs font-medium uppercase tracking-widest text-white/70">
