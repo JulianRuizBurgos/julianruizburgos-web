@@ -43,7 +43,7 @@ export default function Home() {
       {/* Full-screen hero */}
       <section className="relative h-screen w-full overflow-hidden">
         <Image
-          src="/images/main-page-backgound.jpg"
+          src="/images/main-page-background.jpg"
           alt="Landscape photograph"
           fill
           sizes="100vw"
