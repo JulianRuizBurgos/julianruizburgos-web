@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { X } from "lucide-react";
 
 const sections = [
@@ -33,19 +32,12 @@ export default function Nav() {
 
   return (
     <>
-      {/* Logo — fixed top left, links to homepage */}
+      {/* Home link — fixed top left */}
       <Link
         href="/"
-        aria-label="Go to homepage"
-        className="fixed top-5 left-8 z-50 opacity-90 hover:opacity-100 transition-opacity drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+        className="fixed top-6 left-8 z-50 text-xs font-medium uppercase tracking-widest text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
       >
-        <Image
-          src="/ruiz_burgos_ecology_and_software_logo_monochrome.svg"
-          alt="Julian Ruiz Burgos"
-          width={36}
-          height={36}
-          className="brightness-0 invert"
-        />
+        Home
       </Link>
 
       {/* Floating MENU button — overlays the page */}
