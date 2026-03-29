@@ -8,32 +8,32 @@ const sections = [
     label: "Ecology",
     description:
       "Ecology consulting, field research, and academic publications. Conservation at the intersection of science and practice.",
-    accent: "border-sage-400 hover:bg-sage-100",
-    labelColor: "text-sage-600",
+    rule: "border-sage-500",
+    labelColor: "text-sage-700",
   },
   {
     href: "/photography",
     label: "Photography & Prints",
     description:
       "Landscape and wildlife photography from the UK and beyond. Fine art prints available to order.",
-    accent: "border-amber-400 hover:bg-amber-50",
-    labelColor: "text-amber-700",
+    rule: "border-amber-500",
+    labelColor: "text-amber-800",
   },
   {
     href: "/it",
     label: "IT Consulting",
     description:
       "Freelance software development and IT consulting. Infrastructure, automation, and bespoke solutions.",
-    accent: "border-plum-400 hover:bg-plum-100",
-    labelColor: "text-plum-600",
+    rule: "border-plum-500",
+    labelColor: "text-plum-700",
   },
   {
     href: "/blog",
     label: "Blog",
     description:
       "Writing on nature, technology, and the space between. No fixed theme — just things worth saying.",
-    accent: "border-stone-400 hover:bg-stone-50",
-    labelColor: "text-stone-600",
+    rule: "border-earth-400",
+    labelColor: "text-earth-700",
   },
 ];
 
@@ -75,21 +75,21 @@ export default function Home() {
       </section>
 
       {/* Section cards */}
-      <div className="mx-auto max-w-6xl px-6 py-16">
-        <section className="grid gap-6 sm:grid-cols-2">
+      <div className="mx-auto max-w-6xl px-6 py-20">
+        <section className="grid gap-x-16 gap-y-12 sm:grid-cols-2">
           {sections.map((s) => (
             <Link
               key={s.href}
               href={s.href}
-              className={`group rounded-lg border-l-4 bg-white p-8 shadow-sm transition-colors ${s.accent}`}
+              className={`group border-t-2 pt-8 pb-4 transition-opacity hover:opacity-80 ${s.rule}`}
             >
-              <h2 className={`font-serif text-xl font-semibold ${s.labelColor}`}>
+              <h2 className={`font-serif text-2xl font-semibold ${s.labelColor}`}>
                 {s.label}
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-earth-600">
+              <p className="mt-4 text-sm leading-relaxed text-earth-600">
                 {s.description}
               </p>
-              <span className="mt-4 inline-block text-xs font-medium text-earth-400 transition-colors group-hover:text-earth-700">
+              <span className="mt-6 inline-block text-xs font-medium uppercase tracking-widest text-earth-400 transition-colors group-hover:text-terracotta-500">
                 Explore →
               </span>
             </Link>
