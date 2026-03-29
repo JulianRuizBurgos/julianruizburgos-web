@@ -31,68 +31,56 @@ export default async function CaseStudyPage({
   if (!project) notFound();
 
   return (
-    <div>
+    <div className="mx-auto max-w-4xl px-6">
       {/* Header */}
-      <div className="border-b border-plum-200 bg-plum-100">
-        <div className="mx-auto max-w-4xl px-6 py-16">
-          <Link
-            href="/it"
-            className="mb-6 inline-block text-xs font-medium uppercase tracking-widest text-plum-500 transition-colors hover:text-plum-700"
-          >
-            ← IT Consulting
-          </Link>
-          <div className="mb-4 flex flex-wrap gap-2">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-plum-200 px-2.5 py-0.5 text-xs font-medium text-plum-700"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-earth-500">
-            {project.client} — {project.clientDescription}
-          </p>
-          <h1 className="font-serif text-3xl font-semibold text-plum-700 md:text-4xl">
-            {project.tagline}
-          </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-earth-700">
-            {project.outcomeOneLiner}
-          </p>
+      <div className="pt-28 pb-16 border-b border-earth-200">
+        <Link
+          href="/it"
+          className="mb-8 inline-block text-xs font-medium uppercase tracking-widest text-earth-400 transition-colors hover:text-terracotta-500"
+        >
+          ← IT Consulting
+        </Link>
+        <p className="mb-2 text-xs font-medium uppercase tracking-widest text-earth-400">
+          {project.client} — {project.clientDescription}
+        </p>
+        <h1 className="font-serif text-3xl font-semibold text-earth-900 md:text-4xl">
+          {project.tagline}
+        </h1>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-earth-600">
+          {project.outcomeOneLiner}
+        </p>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full bg-plum-100 px-2.5 py-0.5 text-xs font-medium text-plum-600"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
       </div>
 
-      <div className="mx-auto max-w-4xl space-y-16 px-6 py-16">
+      <div className="space-y-16 py-16">
         {/* Challenge & Solution */}
-        <div className="grid gap-10 sm:grid-cols-2">
-          <section>
-            <h2 className="font-serif text-xl font-semibold text-earth-900">
-              The challenge
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-earth-600">
-              {project.challenge}
-            </p>
+        <div className="grid gap-x-16 gap-y-10 sm:grid-cols-2">
+          <section className="border-t-2 border-earth-300 pt-7">
+            <h2 className="font-serif text-xl font-semibold text-earth-900">The challenge</h2>
+            <p className="mt-3 text-sm leading-relaxed text-earth-600">{project.challenge}</p>
           </section>
-          <section>
-            <h2 className="font-serif text-xl font-semibold text-earth-900">
-              The solution
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-earth-600">
-              {project.solution}
-            </p>
+          <section className="border-t-2 border-plum-400 pt-7">
+            <h2 className="font-serif text-xl font-semibold text-earth-900">The solution</h2>
+            <p className="mt-3 text-sm leading-relaxed text-earth-600">{project.solution}</p>
           </section>
         </div>
 
         {/* Outcomes */}
-        <section>
-          <h2 className="font-serif text-2xl font-semibold text-earth-900">
-            Outcomes
-          </h2>
+        <section className="border-t-2 border-terracotta-400 pt-7">
+          <h2 className="font-serif text-2xl font-semibold text-earth-900">Outcomes</h2>
           <ul className="mt-6 space-y-3">
             {project.outcomes.map((outcome, i) => (
               <li key={i} className="flex gap-3 text-sm leading-relaxed text-earth-600">
-                <span className="mt-0.5 shrink-0 text-plum-400">✓</span>
+                <span className="mt-0.5 shrink-0 text-terracotta-400">✓</span>
                 {outcome}
               </li>
             ))}
@@ -100,17 +88,15 @@ export default async function CaseStudyPage({
         </section>
 
         {/* Stack */}
-        <section>
+        <section className="border-t-2 border-earth-200 pt-7">
           <h2 className="font-serif text-2xl font-semibold text-earth-900">Stack</h2>
           <p className="mt-3 text-sm leading-relaxed text-earth-600">{project.stack}</p>
         </section>
 
         {/* Technical details */}
-        <section>
-          <h2 className="font-serif text-2xl font-semibold text-earth-900">
-            Technical details
-          </h2>
-          <div className="mt-6 space-y-8">
+        <section className="border-t-2 border-earth-200 pt-7">
+          <h2 className="font-serif text-2xl font-semibold text-earth-900">Technical details</h2>
+          <div className="mt-8 space-y-8">
             {project.technicalDetails.map((section) => (
               <div key={section.label}>
                 <h3 className="mb-3 text-xs font-medium uppercase tracking-widest text-plum-500">
@@ -134,7 +120,7 @@ export default async function CaseStudyPage({
         <div className="border-t border-earth-100 pt-8">
           <Link
             href="/it"
-            className="text-sm font-medium text-plum-500 transition-colors hover:text-plum-700"
+            className="text-xs font-medium uppercase tracking-widest text-earth-400 transition-colors hover:text-terracotta-500"
           >
             ← Back to IT Consulting
           </Link>
