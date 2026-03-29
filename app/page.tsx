@@ -48,20 +48,22 @@ export default function Home() {
           fill
           sizes="100vw"
           quality={100}
-          className="object-cover object-center"
+          className="object-cover object-center animate-kenburns"
           priority
         />
+        {/* Uniform dark overlay — ensures text is readable against bright sky/snow */}
+        <div className="absolute inset-0 bg-black/30" />
         {/* Top gradient — keeps MENU button legible */}
-        <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-black/40 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-black/30 to-transparent" />
         {/* Bottom gradient */}
-        <div className="absolute inset-x-0 bottom-0 h-64 bg-linear-to-t from-black/60 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-linear-to-t from-black/50 to-transparent" />
 
         {/* Centred name + disciplines */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <h1 className="font-serif text-5xl font-semibold tracking-tight text-white md:text-6xl lg:text-7xl">
+          <h1 className="font-serif text-5xl font-semibold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] md:text-6xl lg:text-7xl">
             Julian Ruiz Burgos
           </h1>
-          <p className="mt-5 text-xs font-medium uppercase tracking-[0.3em] text-white/65">
+          <p className="mt-5 text-xs font-medium uppercase tracking-[0.3em] text-white/80 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
             Ecologist&nbsp;&nbsp;·&nbsp;&nbsp;IT Consultant&nbsp;&nbsp;·&nbsp;&nbsp;Photographer
           </p>
         </div>

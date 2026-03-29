@@ -149,6 +149,14 @@
   /* Typography */
   --font-sans:  var(--font-inter);
   --font-serif: var(--font-playfair);
+
+  /* Animations */
+  --animate-kenburns: kenburns 22s ease-in-out infinite alternate;
+}
+
+@keyframes kenburns {
+  from { transform: scale(1) translate(0, 0); }
+  to   { transform: scale(1.08) translate(-1.5%, 0.8%); }
 }
 
 :root {
