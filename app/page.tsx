@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 
 const sections = [
   {
@@ -39,8 +40,8 @@ const sections = [
 export default function Home() {
   return (
     <>
-      {/* Hero banner */}
-      <section className="relative min-h-72 w-full h-full overflow-hidden">
+      {/* Full-screen hero */}
+      <section className="relative h-screen w-full overflow-hidden">
         <Image
           src="/images/main-page-backgound.jpg"
           alt="Landscape photograph"
@@ -48,20 +49,29 @@ export default function Home() {
           className="object-cover object-center"
           priority
         />
-        {/* gradient overlay so text is legible */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/20 to-transparent" />
-        {/* Text */}
-        <div className="absolute bottom-0 left-0 px-8 pb-10 md:px-16 md:pb-14">
-          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
+        {/* Top gradient — keeps MENU button legible */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-black/40 to-transparent" />
+        {/* Bottom gradient */}
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-linear-to-t from-black/60 to-transparent" />
+
+        {/* Centred name + disciplines */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+          <h1 className="font-serif text-5xl font-semibold tracking-tight text-white md:text-6xl lg:text-7xl">
             Julian Ruiz Burgos
           </h1>
-          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-white/70">
-            Ecologist · IT Consultant · Photographer
+          <p className="mt-5 text-xs font-medium uppercase tracking-[0.3em] text-white/65">
+            Ecologist&nbsp;&nbsp;·&nbsp;&nbsp;IT Consultant&nbsp;&nbsp;·&nbsp;&nbsp;Photographer
           </p>
         </div>
+
+        {/* Down arrow */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+          <ChevronDown className="animate-bounce text-white/50" size={28} />
+        </div>
       </section>
+
       {/* Section cards */}
-      <div className="mx-auto max-w-6xl px-6 py-12">
+      <div className="mx-auto max-w-6xl px-6 py-16">
         <section className="grid gap-6 sm:grid-cols-2">
           {sections.map((s) => (
             <Link
