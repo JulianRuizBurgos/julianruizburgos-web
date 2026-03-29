@@ -63,7 +63,7 @@ export default function Home() {
           <h1 className="font-serif text-5xl font-semibold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] md:text-6xl lg:text-7xl">
             Julian Ruiz Burgos
           </h1>
-          <p className="mt-5 text-xs font-medium uppercase tracking-[0.3em] text-white/80 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+          <p className="mt-5 text-sm font-semibold uppercase tracking-[0.3em] text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
             Ecologist&nbsp;&nbsp;·&nbsp;&nbsp;IT Consultant&nbsp;&nbsp;·&nbsp;&nbsp;Photographer
           </p>
         </div>
