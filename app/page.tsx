@@ -53,18 +53,14 @@ export default function Home() {
 
         {/* Text */}
         <div className="absolute bottom-0 left-0 px-8 pb-10 md:px-16 md:pb-14">
+          <h1 className="align-middle font-serif text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
+            Julian Ruiz Burgos
+          </h1>
           <p className="mb-2 text-xs font-medium uppercase tracking-widest text-white/70">
             Ecologist · IT Consultant · Photographer
           </p>
-          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
-            Julian Ruiz Burgos
-          </h1>
-          <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/80 md:text-base">
-            Based in the Netherlands. I study Ecology, build software and photography stuff.
-          </p>
         </div>
       </section>
-
       {/* Section cards */}
       <div className="mx-auto max-w-6xl px-6 py-12">
         <section className="grid gap-6 sm:grid-cols-2">
