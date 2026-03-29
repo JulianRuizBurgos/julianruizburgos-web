@@ -46,6 +46,8 @@ export default function Home() {
           src="/images/main-page-backgound.jpg"
           alt="Landscape photograph"
           fill
+          sizes="100vw"
+          quality={90}
           className="object-cover object-center"
           priority
         />
