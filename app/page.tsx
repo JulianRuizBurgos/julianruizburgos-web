@@ -4,36 +4,36 @@ import { ChevronDown } from "lucide-react";
 
 const sections = [
   {
-    href: "/ecology",
-    label: "Ecology",
-    description:
-      "Ecology consulting, field research, and academic publications. Conservation at the intersection of science and practice.",
-    rule: "border-sage-500",
-    labelColor: "text-sage-700",
-  },
-  {
     href: "/photography",
     label: "Photography & Prints",
-    description:
-      "Landscape and wildlife photography from the UK and beyond. Fine art prints available to order.",
-    rule: "border-amber-500",
-    labelColor: "text-amber-800",
+    verticalLabel: "Photography",
+    // TODO: replace with chosen photo — e.g. /images/section-photography.jpg
+    image: "/images/main-page-photography-section-card.jpg",
+    accentBg: "bg-amber-500",
+  },
+  {
+    href: "/ecology",
+    label: "Ecology",
+    verticalLabel: "Ecology",
+    // TODO: replace with chosen photo — e.g. /images/section-ecology.jpg
+    image: "/images/main-page-ecology-section-card.jpg",
+    accentBg: "bg-sage-500",
   },
   {
     href: "/it",
     label: "IT Consulting",
-    description:
-      "Freelance software development and IT consulting. Infrastructure, automation, and bespoke solutions.",
-    rule: "border-plum-500",
-    labelColor: "text-plum-700",
+    verticalLabel: "IT",
+    // TODO: replace with chosen photo — e.g. /images/section-it.jpg
+    image: "/images/main-page-it-section-card.png",
+    accentBg: "bg-plum-500",
   },
   {
     href: "/blog",
     label: "Blog",
-    description:
-      "Writing on nature, technology, and the space between. No fixed theme — just things worth saying.",
-    rule: "border-earth-400",
-    labelColor: "text-earth-700",
+    verticalLabel: "Blog",
+    // TODO: replace with chosen photo — e.g. /images/section-blog.jpg
+    image: "/images/main-page-blog-section-card.jpg",
+    accentBg: "bg-earth-400",
   },
 ];
 
@@ -74,28 +74,45 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section cards */}
-      <div className="mx-auto max-w-6xl px-6 py-20">
-        <section className="grid gap-x-16 gap-y-12 sm:grid-cols-2">
-          {sections.map((s) => (
-            <Link
-              key={s.href}
-              href={s.href}
-              className={`group border-t-2 pt-8 pb-4 transition-opacity hover:opacity-80 ${s.rule}`}
-            >
-              <h2 className={`font-serif text-2xl font-semibold ${s.labelColor}`}>
-                {s.label}
-              </h2>
-              <p className="mt-4 text-sm leading-relaxed text-earth-600">
-                {s.description}
-              </p>
-              <span className="mt-6 inline-block text-xs font-medium uppercase tracking-widest text-earth-400 transition-colors group-hover:text-terracotta-500">
+      {/* Section cards — full-width portrait grid */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-earth-200">
+        {sections.map((s) => (
+          <Link
+            key={s.href}
+            href={s.href}
+            className="group relative overflow-hidden h-[55vh] sm:h-[65vh] lg:h-[80vh] bg-earth-900"
+          >
+            {/* Background image — Ken Burns starts on hover, transitions back on unhover */}
+            <Image
+              src={s.image}
+              alt={s.label}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover grayscale group-hover:grayscale-0 transition-[filter,transform] duration-700 ease-in-out group-hover:animate-kenburns"
+            />
+
+            {/* Dark overlay — lifts on hover */}
+            <div className="absolute inset-0 bg-black/65 group-hover:bg-black/25 transition-colors duration-700" />
+
+            {/* Vertical section label */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="[writing-mode:vertical-lr] font-serif text-5xl lg:text-6xl xl:text-7xl font-semibold uppercase tracking-[0.12em] select-none text-white/40 group-hover:text-white transition-colors duration-500">
+                {s.verticalLabel}
+              </span>
+            </div>
+
+            {/* Explore → fades up on hover */}
+            <div className="absolute inset-x-0 bottom-6 flex justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">
+              <span className="text-xs font-medium uppercase tracking-[0.3em] text-terracotta-300">
                 Explore →
               </span>
-            </Link>
-          ))}
-        </section>
-      </div>
+            </div>
+
+            {/* Section accent line — grows from left on hover */}
+            <div className={`absolute inset-x-0 bottom-0 h-px ${s.accentBg} origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
+          </Link>
+        ))}
+      </section>
     </>
   );
 }
