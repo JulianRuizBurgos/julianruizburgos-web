@@ -74,6 +74,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gradient transition — hero dark bottom fades to earth-50 */}
+      <div className="h-24 bg-linear-to-b from-black/50 to-earth-50" />
+
       {/* Section cards — full-width portrait grid */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-earth-200">
         {sections.map((s) => (
@@ -94,11 +97,13 @@ export default function Home() {
             {/* Dark overlay — lifts on hover */}
             <div className="absolute inset-0 bg-black/65 group-hover:bg-black/25 transition-colors duration-700" />
 
-            {/* Vertical section label */}
+            {/* Vertical section label — stacked upright letters */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="[writing-mode:vertical-lr] font-serif text-5xl lg:text-6xl xl:text-7xl font-semibold uppercase tracking-[0.12em] select-none text-white/40 group-hover:text-white transition-colors duration-500">
-                {s.verticalLabel}
-              </span>
+              <div className="flex flex-col items-center font-serif text-4xl lg:text-5xl xl:text-6xl font-semibold uppercase select-none text-white/40 group-hover:text-white transition-colors duration-500 leading-none gap-0.5">
+                {s.verticalLabel.split("").map((char, i) => (
+                  <span key={i}>{char}</span>
+                ))}
+              </div>
             </div>
 
             {/* Explore → fades up on hover */}
