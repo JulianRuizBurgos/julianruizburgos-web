@@ -153,6 +153,7 @@
   /* Animations */
   --animate-kenburns: kenburns 14s ease-in-out infinite alternate;
   --animate-blog-fadein: blog-fadein 0.35s ease-out both;
+  --animate-listening-bar: listening-bar 0.9s ease-in-out infinite;
 }
 
 @keyframes kenburns {
@@ -163,6 +164,11 @@
 @keyframes blog-fadein {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes listening-bar {
+  0%, 100% { height: 4px; }
+  50%       { height: 12px; }
 }
 
 :root {
