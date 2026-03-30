@@ -295,7 +295,7 @@ export default function BlogPage() {
           <div className="mt-10 border-t border-earth-200 pt-8">
             <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-earth-400">About</p>
             <p className="text-xs leading-relaxed text-earth-500">
-              Written by Julian Ruiz Burgos — ecologist, IT consultant, and photographer based in the UK.
+              Written by Julian Ruiz Burgos — ecologist, IT consultant, and amateur photographer based in the Netherlands.
             </p>
           </div>
         </aside>

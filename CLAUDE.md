@@ -111,9 +111,14 @@ components.json               # shadcn/ui config
 ```
 
 ## Content strategy
-Blog posts and ecology content are plain markdown files in `/content`. Julian writes in Obsidian and manually copies finished pieces into the relevant `/content` subfolder when ready to publish.
 
-Key principle: page components never read markdown directly. They call functions from `/lib`. Swapping content source later only requires touching `/lib`.
+**Current (temporary):** Blog posts hardcoded in `lib/blog.ts` as placeholder data.
+
+**Target (step 1 of roadmap):** Site reads markdown directly from Obsidian vault via Nextcloud WebDAV. A designated vault folder (e.g. `03_Library/Published/blog/`) is the source of truth. No manual copying. This pattern extends to ecology and IT content too.
+
+Key principle: page components never read content directly — they call functions from `/lib`. Swapping the source (hardcoded → file system → Nextcloud API) only requires touching `/lib/blog.ts` etc.
+
+**Photography (step 2 of roadmap):** Site reads publish-ready JPEGs from `Photography/Web-ready/` on Nextcloud plus a `photos.json` manifest file. Prerequisite: photography editing workflow must be decided first (see global CLAUDE.md TODO).
 
 **Design references**: stored in Obsidian at `02_Projects/Website/` — two markdown files and a folder of inspiration screenshots.
 
@@ -125,23 +130,30 @@ Key principle: page components never read markdown directly. They call functions
 - SSL via Let's Encrypt
 - GreenNet managing DNS and email (@julianruizburgos.net)
 
-## Current status (2026-03-30)
+## Current status (2026-03-31)
 - [x] Next.js 16.1.6 + TypeScript + Tailwind v4 + App Router
 - [x] shadcn/ui components installed (button, card, dialog, sheet, badge, separator, aspect-ratio)
 - [x] Design system established (palette, typography, layout principles)
 - [x] Homepage: full-screen hero + Ken Burns animation
-- [x] Homepage section cards: full-height photo grid (grayscale→colour, vertical label, Ken Burns on hover)
+- [x] Homepage section cards: full-height photo grid (grayscale→colour, vertical label, Ken Burns on hover). Mobile: IntersectionObserver activates card when 55% in viewport.
 - [x] Navigation: floating HOME + MENU, dark slide-in sidebar
 - [x] IT Consulting page: services + case studies (editorial style)
 - [x] IT case study detail page (/it/[slug])
+- [x] Blog page: three-panel reader (desktop) + full-screen article view (mobile). 10 placeholder posts in `lib/blog.ts`. Responsive at `md` breakpoint.
+- [x] "Now Listening" widget: fixed pill (bottom-centre), animated bars, links to streaming service. Update via `lib/listening.ts`.
 - [x] Hetzner VPS + Coolify + auto-deploy
-- [ ] Photography gallery
-- [ ] Print shop + Stripe integration
-- [ ] Ecology section
-- [ ] Blog with markdown rendering
-- [ ] About page
-- [ ] Configure health check in Coolify
-- [ ] Video hero background (clean, watermark-free source needed)
+
+### Roadmap
+1. **Obsidian gateway** — connect blog (and eventually ecology/IT) to vault via Nextcloud WebDAV. Replaces `lib/blog.ts` hardcoded data.
+2. **Nextcloud photo integration** — photography gallery reads from `Photography/Web-ready/` + `photos.json` manifest on Nextcloud. **Blocked on**: photography editing workflow decision (see global CLAUDE.md TODO).
+3. **Print shop + Stripe** — product catalogue, checkout, order confirmation. No user accounts needed to launch.
+4. **Admin interface** — manage content and orders without touching the repo.
+
+### Parking lot
+- About page
+- Ecology section (will be driven by vault once Obsidian gateway is done)
+- Configure health check in Coolify
+- Video hero background (clean, watermark-free source needed)
 
 ## Dev workflow
 ```bash
