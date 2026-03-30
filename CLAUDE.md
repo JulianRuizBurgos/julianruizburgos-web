@@ -33,8 +33,8 @@ Secondary sections: Ecology (professional identity — consulting, research, pub
 ### Layout principles
 - Photography leads — UI is minimal, images carry visual weight
 - Generous negative space throughout
-- No white cards with shadows — editorial top-rule style (`border-t-2`) instead
-- Section cards: thin colour rule at top, serif heading, terracotta "Explore →" on hover
+- No white cards with shadows — editorial top-rule style (`border-t-2`) on inner pages
+- Homepage section cards: full-height photo cards (80vh on desktop), grayscale→colour on hover, vertical serif label, dark overlay lifts on hover, terracotta "Explore →" fades up, thin accent line grows from left at bottom
 
 ### Navigation
 - **No sticky nav** — two fixed floating elements overlay the page:
@@ -125,16 +125,16 @@ Key principle: page components never read markdown directly. They call functions
 - SSL via Let's Encrypt
 - GreenNet managing DNS and email (@julianruizburgos.net)
 
-## Current status (2026-03-29)
+## Current status (2026-03-30)
 - [x] Next.js 16.1.6 + TypeScript + Tailwind v4 + App Router
 - [x] shadcn/ui components installed (button, card, dialog, sheet, badge, separator, aspect-ratio)
 - [x] Design system established (palette, typography, layout principles)
-- [x] Homepage: full-screen hero + Ken Burns animation + editorial section cards
+- [x] Homepage: full-screen hero + Ken Burns animation
+- [x] Homepage section cards: full-height photo grid (grayscale→colour, vertical label, Ken Burns on hover)
 - [x] Navigation: floating HOME + MENU, dark slide-in sidebar
 - [x] IT Consulting page: services + case studies (editorial style)
 - [x] IT case study detail page (/it/[slug])
 - [x] Hetzner VPS + Coolify + auto-deploy
-- [ ] Homepage section cards redesign (sketch pending from Julian)
 - [ ] Photography gallery
 - [ ] Print shop + Stripe integration
 - [ ] Ecology section
