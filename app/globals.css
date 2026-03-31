@@ -151,6 +151,14 @@
   --color-forest-900: #1b2d1f;
   --color-forest-700: #2e5234;
 
+  /* Stone — photography section: cool, marble-like, minimal */
+  --color-stone-50:  #f7f5f3;
+  --color-stone-100: #ede9e5;
+  --color-stone-200: #d8d2cb;
+  --color-stone-400: #a09890;
+  --color-stone-600: #6b6460;
+  --color-stone-800: #3a3633;
+
   /* Typography */
   --font-sans:  var(--font-inter);
   --font-serif: var(--font-playfair);

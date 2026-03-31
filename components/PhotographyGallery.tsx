@@ -10,45 +10,40 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
   return (
     <Dialog.Root open onOpenChange={(open) => { if (!open) onClose(); }}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-earth-900/95 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-earth-900/96 backdrop-blur-sm" />
         <Dialog.Content
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 md:p-10 outline-none"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 md:p-12 outline-none"
           aria-describedby="lightbox-desc"
         >
           <Dialog.Title className="sr-only">{photo.title}</Dialog.Title>
           <p id="lightbox-desc" className="sr-only">{photo.description ?? photo.title}</p>
 
-          {/* Close */}
           <Dialog.Close
-            className="absolute top-5 right-6 text-earth-400 hover:text-white transition-colors text-2xl leading-none"
+            className="absolute top-5 right-6 text-stone-400 hover:text-white transition-colors text-2xl leading-none"
             aria-label="Close"
           >
             ×
           </Dialog.Close>
 
-          {/* Image */}
-          <div className="relative w-full max-h-[75vh] flex items-center justify-center">
+          <div className="w-full max-h-[78vh] flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={photo.imageUrl}
               alt={photo.title}
-              className="max-h-[75vh] max-w-full object-contain"
+              className="max-h-[78vh] max-w-full object-contain"
             />
           </div>
 
-          {/* Caption */}
-          <div className="mt-6 w-full max-w-2xl text-center">
+          <div className="mt-7 w-full max-w-xl text-center">
             <p className="font-serif text-lg font-semibold text-white">{photo.title}</p>
-            <p className="mt-1 text-sm text-earth-400">{photo.location} · {photo.displayDate}</p>
-            {photo.camera && (
-              <p className="mt-1 text-xs text-earth-600">{photo.camera}</p>
-            )}
+            <p className="mt-1.5 text-sm text-stone-400">{photo.location} · {photo.displayDate}</p>
+            {photo.camera && <p className="mt-1 text-xs text-stone-600">{photo.camera}</p>}
             {photo.description && (
-              <p className="mt-3 text-sm leading-relaxed text-earth-300">{photo.description}</p>
+              <p className="mt-3 text-sm leading-relaxed text-stone-200">{photo.description}</p>
             )}
             {photo.printAvailable && (
-              <p className="mt-4 text-xs font-medium uppercase tracking-[0.2em] text-terracotta-400">
-                Print available — from £{((photo.priceInPence ?? 0) / 100).toFixed(0)}
+              <p className="mt-5 text-xs font-medium uppercase tracking-[0.2em] text-terracotta-400">
+                Fine art print available — from £{((photo.priceInPence ?? 0) / 100).toFixed(0)}
               </p>
             )}
           </div>
@@ -63,24 +58,23 @@ function PhotoCard({ photo, onClick }: { photo: Photo; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="group relative w-full overflow-hidden bg-earth-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-400"
-      style={{ aspectRatio: photo.aspectRatio }}
+      className="group relative w-full overflow-hidden bg-stone-100 aspect-4/3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-400"
       aria-label={`View ${photo.title}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={photo.imageUrl}
         alt={photo.title}
-        className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-[1.03]"
+        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
         loading="lazy"
       />
-      {/* Hover overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-earth-900/70 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-      <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-        <p className="font-serif text-sm font-semibold text-white leading-snug">{photo.title}</p>
-        <p className="mt-0.5 text-xs text-earth-300">{photo.location}</p>
+      {/* Hover: subtle dark veil + caption */}
+      <div className="absolute inset-0 bg-earth-900/0 transition-colors duration-500 group-hover:bg-earth-900/40" />
+      <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-1 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+        <p className="font-serif text-sm font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
+        <p className="mt-0.5 text-xs text-stone-200 drop-shadow">{photo.location}</p>
         {photo.printAvailable && (
-          <p className="mt-1.5 text-xs font-medium uppercase tracking-[0.15em] text-terracotta-400">
+          <p className="mt-1.5 text-xs font-medium uppercase tracking-[0.15em] text-terracotta-300 drop-shadow">
             Print available
           </p>
         )}
@@ -93,40 +87,44 @@ function PhotoCard({ photo, onClick }: { photo: Photo; onClick: () => void }) {
 function CollectionsStrip({ collections }: { collections: Collection[] }) {
   if (collections.length === 0) return null;
   return (
-    <section className="border-t border-earth-800 bg-earth-900 px-6 py-12 lg:px-20">
-      <div className="mb-8 flex items-baseline justify-between">
-        <p className="text-xs font-medium uppercase tracking-[0.25em] text-earth-400">Collections</p>
-        <Link
-          href="/photography/collections"
-          className="text-xs font-medium uppercase tracking-[0.2em] text-earth-600 transition-colors hover:text-earth-300"
-        >
-          View all →
-        </Link>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {collections.map((col) => (
+    <section className="border-t border-stone-200 bg-stone-50 px-6 py-16 lg:px-20">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 flex items-baseline justify-between">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.25em] text-stone-400">Photography</p>
+            <h2 className="mt-2 font-serif text-3xl font-semibold text-forest-900">Collections</h2>
+          </div>
           <Link
-            key={col.slug}
-            href={`/photography/collections/${col.slug}`}
-            className="group relative aspect-video overflow-hidden bg-earth-800"
+            href="/photography/collections"
+            className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400 transition-colors hover:text-earth-800"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`/photography/images/${encodeURIComponent(col.coverPhoto)}`}
-              alt={col.title}
-              className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-[1.03]"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-black/40 transition-colors duration-500 group-hover:bg-black/20" />
-            <div className="absolute bottom-0 left-0 right-0 p-5">
-              <p className="font-serif text-xl font-semibold text-white leading-snug">{col.title}</p>
-              <p className="mt-1 text-xs text-earth-300">{col.description}</p>
-              <p className="mt-2 text-xs font-medium uppercase tracking-[0.2em] text-terracotta-400 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                Explore →
-              </p>
-            </div>
+            View all →
           </Link>
-        ))}
+        </div>
+        <div className="grid gap-px bg-stone-200 sm:grid-cols-2 lg:grid-cols-3">
+          {collections.map((col) => (
+            <Link
+              key={col.slug}
+              href={`/photography/collections/${col.slug}`}
+              className="group relative aspect-[4/3] overflow-hidden bg-stone-100"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/photography/images/${encodeURIComponent(col.coverPhoto)}`}
+                alt={col.title}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-earth-900/20 transition-colors duration-500 group-hover:bg-earth-900/50" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <p className="font-serif text-2xl font-semibold text-white drop-shadow">{col.title}</p>
+                <p className="mt-1 text-xs font-medium uppercase tracking-[0.2em] text-terracotta-300 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                  Explore →
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -152,40 +150,41 @@ export default function PhotographyGallery({
   return (
     <>
       {/* ── Header ──────────────────────────────────────────────────────────── */}
-      <section className="bg-earth-900 pt-28 pb-16 px-6 lg:px-20">
-        <div className="max-w-4xl">
-          <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-amber-600">Photography</p>
-          <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl lg:text-7xl">
-            Portfolio.
-          </h1>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-earth-300 md:text-lg">
-            Landscape and wildlife photography from Britain and beyond. All images available as fine art prints.
-          </p>
+      <section className="bg-stone-50 pt-28 pb-10 px-6 lg:px-20 border-b border-stone-200">
+        <div className="mx-auto max-w-6xl flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+          <div>
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.25em] text-stone-400">Julian Ruiz Burgos</p>
+            <h1 className="font-serif text-5xl font-semibold leading-tight text-forest-900 md:text-6xl">
+              Photography.
+            </h1>
+            <p className="mt-4 max-w-lg text-base leading-relaxed text-stone-600">
+              Landscape and wildlife from Britain and beyond.
+            </p>
+          </div>
 
-          {/* Tag filters */}
-          <div className="mt-10 flex flex-wrap gap-2">
+          {/* Tag filters — right-aligned on desktop */}
+          <div className="flex flex-wrap gap-2 md:justify-end md:max-w-sm">
             <button
               onClick={() => setActiveTag(null)}
-              className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+              className={`text-xs font-medium uppercase tracking-[0.15em] transition-colors px-1 pb-0.5 border-b ${
                 activeTag === null
-                  ? "border-amber-500 bg-amber-500/10 text-amber-400"
-                  : "border-earth-700 text-earth-600 hover:border-earth-500 hover:text-earth-400"
+                  ? "border-forest-900 text-forest-900"
+                  : "border-transparent text-stone-400 hover:text-stone-600"
               }`}
             >
               All
             </button>
-            {tagCounts.map(({ tag, count }) => (
+            {tagCounts.map(({ tag }) => (
               <button
                 key={tag}
                 onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                className={`text-xs font-medium uppercase tracking-[0.15em] transition-colors px-1 pb-0.5 border-b ${
                   activeTag === tag
-                    ? "border-amber-500 bg-amber-500/10 text-amber-400"
-                    : "border-earth-700 text-earth-600 hover:border-earth-500 hover:text-earth-400"
+                    ? "border-forest-900 text-forest-900"
+                    : "border-transparent text-stone-400 hover:text-stone-600"
                 }`}
               >
                 {tag}
-                <span className="ml-1.5 text-earth-700">({count})</span>
               </button>
             ))}
           </div>
@@ -193,20 +192,24 @@ export default function PhotographyGallery({
       </section>
 
       {/* ── Grid ────────────────────────────────────────────────────────────── */}
-      <section className="bg-earth-950 px-2 py-2 md:px-3 md:py-3">
-        {visible.length === 0 ? (
-          <div className="flex min-h-[40vh] items-center justify-center">
-            <p className="font-serif text-2xl text-earth-700">No photographs for this filter.</p>
-          </div>
-        ) : (
-          <div className="columns-1 gap-2 sm:columns-2 lg:columns-3 md:gap-3">
-            {visible.map((photo) => (
-              <div key={photo.filename} className="mb-2 break-inside-avoid md:mb-3">
-                <PhotoCard photo={photo} onClick={() => setLightboxPhoto(photo)} />
-              </div>
-            ))}
-          </div>
-        )}
+      <section className="bg-stone-50 px-6 py-10 lg:px-20">
+        <div className="mx-auto max-w-6xl">
+          {visible.length === 0 ? (
+            <div className="flex min-h-[40vh] items-center justify-center">
+              <p className="font-serif text-2xl text-stone-300">No photographs for this filter.</p>
+            </div>
+          ) : (
+            <div className="grid gap-px bg-stone-200 sm:grid-cols-2 lg:grid-cols-3">
+              {visible.map((photo) => (
+                <PhotoCard
+                  key={photo.filename}
+                  photo={photo}
+                  onClick={() => setLightboxPhoto(photo)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </section>
 
       {/* ── Collections ─────────────────────────────────────────────────────── */}
