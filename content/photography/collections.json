@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "norway",
+    "title": "Norway",
+    "description": "Three weeks along the western fjords, autumn 2024.",
+    "coverPhoto": "hardangerfjord-dusk.jpg",
+    "photos": ["hardangerfjord-dusk.jpg", "trolltunga-mist.jpg", "bergen-harbour.jpg"]
+  },
+  {
+    "slug": "scotland-highlands",
+    "title": "Scottish Highlands",
+    "description": "Recurring visits to the Cairngorms, Torridon, and Perthshire over 2024–2025.",
+    "coverPhoto": "highland-stag.jpg",
+    "photos": ["highland-stag.jpg", "loch-rannoch-dawn.jpg", "beinn-eighe-ridge.jpg", "otter-river-tay.jpg"]
+  }
+]
