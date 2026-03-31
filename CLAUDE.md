@@ -177,14 +177,21 @@ tags: ["tag one", "tag two"]
 4. **Automated translation** — serve the site in multiple languages. Decision needed: static (build-time, e.g. next-intl with translated markdown files) vs. dynamic (runtime machine translation API). Content-heavy so quality matters; ecology and IT writing should not sound like raw MT output.
 
 5. **Accessibility (high priority — treat this seriously throughout)**
-   The goal is a site that works well for people with impaired vision and other disabilities — not just checkbox compliance.
-   - [ ] Audit and fix semantic HTML across all pages (landmarks, heading hierarchy, alt text)
-   - [ ] Keyboard navigation — full site navigable without a mouse
-   - [ ] Screen reader testing (NVDA / VoiceOver)
-   - [ ] WCAG AA contrast compliance across all colour combinations
-   - [ ] **Audio narration for blog entries** — Julian records himself reading each post. Add an audio player to the article view (HTML5 `<audio>`, styled to match the design). Audio file lives in the post folder alongside `index.md` (e.g. `narration.mp3`); referenced via optional `audio` frontmatter field, served through the existing asset route.
-   - [ ] Consider `prefers-reduced-motion` for Ken Burns and other animations
+   The goal is a site that works genuinely well for people with a wide range of disabilities — visual, motor, cognitive, neurological, and situational. Not checkbox compliance; real usability. This is a first-class design constraint, not an afterthought.
+
+   **First step — research (do this before implementing anything):**
+   - [ ] Research the full landscape of web accessibility needs and standards. Specifically: what disability categories affect web use (visual, motor, cognitive, neurological, deafness/hearing loss, speech, situational/temporary); what WCAG 2.2 levels AA and AAA require and why; what assistive technologies exist (screen readers, switch access, eye tracking, voice control, magnification); what the most common failure modes are on portfolio/content sites specifically. Produce a prioritised list of what to implement for this site, with rationale.
+
+   **Known items to implement (expand after research):**
+   - [ ] Semantic HTML audit across all pages — correct landmark regions (`<main>`, `<nav>`, `<article>`, etc.), heading hierarchy, descriptive link text, alt text on all images
+   - [ ] Keyboard navigation — full site navigable without a mouse; visible focus indicators; no keyboard traps
+   - [ ] Screen reader testing (NVDA on Linux, VoiceOver on iOS)
+   - [ ] WCAG AA contrast compliance across all colour combinations (light and dark backgrounds)
+   - [ ] `prefers-reduced-motion` — disable or reduce Ken Burns, card animations, transitions
+   - [ ] **Audio narration for blog entries** — Julian records himself reading each post. HTML5 `<audio>` player in the article view, styled to match the design. Audio file lives in the post folder (`narration.mp3`); optional `audio` frontmatter field; served through the existing asset route.
+   - [ ] Touch target sizes — minimum 44×44px for all interactive elements (important for motor difficulties and mobile)
    - [ ] `lang` attribute on translated pages (when translation is implemented)
+   - [ ] Review whether the three-panel blog layout is navigable and usable with a screen reader or keyboard only
 
 ### Parking lot
 - About page
