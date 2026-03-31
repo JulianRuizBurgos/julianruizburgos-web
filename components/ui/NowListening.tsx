@@ -32,7 +32,7 @@ export default function NowListening() {
 
         {/* Text */}
         <div className="flex items-baseline gap-1.5">
-          <span className="text-xs font-medium uppercase tracking-[0.15em] text-earth-500">
+          <span className="text-xs font-medium uppercase tracking-[0.15em] text-earth-300">
             Listening
           </span>
           <span className="text-xs text-earth-400">—</span>
@@ -43,7 +43,7 @@ export default function NowListening() {
             className="text-xs text-earth-200 hover:text-terracotta-300 transition-colors"
           >
             {artist}
-            <span className="text-earth-500">,</span>{" "}
+            <span className="text-earth-400">,</span>{" "}
             <span className="italic text-earth-400">{track}</span>
           </a>
           <span className="hidden sm:inline text-xs text-earth-600">

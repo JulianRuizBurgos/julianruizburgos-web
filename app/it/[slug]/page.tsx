@@ -43,7 +43,7 @@ export default async function CaseStudyPage({
         <p className="mb-2 text-xs font-medium uppercase tracking-widest text-earth-400">
           {project.client} — {project.clientDescription}
         </p>
-        <h1 className="font-serif text-3xl font-semibold text-earth-900 md:text-4xl">
+        <h1 className="font-serif text-3xl font-semibold text-forest-900 md:text-4xl">
           {project.tagline}
         </h1>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-earth-600">
@@ -65,18 +65,18 @@ export default async function CaseStudyPage({
         {/* Challenge & Solution */}
         <div className="grid gap-x-16 gap-y-10 sm:grid-cols-2">
           <section className="border-t-2 border-earth-300 pt-7">
-            <h2 className="font-serif text-xl font-semibold text-earth-900">The challenge</h2>
+            <h2 className="font-serif text-xl font-semibold text-forest-900">The challenge</h2>
             <p className="mt-3 text-sm leading-relaxed text-earth-600">{project.challenge}</p>
           </section>
           <section className="border-t-2 border-plum-400 pt-7">
-            <h2 className="font-serif text-xl font-semibold text-earth-900">The solution</h2>
+            <h2 className="font-serif text-xl font-semibold text-forest-900">The solution</h2>
             <p className="mt-3 text-sm leading-relaxed text-earth-600">{project.solution}</p>
           </section>
         </div>
 
         {/* Outcomes */}
         <section className="border-t-2 border-terracotta-400 pt-7">
-          <h2 className="font-serif text-2xl font-semibold text-earth-900">Outcomes</h2>
+          <h2 className="font-serif text-2xl font-semibold text-forest-900">Outcomes</h2>
           <ul className="mt-6 space-y-3">
             {project.outcomes.map((outcome, i) => (
               <li key={i} className="flex gap-3 text-sm leading-relaxed text-earth-600">
@@ -89,13 +89,13 @@ export default async function CaseStudyPage({
 
         {/* Stack */}
         <section className="border-t-2 border-earth-200 pt-7">
-          <h2 className="font-serif text-2xl font-semibold text-earth-900">Stack</h2>
+          <h2 className="font-serif text-2xl font-semibold text-forest-900">Stack</h2>
           <p className="mt-3 text-sm leading-relaxed text-earth-600">{project.stack}</p>
         </section>
 
         {/* Technical details */}
         <section className="border-t-2 border-earth-200 pt-7">
-          <h2 className="font-serif text-2xl font-semibold text-earth-900">Technical details</h2>
+          <h2 className="font-serif text-2xl font-semibold text-forest-900">Technical details</h2>
           <div className="mt-8 space-y-8">
             {project.technicalDetails.map((section) => (
               <div key={section.label}>

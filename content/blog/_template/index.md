@@ -4,6 +4,7 @@ date: "YYYY-MM-DD"
 topic: personal
 excerpt: "One or two sentences — shown in the post list and as a pull-quote at the top of the article."
 tags: ["tag one", "tag two"]
+# pdf: "filename.pdf"   ← optional: drop PDF in this folder and set filename here
 ---
 
 Post body in standard Markdown.

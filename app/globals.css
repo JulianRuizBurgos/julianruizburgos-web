@@ -146,6 +146,10 @@
   --color-plum-600: #5e4269;
   --color-plum-700: #422f4c;
 
+  /* Forest greens — for headings on light backgrounds */
+  --color-forest-900: #1b2d1f;
+  --color-forest-700: #2e5234;
+
   /* Typography */
   --font-sans:  var(--font-inter);
   --font-serif: var(--font-playfair);
@@ -189,7 +193,7 @@
 
 /* ── Prose content (rendered markdown in blog articles) ───────────────────── */
 .prose-content {
-  color: var(--color-earth-700);
+  color: var(--color-earth-900);
   line-height: 1.85;
   font-size: 1rem;
 }
@@ -197,7 +201,7 @@
 .prose-content h1,
 .prose-content h2,
 .prose-content h3,
-.prose-content h4      { font-family: var(--font-serif); color: var(--color-earth-900); font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; line-height: 1.3; }
+.prose-content h4      { font-family: var(--font-serif); color: var(--color-forest-900); font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; line-height: 1.3; }
 .prose-content h1      { font-size: 1.75rem; }
 .prose-content h2      { font-size: 1.375rem; }
 .prose-content h3      { font-size: 1.125rem; }

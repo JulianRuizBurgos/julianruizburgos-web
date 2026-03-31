@@ -16,6 +16,7 @@ export interface BlogPost {
   readTime: string;
   excerpt: string;
   content: string;     // rendered HTML
+  pdf?: string;        // URL to embedded PDF served via asset route
   tags: string[];
 }
 
@@ -85,6 +86,7 @@ async function readPost(slug: string): Promise<BlogPost> {
     readTime: calcReadTime(body),
     excerpt: typeof data.excerpt === "string" ? data.excerpt : "",
     content: htmlContent,
+    pdf: typeof data.pdf === "string" ? `/blog/assets/${slug}/${data.pdf}` : undefined,
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
   };
 }

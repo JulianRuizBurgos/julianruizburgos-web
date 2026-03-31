@@ -19,7 +19,7 @@ export default function ITPage() {
         <p className="mb-3 text-xs font-medium uppercase tracking-widest text-plum-500">
           Freelance
         </p>
-        <h1 className="font-serif text-4xl font-semibold text-earth-900 md:text-5xl">
+        <h1 className="font-serif text-4xl font-semibold text-forest-900 md:text-5xl">
           IT Consulting
         </h1>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-earth-600">
@@ -32,7 +32,7 @@ export default function ITPage() {
       <div className="space-y-20 py-16">
         {/* Services */}
         <section>
-          <h2 className="font-serif text-2xl font-semibold text-earth-900">What I do</h2>
+          <h2 className="font-serif text-2xl font-semibold text-forest-900">What I do</h2>
           <p className="mt-1 text-sm text-earth-400">Services available for hire</p>
           <div className="mt-10 grid gap-x-16 gap-y-10 sm:grid-cols-2">
             {services.map((service) => (
@@ -60,7 +60,7 @@ export default function ITPage() {
 
         {/* Projects */}
         <section>
-          <h2 className="font-serif text-2xl font-semibold text-earth-900">Projects</h2>
+          <h2 className="font-serif text-2xl font-semibold text-forest-900">Projects</h2>
           <p className="mt-1 text-sm text-earth-400">Selected client work</p>
           <div className="mt-10 grid gap-x-16 gap-y-10 sm:grid-cols-2">
             {projects.map((project) => (
@@ -72,7 +72,7 @@ export default function ITPage() {
                 <p className="text-xs font-medium uppercase tracking-widest text-earth-400">
                   {project.client}
                 </p>
-                <h3 className="mt-2 font-serif text-xl font-semibold text-earth-900">
+                <h3 className="mt-2 font-serif text-xl font-semibold text-forest-900">
                   {project.tagline}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-earth-600">
