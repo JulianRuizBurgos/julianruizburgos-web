@@ -3,6 +3,7 @@ import type { Dirent } from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { marked, Renderer } from "marked";
+import markedFootnote from "marked-footnote";
 
 export type Topic = "ecology" | "photography" | "technology" | "travel" | "personal";
 
@@ -17,6 +18,8 @@ export interface BlogPost {
   content: string;     // rendered HTML
   tags: string[];
 }
+
+marked.use(markedFootnote());
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
