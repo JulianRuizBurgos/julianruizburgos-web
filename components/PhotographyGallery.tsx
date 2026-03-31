@@ -233,7 +233,7 @@ export default function PhotographyGallery({
           </div>
 
           {/* Grid */}
-          <div className="p-5 pt-[calc(7rem+20px)] md:pt-5">
+          <div className="p-5 pt-[calc(7rem+40px)] md:pt-5">
             <MasonryGrid photos={visible} onPhotoClick={setLightboxPhoto} />
           </div>
         </div>
