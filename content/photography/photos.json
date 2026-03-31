@@ -1,8 +1,8 @@
 [
   {
-    "filename": "bluetailed_damselfly .jpg",
+    "filename": "bluetailed_damselfly.jpg",
     "title": "Blue-tailed Damselfly",
-    "date": "2025-06-01",
+    "date": "2021-06-15",
     "location": "Unknown",
     "description": null,
     "tags": ["wildlife", "insects", "damselflies"],
@@ -10,13 +10,13 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II · 40-150mm F4-5.6",
     "sortOrder": null
   },
   {
     "filename": "bumblebee.jpg",
     "title": "Bumblebee",
-    "date": "2025-06-01",
+    "date": "2022-05-26",
     "location": "Unknown",
     "description": null,
     "tags": ["wildlife", "insects", "bees", "pollinators"],
@@ -24,13 +24,13 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II · 40-150mm F4-5.6",
     "sortOrder": null
   },
   {
     "filename": "burgundy_snail.jpg",
     "title": "Burgundy Snail",
-    "date": "2025-06-01",
+    "date": "2021-07-24",
     "location": "Unknown",
     "description": null,
     "tags": ["wildlife", "invertebrates", "molluscs"],
@@ -38,7 +38,7 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II",
     "sortOrder": null
   },
   {
@@ -52,13 +52,13 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II · 40-150mm F4-5.6",
     "sortOrder": null
   },
   {
     "filename": "dung_beetle.jpg",
     "title": "Dung Beetle",
-    "date": "2025-06-01",
+    "date": "2021-07-10",
     "location": "Unknown",
     "description": null,
     "tags": ["wildlife", "insects", "beetles"],
@@ -66,13 +66,13 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II",
     "sortOrder": null
   },
   {
     "filename": "ginger_cat.jpg",
     "title": "Ginger Cat",
-    "date": "2025-06-01",
+    "date": "2022-05-26",
     "location": "Unknown",
     "description": null,
     "tags": ["wildlife", "mammals"],
@@ -80,7 +80,7 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II · 40-150mm F4-5.6",
     "sortOrder": null
   },
   {
@@ -100,7 +100,7 @@
   {
     "filename": "highland_cow.jpg",
     "title": "Highland Cow",
-    "date": "2025-06-01",
+    "date": "2021-03-07",
     "location": "Unknown",
     "description": null,
     "tags": ["wildlife", "mammals", "scotland"],
@@ -108,7 +108,7 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II",
     "sortOrder": null
   },
   {
@@ -122,13 +122,13 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II · 12-40mm F2.8",
     "sortOrder": null
   },
   {
     "filename": "lesser_spotted_woodpecker.jpg",
     "title": "Lesser Spotted Woodpecker",
-    "date": "2025-06-01",
+    "date": "2022-08-21",
     "location": "Unknown",
     "description": null,
     "tags": ["wildlife", "birds", "woodpeckers"],
@@ -136,13 +136,13 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II",
     "sortOrder": null
   },
   {
     "filename": "sparrow.jpg",
     "title": "Sparrow",
-    "date": "2025-06-01",
+    "date": "2021-10-09",
     "location": "Unknown",
     "description": null,
     "tags": ["wildlife", "birds"],
@@ -150,13 +150,13 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II · 12-40mm F2.8",
     "sortOrder": null
   },
   {
     "filename": "swan.jpg",
     "title": "Swan",
-    "date": "2025-06-01",
+    "date": "2022-05-23",
     "location": "Unknown",
     "description": null,
     "tags": ["wildlife", "birds", "water"],
@@ -164,13 +164,13 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II · 12-40mm F2.8",
     "sortOrder": null
   },
   {
     "filename": "yellow_damselfly.jpg",
     "title": "Yellow Damselfly",
-    "date": "2025-06-01",
+    "date": "2021-06-15",
     "location": "Unknown",
     "description": null,
     "tags": ["wildlife", "insects", "damselflies"],
@@ -178,7 +178,7 @@
     "printSizes": [],
     "priceInPence": null,
     "aspectRatio": 1.0,
-    "camera": null,
+    "camera": "Olympus OM-D E-M5 Mark II · 40-150mm F4-5.6",
     "sortOrder": null
   }
 ]
