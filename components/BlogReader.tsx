@@ -35,7 +35,7 @@ function ArticleView({
   return (
     <article
       key={contentKey}
-      className="animate-blog-fadein mx-auto max-w-2xl px-6 py-10 md:px-10 md:py-14 lg:px-16"
+      className="animate-blog-fadein px-16 py-10 md:px-24 md:py-14"
     >
       <button
         onClick={onBack}
