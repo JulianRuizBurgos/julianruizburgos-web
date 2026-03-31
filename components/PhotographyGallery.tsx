@@ -10,7 +10,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
   return (
     <Dialog.Root open onOpenChange={(open) => { if (!open) onClose(); }}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/92 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-[#071e36]/95 backdrop-blur-sm" />
         <Dialog.Content
           className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 md:p-16 outline-none"
           aria-describedby="lightbox-desc"
@@ -80,7 +80,7 @@ function Sidebar({
         onClick={() => onTagChange(null)}
         className={`text-left text-sm mb-1 transition-colors ${
           activeTag === null
-            ? "text-forest-900 font-semibold"
+            ? "text-[#1068b6] font-semibold"
             : "text-stone-400 hover:text-stone-700"
         }`}
       >
@@ -116,7 +116,7 @@ function Sidebar({
                 onClick={() => onTagChange(activeTag === tag ? null : tag)}
                 className={`text-sm transition-colors ${
                   activeTag === tag
-                    ? "text-terracotta-500 font-medium"
+                    ? "text-[#1068b6] font-medium"
                     : "text-stone-400 hover:text-stone-700"
                 }`}
               >
@@ -147,12 +147,12 @@ function MasonryGrid({
   }
 
   return (
-    <div className="columns-2 md:columns-3 gap-px">
+    <div className="columns-2 md:columns-3 gap-[15px]">
       {photos.map((photo) => (
         <button
           key={photo.filename}
           onClick={() => onPhotoClick(photo)}
-          className="group relative w-full block break-inside-avoid mb-px overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-400"
+          className="group relative w-full block break-inside-avoid mb-[15px] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1068b6]"
           aria-label={`View ${photo.title}`}
           style={{ aspectRatio: photo.aspectRatio }}
         >
@@ -216,7 +216,7 @@ export default function PhotographyGallery({
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
               <button
                 onClick={() => setActiveTag(null)}
-                className={`text-xs transition-colors ${activeTag === null ? "text-forest-900 font-semibold" : "text-stone-400"}`}
+                className={`text-xs transition-colors ${activeTag === null ? "text-[#1068b6] font-semibold" : "text-stone-400"}`}
               >
                 All
               </button>
@@ -224,7 +224,7 @@ export default function PhotographyGallery({
                 <button
                   key={tag}
                   onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                  className={`text-xs transition-colors ${activeTag === tag ? "text-terracotta-500 font-medium" : "text-stone-400"}`}
+                  className={`text-xs transition-colors ${activeTag === tag ? "text-[#1068b6] font-medium" : "text-stone-400"}`}
                 >
                   {tag}
                 </button>
@@ -233,7 +233,7 @@ export default function PhotographyGallery({
           </div>
 
           {/* Grid */}
-          <div className="p-px pt-[calc(7rem+1px)] md:pt-px">
+          <div className="p-5 pt-[calc(7rem+20px)] md:pt-5">
             <MasonryGrid photos={visible} onPhotoClick={setLightboxPhoto} />
           </div>
         </div>

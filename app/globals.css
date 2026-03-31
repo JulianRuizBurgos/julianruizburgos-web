@@ -151,13 +151,15 @@
   --color-forest-900: #1b2d1f;
   --color-forest-700: #2e5234;
 
-  /* Stone — photography section: cool, marble-like, minimal */
-  --color-stone-50:  #f7f5f3;
-  --color-stone-100: #ede9e5;
-  --color-stone-200: #d8d2cb;
-  --color-stone-400: #a09890;
-  --color-stone-600: #6b6460;
-  --color-stone-800: #3a3633;
+  /* Stone — photography section: blue-tinted, built around #1068b6 */
+  --color-stone-50:  #f0f5fb;
+  --color-stone-100: #deeaf6;
+  --color-stone-200: #b8d0e8;
+  --color-stone-400: #6a9ec4;
+  --color-stone-600: #2a6090;
+  --color-stone-800: #0d3357;
+
+  
 
   /* Typography */
   --font-sans:  var(--font-inter);
