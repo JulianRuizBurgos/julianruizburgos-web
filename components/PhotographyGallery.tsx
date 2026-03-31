@@ -10,36 +10,36 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
   return (
     <Dialog.Root open onOpenChange={(open) => { if (!open) onClose(); }}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-earth-900/96 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/92 backdrop-blur-sm" />
         <Dialog.Content
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 md:p-12 outline-none"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 md:p-16 outline-none"
           aria-describedby="lightbox-desc"
         >
           <Dialog.Title className="sr-only">{photo.title}</Dialog.Title>
           <p id="lightbox-desc" className="sr-only">{photo.description ?? photo.title}</p>
 
           <Dialog.Close
-            className="absolute top-5 right-6 text-stone-400 hover:text-white transition-colors text-2xl leading-none"
+            className="absolute top-5 right-6 text-stone-500 hover:text-white transition-colors text-2xl leading-none"
             aria-label="Close"
           >
             ×
           </Dialog.Close>
 
-          <div className="w-full max-h-[78vh] flex items-center justify-center">
+          <div className="w-full max-h-[80vh] flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={photo.imageUrl}
               alt={photo.title}
-              className="max-h-[78vh] max-w-full object-contain"
+              className="max-h-[80vh] max-w-full object-contain"
             />
           </div>
 
-          <div className="mt-7 w-full max-w-xl text-center">
-            <p className="font-serif text-lg font-semibold text-white">{photo.title}</p>
-            <p className="mt-1.5 text-sm text-stone-400">{photo.location} · {photo.displayDate}</p>
-            {photo.camera && <p className="mt-1 text-xs text-stone-600">{photo.camera}</p>}
+          <div className="mt-6 w-full max-w-lg text-center">
+            <p className="font-serif text-base font-semibold text-white">{photo.title}</p>
+            <p className="mt-1 text-xs text-stone-500">{photo.location} · {photo.displayDate}</p>
+            {photo.camera && <p className="mt-0.5 text-xs text-stone-600">{photo.camera}</p>}
             {photo.description && (
-              <p className="mt-3 text-sm leading-relaxed text-stone-200">{photo.description}</p>
+              <p className="mt-3 text-sm leading-relaxed text-stone-300">{photo.description}</p>
             )}
             {photo.printAvailable && (
               <p className="mt-5 text-xs font-medium uppercase tracking-[0.2em] text-terracotta-400">
@@ -53,80 +53,128 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
   );
 }
 
-// ── Photo card ────────────────────────────────────────────────────────────────
-function PhotoCard({ photo, onClick }: { photo: Photo; onClick: () => void }) {
+// ── Sidebar ───────────────────────────────────────────────────────────────────
+function Sidebar({
+  collections,
+  tagCounts,
+  activeTag,
+  onTagChange,
+}: {
+  collections: Collection[];
+  tagCounts: { tag: string; count: number }[];
+  activeTag: string | null;
+  onTagChange: (tag: string | null) => void;
+}) {
   return (
-    <button
-      onClick={onClick}
-      className="group relative w-full overflow-hidden bg-stone-100 aspect-4/3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-400"
-      aria-label={`View ${photo.title}`}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={photo.imageUrl}
-        alt={photo.title}
-        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-        loading="lazy"
-      />
-      {/* Hover: subtle dark veil + caption */}
-      <div className="absolute inset-0 bg-earth-900/0 transition-colors duration-500 group-hover:bg-earth-900/40" />
-      <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-1 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-        <p className="font-serif text-sm font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
-        <p className="mt-0.5 text-xs text-stone-200 drop-shadow">{photo.location}</p>
-        {photo.printAvailable && (
-          <p className="mt-1.5 text-xs font-medium uppercase tracking-[0.15em] text-terracotta-300 drop-shadow">
-            Print available
-          </p>
-        )}
+    <aside className="w-48 shrink-0 flex flex-col pt-28 pb-10 px-6 sticky top-0 h-screen overflow-y-auto">
+      {/* Name */}
+      <div className="mb-10">
+        <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-stone-400 mb-1">Photography</p>
+        <p className="font-serif text-xl font-semibold text-forest-900 leading-snug">
+          Julian<br />Ruiz Burgos
+        </p>
       </div>
-    </button>
+
+      {/* All photos */}
+      <button
+        onClick={() => onTagChange(null)}
+        className={`text-left text-sm mb-1 transition-colors ${
+          activeTag === null
+            ? "text-forest-900 font-semibold"
+            : "text-stone-400 hover:text-stone-700"
+        }`}
+      >
+        All photos
+      </button>
+
+      {/* Collections */}
+      {collections.length > 0 && (
+        <div className="mt-6 mb-6">
+          <p className="text-[9px] font-medium uppercase tracking-[0.25em] text-stone-300 mb-2">Collections</p>
+          <ul className="space-y-1">
+            {collections.map((col) => (
+              <li key={col.slug}>
+                <Link
+                  href={`/photography/collections/${col.slug}`}
+                  className="text-sm text-stone-400 hover:text-forest-900 transition-colors"
+                >
+                  {col.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Tags */}
+      <div className="mt-auto">
+        <p className="text-[9px] font-medium uppercase tracking-[0.25em] text-stone-300 mb-2">Filter</p>
+        <ul className="space-y-1">
+          {tagCounts.map(({ tag }) => (
+            <li key={tag}>
+              <button
+                onClick={() => onTagChange(activeTag === tag ? null : tag)}
+                className={`text-sm transition-colors ${
+                  activeTag === tag
+                    ? "text-terracotta-500 font-medium"
+                    : "text-stone-400 hover:text-stone-700"
+                }`}
+              >
+                {tag}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </aside>
   );
 }
 
-// ── Collections strip ─────────────────────────────────────────────────────────
-function CollectionsStrip({ collections }: { collections: Collection[] }) {
-  if (collections.length === 0) return null;
-  return (
-    <section className="border-t border-stone-200 bg-stone-50 px-6 py-16 lg:px-20">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-10 flex items-baseline justify-between">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.25em] text-stone-400">Photography</p>
-            <h2 className="mt-2 font-serif text-3xl font-semibold text-forest-900">Collections</h2>
-          </div>
-          <Link
-            href="/photography/collections"
-            className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400 transition-colors hover:text-earth-800"
-          >
-            View all →
-          </Link>
-        </div>
-        <div className="grid gap-px bg-stone-200 sm:grid-cols-2 lg:grid-cols-3">
-          {collections.map((col) => (
-            <Link
-              key={col.slug}
-              href={`/photography/collections/${col.slug}`}
-              className="group relative aspect-[4/3] overflow-hidden bg-stone-100"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`/photography/images/${encodeURIComponent(col.coverPhoto)}`}
-                alt={col.title}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-earth-900/20 transition-colors duration-500 group-hover:bg-earth-900/50" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <p className="font-serif text-2xl font-semibold text-white drop-shadow">{col.title}</p>
-                <p className="mt-1 text-xs font-medium uppercase tracking-[0.2em] text-terracotta-300 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                  Explore →
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
+// ── Masonry grid ──────────────────────────────────────────────────────────────
+function MasonryGrid({
+  photos,
+  onPhotoClick,
+}: {
+  photos: Photo[];
+  onPhotoClick: (photo: Photo) => void;
+}) {
+  if (photos.length === 0) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <p className="font-serif text-2xl text-stone-300">No photographs for this filter.</p>
       </div>
-    </section>
+    );
+  }
+
+  return (
+    <div className="columns-2 md:columns-3 gap-px">
+      {photos.map((photo) => (
+        <button
+          key={photo.filename}
+          onClick={() => onPhotoClick(photo)}
+          className="group relative w-full block break-inside-avoid mb-px overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-400"
+          aria-label={`View ${photo.title}`}
+          style={{ aspectRatio: photo.aspectRatio }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photo.imageUrl}
+            alt={photo.title}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/30" />
+          <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-1 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+            <p className="font-serif text-sm font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
+            {photo.printAvailable && (
+              <p className="mt-1 text-xs font-medium uppercase tracking-[0.15em] text-terracotta-300 drop-shadow">
+                Print available
+              </p>
+            )}
+          </div>
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -149,73 +197,48 @@ export default function PhotographyGallery({
 
   return (
     <>
-      {/* ── Header ──────────────────────────────────────────────────────────── */}
-      <section className="bg-stone-50 pt-28 pb-10 px-6 lg:px-20 border-b border-stone-200">
-        <div className="mx-auto max-w-6xl flex flex-col md:flex-row md:items-end md:justify-between gap-8">
-          <div>
-            <p className="mb-3 text-xs font-medium uppercase tracking-[0.25em] text-stone-400">Julian Ruiz Burgos</p>
-            <h1 className="font-serif text-5xl font-semibold leading-tight text-forest-900 md:text-6xl">
-              Photography.
-            </h1>
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-stone-600">
-              Landscape and wildlife from Britain and beyond.
-            </p>
-          </div>
-
-          {/* Tag filters — right-aligned on desktop */}
-          <div className="flex flex-wrap gap-2 md:justify-end md:max-w-sm">
-            <button
-              onClick={() => setActiveTag(null)}
-              className={`text-xs font-medium uppercase tracking-[0.15em] transition-colors px-1 pb-0.5 border-b ${
-                activeTag === null
-                  ? "border-forest-900 text-forest-900"
-                  : "border-transparent text-stone-400 hover:text-stone-600"
-              }`}
-            >
-              All
-            </button>
-            {tagCounts.map(({ tag }) => (
-              <button
-                key={tag}
-                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                className={`text-xs font-medium uppercase tracking-[0.15em] transition-colors px-1 pb-0.5 border-b ${
-                  activeTag === tag
-                    ? "border-forest-900 text-forest-900"
-                    : "border-transparent text-stone-400 hover:text-stone-600"
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
+      <div className="flex min-h-screen bg-stone-50">
+        {/* ── Sidebar (hidden on mobile) ───────────────────────────────────── */}
+        <div className="hidden md:block border-r border-stone-200">
+          <Sidebar
+            collections={collections}
+            tagCounts={tagCounts}
+            activeTag={activeTag}
+            onTagChange={setActiveTag}
+          />
         </div>
-      </section>
 
-      {/* ── Grid ────────────────────────────────────────────────────────────── */}
-      <section className="bg-stone-50 px-6 py-10 lg:px-20">
-        <div className="mx-auto max-w-6xl">
-          {visible.length === 0 ? (
-            <div className="flex min-h-[40vh] items-center justify-center">
-              <p className="font-serif text-2xl text-stone-300">No photographs for this filter.</p>
-            </div>
-          ) : (
-            <div className="grid gap-px bg-stone-200 sm:grid-cols-2 lg:grid-cols-3">
-              {visible.map((photo) => (
-                <PhotoCard
-                  key={photo.filename}
-                  photo={photo}
-                  onClick={() => setLightboxPhoto(photo)}
-                />
+        {/* ── Main content ─────────────────────────────────────────────────── */}
+        <div className="flex-1 min-w-0">
+          {/* Mobile header */}
+          <div className="md:hidden pt-24 pb-6 px-4 border-b border-stone-200">
+            <p className="font-serif text-3xl font-semibold text-forest-900">Photography.</p>
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+              <button
+                onClick={() => setActiveTag(null)}
+                className={`text-xs transition-colors ${activeTag === null ? "text-forest-900 font-semibold" : "text-stone-400"}`}
+              >
+                All
+              </button>
+              {tagCounts.map(({ tag }) => (
+                <button
+                  key={tag}
+                  onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                  className={`text-xs transition-colors ${activeTag === tag ? "text-terracotta-500 font-medium" : "text-stone-400"}`}
+                >
+                  {tag}
+                </button>
               ))}
             </div>
-          )}
+          </div>
+
+          {/* Grid */}
+          <div className="p-px pt-[calc(7rem+1px)] md:pt-px">
+            <MasonryGrid photos={visible} onPhotoClick={setLightboxPhoto} />
+          </div>
         </div>
-      </section>
+      </div>
 
-      {/* ── Collections ─────────────────────────────────────────────────────── */}
-      <CollectionsStrip collections={collections} />
-
-      {/* ── Lightbox ────────────────────────────────────────────────────────── */}
       {lightboxPhoto && (
         <Lightbox photo={lightboxPhoto} onClose={() => setLightboxPhoto(null)} />
       )}
