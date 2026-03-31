@@ -66,7 +66,7 @@ export default function Nav() {
         <div className="flex h-full flex-col px-8 py-8">
           {/* Header row */}
           <div className="mb-12 flex items-center justify-between">
-            <span className="text-xs font-medium uppercase tracking-widest text-white/40">
+            <span className="text-xs font-medium uppercase tracking-widest text-white/60">
               MENU
             </span>
             <button
@@ -82,7 +82,7 @@ export default function Nav() {
           <nav className="flex-1 space-y-10">
             {sections.map((section) => (
               <div key={section.label}>
-                <p className="mb-4 text-xs font-medium uppercase tracking-widest text-white/30">
+                <p className="mb-4 text-xs font-medium uppercase tracking-widest text-white/60">
                   {section.label}
                 </p>
                 <ul className="space-y-3">
@@ -104,7 +104,7 @@ export default function Nav() {
 
           {/* Contact info anchored to bottom */}
           <div className="border-t border-white/10 pt-8">
-            <p className="mb-3 text-xs font-medium uppercase tracking-widest text-white/30">
+            <p className="mb-3 text-xs font-medium uppercase tracking-widest text-white/80">
               GET IN TOUCH
             </p>
             <a
