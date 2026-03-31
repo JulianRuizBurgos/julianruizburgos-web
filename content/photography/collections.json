@@ -1,16 +1,9 @@
 [
   {
-    "slug": "norway",
-    "title": "Norway",
-    "description": "Three weeks along the western fjords, autumn 2024.",
-    "coverPhoto": "hardangerfjord-dusk.jpg",
-    "photos": ["hardangerfjord-dusk.jpg", "trolltunga-mist.jpg", "bergen-harbour.jpg"]
-  },
-  {
-    "slug": "scotland-highlands",
-    "title": "Scottish Highlands",
-    "description": "Recurring visits to the Cairngorms, Torridon, and Perthshire over 2024–2025.",
-    "coverPhoto": "highland-stag.jpg",
-    "photos": ["highland-stag.jpg", "loch-rannoch-dawn.jpg", "beinn-eighe-ridge.jpg", "otter-river-tay.jpg"]
+    "slug": "european_animals",
+    "title": "Animals of Europe",
+    "description": "Shots of different animal species found throughout Europe",
+    "coverPhoto": "burgundy_snail.jpg",
+    "photos": ["bluetailed_damselfly.jpg", "bumblebee.jpg", "burgundy_snail.jpg", "crane_flies.jpg", "dung_beetle.jpg", "ginger_cat.jpg", "gotas en cristal.jpg", "highland_cow.jpg", "hornet.jpg", "lesser_spotted_woodpecker.jpg", "sparrow.jpg", "swan.jpg", "yellow_damselfly.jpg"]
   }
 ]
