@@ -11,24 +11,28 @@ Secondary sections: Ecology (professional identity — consulting, research, pub
 - **Framework**: Next.js 16.1.6, App Router, TypeScript
 - **Styling**: Tailwind CSS v4 — config via `@theme` in `app/globals.css`, no `tailwind.config.ts`
 - **Components**: shadcn/ui (copied into `components/ui/`), lucide-react icons, Radix UI (via shadcn)
-- **Content**: Markdown files in `/content` (no CMS — see content strategy below)
+- **Content**: Markdown files in `content/blog/<slug>/index.md` — folder-per-post structure
 - **Version control**: GitHub
 - **Hosting**: Hetzner CX23 VPS (Helsinki) — live at https://julianruizburgos.net
 - **Deployment**: Coolify — auto-deploy on push to `main`, active
 - **Payments**: Stripe (for print shop, not yet implemented)
 - **Node**: v20+ required (v18 will fail the build)
 
-## Design system (established 2026-03-29)
+## Design system
 
 ### Typography
 - **Display/serif**: Playfair Display (`font-serif`) — headings, section titles, editorial voice
 - **Body/sans**: Inter (`font-sans`) — body text, UI labels
 
 ### Colour palette (defined in `app/globals.css` via `@theme`)
-- **Base**: `earth-50` (#faf8f5) — warm off-white, page background
-- **Text**: `earth-900` (#241c16) — near-black, body text
+- **Page background**: `earth-50` (#faf8f5) — warm off-white
+- **Body text**: `earth-900` (#241c16) — near-black
+- **Headings on light bg**: `forest-900` (#1b2d1f) — dark woodland green
+- **Muted text on light bg**: `earth-600` — minimum for secondary/caption text
+- **Muted text on dark bg**: `earth-300` or `earth-400`
 - **Accent**: `terracotta-*` — rust/terracotta, used sparingly for CTAs and hover states
-- **Section colours**: sage (ecology), amber (photography), plum (IT), stone (blog)
+- **Section colours**: sage (ecology), amber (photography), plum (IT)
+- **Do not use `earth-500` for text** — fails contrast on both light and dark backgrounds
 
 ### Layout principles
 - Photography leads — UI is minimal, images carry visual weight
@@ -69,9 +73,9 @@ Homepage
 │   ├── Consulting
 │   ├── Research
 │   └── Publications
-├── Blog                      (stone — general, multi-topic)
+├── Blog                      (general, multi-topic)
 │   ├── All posts
-│   └── Categories / [category]
+│   └── Topic + tag filtering
 └── About                     (footer-level)
 ```
 
@@ -84,43 +88,63 @@ app/                          # Next.js App Router routes (no src/ prefix)
   it/
     page.tsx                  # IT consulting services + projects
     [slug]/page.tsx           # case study detail pages
+  blog/
+    page.tsx                  # Server Component — fetches posts, renders BlogReader
+    assets/[slug]/[...file]/
+      route.ts                # serves static assets from content/blog/<slug>/
   photography/page.tsx        # placeholder
   ecology/page.tsx            # placeholder
-  blog/page.tsx               # placeholder
   about/page.tsx              # placeholder
-  globals.css                 # Tailwind v4 config + custom palette + keyframes
+  globals.css                 # Tailwind v4 config + custom palette + keyframes + prose-content CSS
 
 components/
-  ui/                         # Nav.tsx, Footer.tsx + shadcn/ui components
+  BlogReader.tsx              # "use client" — interactive blog UI (filters, article view)
+  ui/                         # Nav.tsx, Footer.tsx, NowListening.tsx + shadcn/ui components
 
 lib/
+  blog.ts                     # reads content/blog/ from filesystem (gray-matter + marked)
   it.ts                       # IT services & projects data
   utils.ts                    # cn() helper (shadcn)
 
-content/                      # markdown files (Obsidian bridge)
+content/
   blog/
-  ecology/
-    publications/
-    research/
+    <slug>/
+      index.md                # post content + frontmatter
+      *.png / *.pdf / ...     # co-located assets (served via /blog/assets/<slug>/*)
+    _template/
+      index.md                # copy this when writing a new post
 
 public/
   images/                     # hero images (21:9 ultrawide crop in use)
-  videos/                     # video backgrounds (watermarked Runway ML clip — not in use)
 
 components.json               # shadcn/ui config
 ```
 
-## Content strategy
+## Blog content pipeline
 
-**Current (temporary):** Blog posts hardcoded in `lib/blog.ts` as placeholder data.
+Posts live in `content/blog/<slug>/`. The slug becomes the URL-safe post ID.
 
-**Target (step 1 of roadmap):** Site reads markdown directly from Obsidian vault via Nextcloud WebDAV. A designated vault folder (e.g. `03_Library/Published/blog/`) is the source of truth. No manual copying. This pattern extends to ecology and IT content too.
+**Required frontmatter:**
+```yaml
+---
+title: "Post title"
+date: "YYYY-MM-DD"           # ISO format — used for sorting
+topic: personal              # ecology | photography | technology | travel | personal
+excerpt: "One or two sentences."
+tags: ["tag one", "tag two"]
+# pdf: "filename.pdf"        # optional — embeds a PDF viewer below the text body
+---
+```
 
-Key principle: page components never read content directly — they call functions from `/lib`. Swapping the source (hardcoded → file system → Nextcloud API) only requires touching `/lib/blog.ts` etc.
+**Key behaviours:**
+- `readTime` is auto-calculated (~200 wpm) — do not add to frontmatter
+- Obsidian `![[image embeds]]` and `[[wikilinks]]` are stripped automatically
+- Images referenced with relative paths (`![alt](image.png)`) are served via the asset route
+- Footnotes (`[^1]` / `[^1]: text`) rendered and linked via `marked-footnote`
+- Body text is justified with automatic hyphenation
+- Files/folders starting with `_` are ignored by the blog reader
 
-**Photography (step 2 of roadmap):** Site reads publish-ready JPEGs from `Photography/Web-ready/` on Nextcloud plus a `photos.json` manifest file. Prerequisite: photography editing workflow must be decided first (see global CLAUDE.md TODO).
-
-**Design references**: stored in Obsidian at `02_Projects/Website/` — two markdown files and a folder of inspiration screenshots.
+**Architecture note:** `app/blog/page.tsx` is a Server Component — it fetches data and passes it as props to `BlogReader.tsx` (client). Page components never read content directly; they go through `lib/blog.ts`. Swapping the data source only requires touching that file.
 
 ## Infrastructure
 - Hetzner CX23 VPS at 204.168.183.129 (Helsinki), Ubuntu 24.04
@@ -132,26 +156,39 @@ Key principle: page components never read content directly — they call functio
 
 ## Current status (2026-03-31)
 - [x] Next.js 16.1.6 + TypeScript + Tailwind v4 + App Router
-- [x] shadcn/ui components installed (button, card, dialog, sheet, badge, separator, aspect-ratio)
-- [x] Design system established (palette, typography, layout principles)
-- [x] Homepage: full-screen hero + Ken Burns animation
-- [x] Homepage section cards: full-height photo grid (grayscale→colour, vertical label, Ken Burns on hover). Mobile: IntersectionObserver activates card when 55% in viewport.
+- [x] shadcn/ui components installed
+- [x] Design system: forest-900 headings, earth-900 body text, terracotta accent
+- [x] Homepage: full-screen hero + Ken Burns animation + section cards
 - [x] Navigation: floating HOME + MENU, dark slide-in sidebar
 - [x] IT Consulting page: services + case studies (editorial style)
-- [x] IT case study detail page (/it/[slug])
-- [x] Blog page: three-panel reader (desktop) + full-screen article view (mobile). 10 placeholder posts in `lib/blog.ts`. Responsive at `md` breakpoint.
-- [x] "Now Listening" widget: fixed pill (bottom-centre), animated bars, links to streaming service. Update via `lib/listening.ts`.
+- [x] IT case study detail page (`/it/[slug]`)
+- [x] Blog: three-panel reader (desktop) + full-screen article (mobile). Reads from `content/blog/` via filesystem. Topic + tag filtering. Folder-per-post with co-located assets. PDF embed support. Footnotes work in all browsers.
+- [x] "Now Listening" widget: fixed pill (bottom-centre), animated bars. Update via `lib/listening.ts`.
 - [x] Hetzner VPS + Coolify + auto-deploy
 
-### Roadmap
-1. **Obsidian gateway** — connect blog (and eventually ecology/IT) to vault via Nextcloud WebDAV. Replaces `lib/blog.ts` hardcoded data.
-2. **Nextcloud photo integration** — photography gallery reads from `Photography/Web-ready/` + `photos.json` manifest on Nextcloud. **Blocked on**: photography editing workflow decision (see global CLAUDE.md TODO).
-3. **Print shop + Stripe** — product catalogue, checkout, order confirmation. No user accounts needed to launch.
-4. **Admin interface** — manage content and orders without touching the repo.
+## Roadmap
+
+### In progress / next
+1. **Nextcloud photo integration** — photography gallery reads from `Photography/Web-ready/` + `photos.json` manifest on Nextcloud. **Blocked on**: photography editing workflow decision (see global CLAUDE.md TODO).
+2. **Print shop + Stripe** — product catalogue, checkout, order confirmation. No user accounts needed to launch.
+3. **Admin interface** — manage content and orders without touching the repo.
+
+### Planned
+4. **Automated translation** — serve the site in multiple languages. Decision needed: static (build-time, e.g. next-intl with translated markdown files) vs. dynamic (runtime machine translation API). Content-heavy so quality matters; ecology and IT writing should not sound like raw MT output.
+
+5. **Accessibility (high priority — treat this seriously throughout)**
+   The goal is a site that works well for people with impaired vision and other disabilities — not just checkbox compliance.
+   - [ ] Audit and fix semantic HTML across all pages (landmarks, heading hierarchy, alt text)
+   - [ ] Keyboard navigation — full site navigable without a mouse
+   - [ ] Screen reader testing (NVDA / VoiceOver)
+   - [ ] WCAG AA contrast compliance across all colour combinations
+   - [ ] **Audio narration for blog entries** — Julian records himself reading each post. Add an audio player to the article view (HTML5 `<audio>`, styled to match the design). Audio file lives in the post folder alongside `index.md` (e.g. `narration.mp3`); referenced via optional `audio` frontmatter field, served through the existing asset route.
+   - [ ] Consider `prefers-reduced-motion` for Ken Burns and other animations
+   - [ ] `lang` attribute on translated pages (when translation is implemented)
 
 ### Parking lot
 - About page
-- Ecology section (will be driven by vault once Obsidian gateway is done)
+- Ecology section
 - Configure health check in Coolify
 - Video hero background (clean, watermark-free source needed)
 
