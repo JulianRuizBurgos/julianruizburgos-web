@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import type { RefObject } from "react";
 import type { BlogPost, Topic } from "@/lib/blog";
 
 // ── topic accent colours ──────────────────────────────────────────────────────
@@ -27,13 +28,49 @@ function ArticleView({
   post,
   contentKey,
   onBack,
+  scrollContainer,
 }: {
   post: BlogPost;
   contentKey: number;
   onBack: () => void;
+  scrollContainer?: RefObject<HTMLElement | null>;
 }) {
+  const articleRef = useRef<HTMLElement>(null);
+
+  // Scroll container to top when a new post loads
+  useEffect(() => {
+    scrollContainer?.current?.scrollTo({ top: 0, behavior: "instant" });
+  }, [contentKey, scrollContainer]);
+
+  // Intercept anchor clicks (footnotes etc.) and scroll within the container
+  useEffect(() => {
+    const article = articleRef.current;
+    const container = scrollContainer?.current;
+    if (!article || !container) return;
+
+    const handleClick = (e: MouseEvent) => {
+      const anchor = (e.target as HTMLElement).closest("a");
+      if (!anchor) return;
+      const href = anchor.getAttribute("href");
+      if (!href?.startsWith("#")) return;
+
+      e.preventDefault();
+      const target = document.getElementById(href.slice(1));
+      if (!target) return;
+      const offset =
+        container.scrollTop +
+        target.getBoundingClientRect().top -
+        container.getBoundingClientRect().top;
+      container.scrollTo({ top: offset, behavior: "smooth" });
+    };
+
+    article.addEventListener("click", handleClick);
+    return () => article.removeEventListener("click", handleClick);
+  }, [contentKey, scrollContainer]);
+
   return (
     <article
+      ref={articleRef}
       key={contentKey}
       className="animate-blog-fadein px-16 py-10 md:px-24 md:py-14"
     >
@@ -128,6 +165,7 @@ export default function BlogReader({
   const [topicFilter, setTopicFilter] = useState<Topic | null>(null);
   const [tagFilter, setTagFilter] = useState<string | null>(null);
   const [contentKey, setContentKey] = useState(0);
+  const mainRef = useRef<HTMLElement>(null);
 
   // Collect all unique tags across all posts, sorted
   const allTags = Array.from(
@@ -157,9 +195,9 @@ export default function BlogReader({
     setTagFilter(null);
   }
 
-  // Scroll to top on mobile when article opens
+  // Scroll to top on mobile when article opens (desktop handled inside ArticleView)
   useEffect(() => {
-    if (activeSelected) window.scrollTo({ top: 0, behavior: "smooth" });
+    if (activeSelected) window.scrollTo({ top: 0, behavior: "instant" });
   }, [activeSelected]);
 
   return (
@@ -263,9 +301,9 @@ export default function BlogReader({
         </aside>
 
         {/* Center — reading area */}
-        <main className="flex-1 overflow-y-auto bg-earth-50">
+        <main ref={mainRef} className="flex-1 overflow-y-auto bg-earth-50">
           {activeSelected ? (
-            <ArticleView post={activeSelected} contentKey={contentKey} onBack={clearSelection} />
+            <ArticleView post={activeSelected} contentKey={contentKey} onBack={clearSelection} scrollContainer={mainRef} />
           ) : (
             <div className="flex h-full flex-col items-center justify-center px-10 text-center">
               <p className="font-serif text-3xl font-semibold text-earth-200 leading-snug max-w-md">
