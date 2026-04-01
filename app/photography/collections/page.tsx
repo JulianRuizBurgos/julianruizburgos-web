@@ -23,7 +23,7 @@ export default async function CollectionsPage() {
           <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl">
             Collections.
           </h1>
-          <p className="mt-4 max-w-lg text-base leading-relaxed text-white/80">
+          <p className="mt-4 max-w-lg text-base leading-relaxed font-semibold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
             Curated groups of photographs — by place, project, or theme.
           </p>
         </div>
