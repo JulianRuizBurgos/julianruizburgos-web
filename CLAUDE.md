@@ -31,7 +31,8 @@ Secondary sections: Ecology (professional identity — consulting, research, pub
 - **Muted text on light bg**: `earth-600` — minimum for secondary/caption text
 - **Muted text on dark bg**: `earth-300` or `earth-400`
 - **Accent**: `terracotta-*` — rust/terracotta, used sparingly for CTAs and hover states
-- **Section colours**: sage (ecology), amber (photography), plum (IT)
+- **Section colours**: sage (ecology), plum (IT)
+- **Photography section**: blue-tinted `stone-*` palette built around `#1068b6`. Active states use `#1068b6` directly. stone-50 through stone-900 all defined.
 - **Do not use `earth-500` for text** — fails contrast on both light and dark backgrounds
 
 ### Layout principles
@@ -92,17 +93,26 @@ app/                          # Next.js App Router routes (no src/ prefix)
     page.tsx                  # Server Component — fetches posts, renders BlogReader
     assets/[slug]/[...file]/
       route.ts                # serves static assets from content/blog/<slug>/
-  photography/page.tsx        # placeholder
+  photography/
+    page.tsx                  # Server Component — fetches photos/tags/collections, renders PhotographyGallery
+    images/[filename]/
+      route.ts                # image proxy — streams from Nextcloud or falls back to public/photography/dev/
+    collections/
+      page.tsx                # collections index — cover cards with vignette effect
+      [slug]/page.tsx         # SSG collection detail — renders CollectionView
   ecology/page.tsx            # placeholder
   about/page.tsx              # placeholder
   globals.css                 # Tailwind v4 config + custom palette + keyframes + prose-content CSS
 
 components/
   BlogReader.tsx              # "use client" — interactive blog UI (filters, article view)
+  PhotographyGallery.tsx      # "use client" — sidebar nav + masonry grid + tag filtering + lightbox
+  CollectionView.tsx          # "use client" — collection detail grid + lightbox
   ui/                         # Nav.tsx, Footer.tsx, NowListening.tsx + shadcn/ui components
 
 lib/
   blog.ts                     # reads content/blog/ from filesystem (gray-matter + marked)
+  photography.ts              # Photo + Collection types, getAllPhotos(), getTagCounts(), getAllCollections(), getCollection()
   it.ts                       # IT services & projects data
   utils.ts                    # cn() helper (shadcn)
 
@@ -113,9 +123,13 @@ content/
       *.png / *.pdf / ...     # co-located assets (served via /blog/assets/<slug>/*)
     _template/
       index.md                # copy this when writing a new post
+  photography/
+    photos.json               # photo manifest — metadata for all published photos
+    collections.json          # collection definitions — ordered photo lists
 
 public/
   images/                     # hero images (21:9 ultrawide crop in use)
+  photography/dev/            # local dev placeholder images (not served directly — use the proxy route)
 
 components.json               # shadcn/ui config
 ```
@@ -146,6 +160,46 @@ tags: ["tag one", "tag two"]
 
 **Architecture note:** `app/blog/page.tsx` is a Server Component — it fetches data and passes it as props to `BlogReader.tsx` (client). Page components never read content directly; they go through `lib/blog.ts`. Swapping the data source only requires touching that file.
 
+## Photography content pipeline
+
+Photos are described in `content/photography/photos.json` (local dev) or fetched from Nextcloud WebDAV in production. Collections are in `content/photography/collections.json`.
+
+**`photos.json` entry shape:**
+```json
+{
+  "filename": "my_photo.jpg",
+  "title": "My Photo",
+  "date": "YYYY-MM-DD",
+  "location": "Location name",
+  "description": null,
+  "tags": ["wildlife", "birds"],
+  "printAvailable": true,
+  "printSizes": ["A3", "A2", "30×30 cm"],
+  "priceInEuro": null,
+  "aspectRatio": 1.33,
+  "camera": "Olympus OM-D E-M5 Mark II · 40-150mm F4-5.6",
+  "sortOrder": null
+}
+```
+
+**`collections.json` entry shape:**
+```json
+{
+  "slug": "my-collection",
+  "title": "My Collection",
+  "description": "Short description.",
+  "coverPhoto": "cover.jpg",
+  "photos": ["photo1.jpg", "photo2.jpg"]
+}
+```
+
+**Key rules:**
+- `aspectRatio` must be set accurately — the masonry grid uses it to size each cell. Read from EXIF with `identify -verbose file.jpg | grep "exif:Pixel"` or ImageMagick.
+- `sortOrder` null = sort by date descending. Set integers to force order within a collection.
+- `PrintSize` valid values: `"A4"` `"A3"` `"A2"` `"A1"` `"A0"` `"30×30 cm"` `"40×40 cm"` `"50×50 cm"` `"20×25 cm"` `"20×30 cm"` `"30×40 cm"` `"30×45 cm"` `"40×60 cm"` `"50×75 cm"`
+- Local dev images live in `public/photography/dev/` — served via the proxy route at `/photography/images/[filename]`, not directly from `public/`.
+- **Never import `lib/photography.ts` from a client component** — it uses `fs/promises`. Only `import type` is safe across the boundary.
+
 ## Infrastructure
 - Hetzner CX23 VPS at 204.168.183.129 (Helsinki), Ubuntu 24.04
 - Docker + Coolify, Traefik on ports 80/443
@@ -154,7 +208,7 @@ tags: ["tag one", "tag two"]
 - SSL via Let's Encrypt
 - GreenNet managing DNS and email (@julianruizburgos.net)
 
-## Current status (2026-03-31)
+## Current status (2026-04-01)
 - [x] Next.js 16.1.6 + TypeScript + Tailwind v4 + App Router
 - [x] shadcn/ui components installed
 - [x] Design system: forest-900 headings, earth-900 body text, terracotta accent
@@ -165,13 +219,17 @@ tags: ["tag one", "tag two"]
 - [x] Blog: three-panel reader (desktop) + full-screen article (mobile). Reads from `content/blog/` via filesystem. Topic + tag filtering. Folder-per-post with co-located assets. PDF embed support. Footnotes work in all browsers.
 - [x] "Now Listening" widget: fixed pill (bottom-centre), animated bars. Update via `lib/listening.ts`.
 - [x] Hetzner VPS + Coolify + auto-deploy
+- [x] Photography section: sidebar nav + masonry grid + lightbox. Tag filtering. `lib/photography.ts` data layer with Nextcloud WebDAV + local dev fallback. Image proxy route.
+- [x] Photography collections: `/photography/collections` index + `/photography/collections/[slug]` detail pages. Cover cards with vignette effect.
+- [x] Photo metadata: 13 photos with EXIF-sourced dates and camera/lens info. `PrintSize` type covers A0–A4, square, and traditional lab sizes. Price in Euro.
 
 ## Roadmap
 
 ### In progress / next
-1. **Nextcloud photo integration** — photography gallery reads from `Photography/Web-ready/` + `photos.json` manifest on Nextcloud. **Blocked on**: photography editing workflow decision (see global CLAUDE.md TODO).
-2. **Print shop + Stripe** — product catalogue, checkout, order confirmation. No user accounts needed to launch.
-3. **Admin interface** — manage content and orders without touching the repo.
+1. **Nextcloud photo integration** — `lib/photography.ts` and the image proxy route are already wired up for Nextcloud WebDAV (env vars: `NEXTCLOUD_WEBDAV_URL`, `NEXTCLOUD_USER`, `NEXTCLOUD_APP_PASSWORD`, `NEXTCLOUD_PHOTOS_PATH`). Currently using local dev files in `public/photography/dev/`. **Blocked on**: photography editing workflow decision (see global CLAUDE.md TODO).
+2. **CollectionView styling** — `components/CollectionView.tsx` hasn't been redesigned to match the new blue stone aesthetic yet.
+3. **Print shop + Stripe** — `printAvailable: true` and `PrintSize` type are in place. Need: product catalogue UI, Stripe checkout, order confirmation email. No user accounts needed to launch.
+4. **Admin interface** — manage content and orders without touching the repo.
 
 ### Planned
 4. **Automated translation** — serve the site in multiple languages. Decision needed: static (build-time, e.g. next-intl with translated markdown files) vs. dynamic (runtime machine translation API). Content-heavy so quality matters; ecology and IT writing should not sound like raw MT output.
