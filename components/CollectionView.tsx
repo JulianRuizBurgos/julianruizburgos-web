@@ -66,7 +66,7 @@ export default function CollectionView({
       <div className="bg-stone-50 min-h-screen">
         {/* Header */}
         <section className="pt-28 pb-10 px-6 lg:px-20 border-b border-stone-600">
-          <div className="mx-auto max-w-6xl">
+          <div className="mx-auto max-w-8xl">
             <Link
               href="/photography/collections"
               className="mb-8 inline-block text-xs font-medium uppercase tracking-[0.2em] text-stone-600 transition-colors hover:text-earth-800"
@@ -106,10 +106,10 @@ export default function CollectionView({
                   />
                   <div className="absolute inset-0 bg-earth-900/0 transition-colors duration-500 group-hover:bg-earth-900/40" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-1 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                    <p className="font-serif text-sm font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
-                    <p className="mt-0.5 text-xs text-white drop-shadow">{photo.location}</p>
+                    <p className="font-serif text-m font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
+                    <p className="mt-0.5 text-sm text-white drop-shadow">{photo.location}</p>
                     {photo.printAvailable && (
-                      <p className="mt-1.5 text-xs font-medium uppercase tracking-[0.15em] text-terracotta-600 drop-shadow">
+                      <p className="mt-1.5 text-lg uppercase tracking-[0.15em] text-terracotta-600 drop-shadow">
                         Print available
                       </p>
                     )}
