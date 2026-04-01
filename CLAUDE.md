@@ -226,7 +226,7 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - [x] Blog: three-panel reader (desktop) + full-screen article (mobile). Reads from `content/blog/` via filesystem. Topic + tag filtering. Folder-per-post with co-located assets. PDF embed support. Footnotes work in all browsers.
 - [x] "Now Listening" widget: fixed pill (bottom-centre), animated bars. Update via `lib/listening.ts`.
 - [x] Hetzner VPS + Coolify + auto-deploy
-- [x] Photography section: dark stone-900 header + infinite collections carousel + free-text search + sidebar nav + masonry grid + lightbox. Tag + search filtering. `lib/photography.ts` data layer with Nextcloud WebDAV + local dev fallback. Image proxy route.
+- [x] Photography section: dark stone-900 header + infinite collections carousel (desktop) + mobile "See Collections" button + free-text search + sidebar nav (tag filter only) + masonry grid + lightbox. Tag + search filtering. `lib/photography.ts` data layer with Nextcloud WebDAV + local dev fallback. Image proxy route.
 - [x] Photography collections: `/photography/collections` index + `/photography/collections/[slug]` detail pages. Cover cards with vignette effect.
 - [x] Photo metadata: 13 photos with EXIF-sourced dates and camera/lens info. `PrintSize` type covers A0–A4, square, and traditional lab sizes. Price in Euro.
 - [x] Image optimisation: Next.js `<Image>` with AVIF/WebP formats, `sizes` prop on gallery/collection grids, server-side cache in `.next/cache/images`. Lightbox capped at 1200px. Copyright overlay on lightbox.

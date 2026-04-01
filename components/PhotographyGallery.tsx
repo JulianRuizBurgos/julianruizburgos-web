@@ -309,6 +309,16 @@ export default function PhotographyGallery({
         </div>
       </section>
 
+      {/* ── Mobile: See Collections button ──────────────────────────────── */}
+      <div className="md:hidden bg-stone-900 px-6 pb-6">
+        <Link
+          href="/photography/collections"
+          className="inline-block border border-stone-600 px-5 py-2 text-xs font-medium uppercase tracking-[0.2em] text-stone-300 hover:border-stone-400 hover:text-white transition-colors"
+        >
+          See Collections →
+        </Link>
+      </div>
+
       {/* ── Collections carousel ─────────────────────────────────────────── */}
       {collections.length > 0 && (
         <CollectionsCarousel collections={collections} photoMap={photoMap} />
