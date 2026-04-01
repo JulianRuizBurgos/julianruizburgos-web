@@ -51,6 +51,7 @@ export default async function CollectionsPage() {
                   />
                 )}
                 <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/50" />
+                <div className="absolute inset-0 pointer-events-none rounded-xl" style={{ boxShadow: "inset 0 0 80px 30px rgba(0,0,0,0.55)" }} />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <p className="font-serif text-2xl font-semibold text-white drop-shadow">{col.title}</p>
                   <p className="mt-1 text-sm text-white leading-relaxed drop-shadow">{col.description}</p>
