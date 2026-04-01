@@ -1,7 +1,13 @@
 import fs from "fs/promises";
 import path from "path";
 
-export type PrintSize = "A4" | "A3" | "A2" | "A1";
+export type PrintSize =
+  // ISO A series
+  | "A4" | "A3" | "A2" | "A1" | "A0"
+  // Square formats
+  | "30×30 cm" | "40×40 cm" | "50×50 cm"
+  // Traditional photo sizes
+  | "20×25 cm" | "20×30 cm" | "30×40 cm" | "30×45 cm" | "40×60 cm" | "50×75 cm";
 
 export interface Photo {
   filename: string;
@@ -13,7 +19,7 @@ export interface Photo {
   tags: string[];
   printAvailable: boolean;
   printSizes: PrintSize[];
-  priceInPence: number | null;
+  priceInEuro: number | null;
   aspectRatio: number;
   camera: string | null;
   sortOrder: number | null;
@@ -48,7 +54,7 @@ function toPhoto(raw: Record<string, unknown>): Photo {
     tags: Array.isArray(raw.tags) ? raw.tags.map(String) : [],
     printAvailable: Boolean(raw.printAvailable),
     printSizes: Array.isArray(raw.printSizes) ? raw.printSizes.map(String) as PrintSize[] : [],
-    priceInPence: typeof raw.priceInPence === "number" ? raw.priceInPence : null,
+    priceInEuro: typeof raw.priceInEuro === "number" ? raw.priceInEuro : null,
     aspectRatio: typeof raw.aspectRatio === "number" ? raw.aspectRatio : 1.5,
     camera: raw.camera != null ? String(raw.camera) : null,
     sortOrder: typeof raw.sortOrder === "number" ? raw.sortOrder : null,
