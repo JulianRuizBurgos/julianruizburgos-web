@@ -43,7 +43,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
             )}
             {photo.printAvailable && (
               <p className="mt-5 text-xs font-medium uppercase tracking-[0.2em] text-terracotta-400">
-                Fine art print available — from £{((photo.priceInPence ?? 0) / 100).toFixed(0)}
+                Fine art print available — from £{((photo.priceInEuro ?? 0) / 100).toFixed(0)}
               </p>
             )}
           </div>

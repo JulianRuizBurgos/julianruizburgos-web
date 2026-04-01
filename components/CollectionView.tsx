@@ -36,13 +36,13 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
           <div className="mt-7 w-full max-w-xl text-center">
             <p className="font-serif text-lg font-semibold text-white">{photo.title}</p>
             <p className="mt-1.5 text-sm text-stone-400">{photo.location} · {photo.displayDate}</p>
-            {photo.camera && <p className="mt-1 text-xs text-stone-600">{photo.camera}</p>}
+            {photo.camera && <p className="mt-1 text-xs text-stone-900">{photo.camera}</p>}
             {photo.description && (
-              <p className="mt-3 text-sm leading-relaxed text-stone-200">{photo.description}</p>
+              <p className="mt-3 text-sm leading-relaxed text-stone-900">{photo.description}</p>
             )}
             {photo.printAvailable && (
               <p className="mt-5 text-xs font-medium uppercase tracking-[0.2em] text-terracotta-400">
-                Fine art print available — from £{((photo.priceInPence ?? 0) / 100).toFixed(0)}
+                Fine art print available — from {((photo.priceInEuro ?? 0) / 100).toFixed(0)}€.
               </p>
             )}
           </div>
