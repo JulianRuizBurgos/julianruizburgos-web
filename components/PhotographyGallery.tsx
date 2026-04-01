@@ -41,7 +41,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
               <p className="mt-3 text-sm leading-relaxed text-white">{photo.description}</p>
             )}
             {photo.printAvailable && (
-              <p className="mt-1.5 text-lg uppercase tracking-[0.15em] text-terracotta-600 drop-shadow">
+              <p className="mt-1.5 text-lg uppercase tracking-[0.15em] text-terracotta-600 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
                 Print available
               </p>
             )}
@@ -168,7 +168,7 @@ function MasonryGrid({
           <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-1 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
             <p className="font-serif text-sm font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
             {photo.printAvailable && (
-              <p className="mt-1 text-xs font-medium uppercase tracking-[0.15em] text-terracotta-300 drop-shadow">
+              <p className="mt-1 text-xs font-medium uppercase tracking-[0.15em] text-terracotta-300 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
                 Print available
               </p>
             )}
