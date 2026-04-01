@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import * as Dialog from "@radix-ui/react-dialog";
 import type { Photo, Collection } from "@/lib/photography";
 
@@ -24,13 +25,19 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
             ×
           </Dialog.Close>
 
-          <div className="w-full max-h-[80vh] flex items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <div className="relative w-full max-h-[80vh] flex items-center justify-center">
+            <Image
               src={photo.imageUrl}
               alt={photo.title}
+              width={1200}
+              height={Math.round(1200 / photo.aspectRatio)}
               className="max-h-[80vh] max-w-full object-contain"
+              quality={85}
+              priority
             />
+            <span className="pointer-events-none absolute bottom-2 right-3 text-[11px] text-white/40 select-none">
+              © Julian Ruiz Burgos
+            </span>
           </div>
 
           <div className="mt-7 w-full max-w-xl text-center">
@@ -40,11 +47,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
             {photo.description && (
               <p className="mt-3 text-sm leading-relaxed text-white">{photo.description}</p>
             )}
-            {photo.printAvailable && (
-              <p className="mt-1.5 inline-block px-2 text-m bg-terracotta-600 font-semibold uppercase tracking-[0.15em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-                Print available
-              </p>
-            )}
+            
           </div>
         </Dialog.Content>
       </Dialog.Portal>
@@ -88,16 +91,16 @@ function Sidebar({
         <div className="mt-6 mb-6"> 
         <Link
           href="/photography/collections"
-          className="text-sm text-stone-400 hover:text-stone-700 transition-colors"
+          className="text-[14px] font-extrabold uppercase tracking-[0.25em] text-stone-900 hover:text-stone-500 transition-colors mb-2"
         >
-          Collections
+          Collections 
         </Link>
           <ul className="space-y-1">
             {collections.map((col) => (
               <li key={col.slug}>
                 <Link
                   href={`/photography/collections/${col.slug}`}
-                  className="text-sm text-stone-600 hover:text-stone-800 transition-colors"
+                  className="text-sm text-stone-900 hover:text-stone-500 transition-colors"
                 >
                   {col.title}
                 </Link>
@@ -109,7 +112,7 @@ function Sidebar({
 
       {/* Tags */}
       <div className="mt-auto">
-        <p className="text-[9px] font-medium uppercase tracking-[0.25em] text-stone-300 mb-2">Filter</p>
+        <p className="text-[14px] font-extrabold uppercase tracking-[0.25em] text-stone-500 mb-2">Filter</p>
         <ul className="space-y-1">
           {tagCounts.map(({ tag }) => (
             <li key={tag}>
@@ -118,7 +121,7 @@ function Sidebar({
                 className={`text-sm transition-colors ${
                   activeTag === tag
                     ? "text-[#1068b6] font-medium"
-                    : "text-stone-400 hover:text-stone-700"
+                    : "text-stone-900 hover:text-stone-500"
                 }`}
               >
                 {tag}
@@ -167,15 +170,129 @@ function MasonryGrid({
           <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/30" />
           <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-1 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
             <p className="font-serif text-sm font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
-            {photo.printAvailable && (
-              <p className="mt-1.5 inline-block px-2 text-m bg-terracotta-600 font-semibold uppercase tracking-[0.15em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-                Print available
-              </p>
-            )}
+            
           </div>
         </button>
       ))}
     </div>
+  );
+}
+
+// ── Collections carousel ─────────────────────────────────────────────────────
+function CollectionsCarousel({
+  collections,
+  photoMap,
+}: {
+  collections: Collection[];
+  photoMap: Map<string, Photo>;
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stopAuto = () => {
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+  };
+
+  const startAuto = () => {
+    stopAuto();
+    timerRef.current = setInterval(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+      el.scrollLeft += 1;
+      // Seamless loop: when we reach the second copy, jump back to the first
+      if (el.scrollLeft >= el.scrollWidth / 2) {
+        el.scrollLeft -= el.scrollWidth / 2;
+      }
+    }, 45);
+  };
+
+  useEffect(() => {
+    startAuto();
+    return stopAuto;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const nudge = (dir: 1 | -1) => {
+    stopAuto();
+    const el = scrollRef.current;
+    if (!el) return;
+    // Nudging left near the start: teleport to the middle first so there's room to scroll back
+    if (dir === -1 && el.scrollLeft < 280) {
+      el.scrollLeft += el.scrollWidth / 2;
+    }
+    el.scrollBy({ left: dir * 280, behavior: "smooth" });
+    setTimeout(() => {
+      // After smooth scroll, correct if we've crossed the halfway point
+      if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft -= el.scrollWidth / 2;
+      startAuto();
+    }, 1000);
+  };
+
+  return (
+    <section className="bg-stone-100 py-8">
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="flex items-center justify-between mb-5">
+          <p className="text-xs font-medium uppercase tracking-[0.25em] text-stone-800">Collections</p>
+          <Link
+            href="/photography/collections"
+            className="text-sm font-semibold text-stone-400 hover:text-stone-600 transition-colors"
+          >
+            See all →
+          </Link>
+        </div>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => nudge(-1)}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-300 text-stone-500 hover:border-stone-600 hover:text-stone-800 transition-colors"
+          aria-label="Scroll left"
+        >
+          <span className="text-4xl leading-none">←</span>
+        </button>
+
+        <div
+          ref={scrollRef}
+          className="flex flex-1 gap-5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          onMouseEnter={stopAuto}
+          onMouseLeave={startAuto}
+        >
+        {[...collections, ...collections].map((col, i) => {
+          const cover = photoMap.get(col.coverPhoto);
+          return (
+            <Link
+              key={`${col.slug}-${i}`}
+              href={`/photography/collections/${col.slug}`}
+              className="group relative w-60 shrink-0 aspect-[4/3] rounded-2xl overflow-hidden bg-stone-200"
+            >
+              {cover && (
+                <Image
+                  src={cover.imageUrl}
+                  alt={col.title}
+                  fill
+                  sizes="240px"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+              )}
+              <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/50" />
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <p className="font-serif text-base font-semibold text-white leading-snug drop-shadow">{col.title}</p>
+                <p className="mt-0.5 text-sm font-semibold text-white leading-snug drop-shadow">{col.photos.length} {col.photos.length === 1 ? "photograph" : "photographs"}</p>
+              </div>
+            </Link>
+          );
+        })}
+        
+        </div>
+
+        <button
+          onClick={() => nudge(1)}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-300 text-stone-500 hover:border-stone-600 hover:text-stone-800 transition-colors"
+          aria-label="Scroll right"
+        >
+          <span className="text-4xl leading-none">→</span>
+        </button>
+      </div>
+      </div>
+    </section>
   );
 }
 
@@ -191,15 +308,86 @@ export default function PhotographyGallery({
 }) {
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [lightboxPhoto, setLightboxPhoto] = useState<Photo | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const visible = activeTag
-    ? photos.filter((p) => p.tags.includes(activeTag))
-    : photos;
+  const photoMap = new Map(photos.map((p) => [p.filename, p]));
+
+  const searchLower = searchQuery.toLowerCase().trim();
+  const visible = photos.filter((p) => {
+    const matchesTag = !activeTag || p.tags.includes(activeTag);
+    if (!searchLower) return matchesTag;
+    const matchesSearch =
+      p.title.toLowerCase().includes(searchLower) ||
+      p.location.toLowerCase().includes(searchLower) ||
+      (p.description?.toLowerCase().includes(searchLower) ?? false) ||
+      p.tags.some((t) => t.toLowerCase().includes(searchLower)) ||
+      (p.camera?.toLowerCase().includes(searchLower) ?? false) ||
+      p.displayDate.toLowerCase().includes(searchLower);
+    return matchesTag && matchesSearch;
+  });
 
   return (
     <>
+      {/* ── Dark header ──────────────────────────────────────────────────── */}
+      <section className="bg-stone-900 pt-28 pb-10 px-6 lg:px-20">
+        <div className="max-w-4xl">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-stone-400">Photography</p>
+          <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl lg:text-7xl">
+            Photographs.
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-stone-300 md:text-lg">
+            Landscape and wildlife photography from the Netherlands and beyond.
+            Moments from the field — birds, light, water, and the quiet edges of the natural world.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Collections carousel ─────────────────────────────────────────── */}
+      {collections.length > 0 && (
+        <CollectionsCarousel collections={collections} photoMap={photoMap} />
+      )}
+
+      {/* ── Search ───────────────────────────────────────────────────────── */}
+      <div className="bg-stone-50 px-6 lg:px-20 py-6 flex flex-col items-center">
+        <div className="relative w-full max-w-md">
+          <svg
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <circle cx={11} cy={11} r={8} />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by title, location, tags…"
+            className="w-full rounded-sm border border-stone-200 bg-white py-2 pl-9 pr-8 text-sm text-stone-700 placeholder:text-stone-400 focus:border-[#1068b6] focus:outline-none focus:ring-1 focus:ring-[#1068b6]"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-lg leading-none"
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
+        {searchQuery && (
+          <p className="mt-1.5 text-xs text-stone-500 text-center">
+            {visible.length} {visible.length === 1 ? "photograph" : "photographs"} found
+          </p>
+        )}
+      </div>
+
+      {/* ── Two-panel layout ─────────────────────────────────────────────── */}
       <div className="flex min-h-screen bg-stone-50">
-        {/* ── Sidebar (hidden on mobile) ───────────────────────────────────── */}
+        {/* Sidebar (hidden on mobile) */}
         <div className="hidden md:block border-r border-stone-200">
           <Sidebar
             collections={collections}
@@ -209,12 +397,10 @@ export default function PhotographyGallery({
           />
         </div>
 
-        {/* ── Main content ─────────────────────────────────────────────────── */}
         <div className="flex-1 min-w-0">
-          {/* Mobile header */}
-          <div className="md:hidden pt-24 pb-6 px-4 border-b border-stone-200">
-            <p className="font-serif text-3xl font-semibold text-forest-900">Photography.</p>
-            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+          {/* Mobile tag filters */}
+          <div className="md:hidden py-4 px-4 border-b border-stone-200">
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
               <button
                 onClick={() => setActiveTag(null)}
                 className={`text-xs transition-colors ${activeTag === null ? "text-[#1068b6] font-semibold" : "text-stone-400"}`}
@@ -233,8 +419,7 @@ export default function PhotographyGallery({
             </div>
           </div>
 
-          {/* Grid */}
-          <div className="p-5 pt-[calc(7rem+40px)] md:pt-5">
+          <div className="p-5">
             <MasonryGrid photos={visible} onPhotoClick={setLightboxPhoto} />
           </div>
         </div>

@@ -18,7 +18,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Julian Ruiz Burgos",
   description:
-    "Landscape and wildlife photographer, ecologist, and IT consultant based in the UK.",
+    "Landscape and wildlife photographer, ecologist, and IT consultant the Netherlands.",
 };
 
 export default function RootLayout({

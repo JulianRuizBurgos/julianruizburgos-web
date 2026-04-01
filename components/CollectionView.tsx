@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import * as Dialog from "@radix-ui/react-dialog";
 import type { Photo, Collection } from "@/lib/photography";
 
@@ -24,13 +25,19 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
             ×
           </Dialog.Close>
 
-          <div className="w-full max-h-[78vh] flex items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <div className="relative w-full max-h-[78vh] flex items-center justify-center">
+            <Image
               src={photo.imageUrl}
               alt={photo.title}
+              width={1200}
+              height={Math.round(1200 / photo.aspectRatio)}
               className="max-h-[78vh] max-w-full object-contain"
+              quality={85}
+              priority
             />
+            <span className="pointer-events-none absolute bottom-2 right-3 text-[11px] text-white/40 select-none">
+              © Julian Ruiz Burgos
+            </span>
           </div>
 
           <div className="mt-7 w-full max-w-xl text-center">
@@ -40,11 +47,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
             {photo.description && (
               <p className="mt-3 text-sm leading-relaxed text-white">{photo.description}</p>
             )}
-            {photo.printAvailable && (
-              <p className="mt-1.5 inline-block px-2 text-m bg-terracotta-600 font-semibold uppercase tracking-[0.15em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-                Print available
-              </p>
-            )}
+            
           </div>
         </Dialog.Content>
       </Dialog.Portal>
@@ -97,22 +100,18 @@ export default function CollectionView({
                   className="group relative w-full overflow-hidden bg-stone-100 aspect-4/3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta-400"
                   aria-label={`View ${photo.title}`}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={photo.imageUrl}
                     alt={photo.title}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                    loading="lazy"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                   <div className="absolute inset-0 bg-earth-900/0 transition-colors duration-500 group-hover:bg-earth-900/40" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-1 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                     <p className="font-serif text-m font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
                     <p className="mt-0.5 text-sm text-white drop-shadow">{photo.location}</p>
-                    {photo.printAvailable && (
-                      <p className="mt-1.5 inline-block px-2 text-m bg-terracotta-600 font-semibold uppercase tracking-[0.15em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-                        Print available
-                      </p>
-                    )}
+                    
                   </div>
                 </button>
               ))}

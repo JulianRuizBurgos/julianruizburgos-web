@@ -173,14 +173,20 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
   "location": "Location name",
   "description": null,
   "tags": ["wildlife", "birds"],
-  "printAvailable": true,
-  "printSizes": ["A3", "A2", "30×30 cm"],
-  "priceInEuro": null,
-  "aspectRatio": 1.33,
+  "widthPx": 6000,
+  "heightPx": 4000,
+  "aspectRatio": 1.5,
   "camera": "Olympus OM-D E-M5 Mark II · 40-150mm F4-5.6",
   "sortOrder": null
 }
 ```
+
+**Print availability:**
+- All photos are available as prints and postcards — no per-photo flag needed
+- Available print sizes are computed at runtime in `lib/shop.ts` from `widthPx`/`heightPx` and `aspectRatio`
+- Logic: filter the master size list to those whose long edge fits within the photo's resolution at a minimum print DPI (e.g. 200 DPI); then filter to sizes whose aspect ratio matches the photo's aspect ratio within a tolerance (e.g. ±5%)
+- `printAvailable` and `printSizes` fields in existing `photos.json` entries are **deprecated** — remove when implementing the shop
+- The "Print available" badge in `PhotographyGallery.tsx` and `CollectionView.tsx` should be removed at that point too
 
 **`collections.json` entry shape:**
 ```json
@@ -194,9 +200,10 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 ```
 
 **Key rules:**
-- `aspectRatio` must be set accurately — the masonry grid uses it to size each cell. Read from EXIF with `identify -verbose file.jpg | grep "exif:Pixel"` or ImageMagick.
+- `aspectRatio`, `widthPx`, and `heightPx` all come from EXIF (`PixelXDimension`, `PixelYDimension`) — do not enter manually. Use the metadata sync script (to be written) or read with `identify -format "%wx%h" file.jpg` (ImageMagick). Values are cached in `photos.json` so the site never needs to read EXIF at request time (important for Nextcloud images in production).
+- `widthPx`/`heightPx` are used by `lib/shop.ts` to compute which print sizes are available at sufficient quality.
 - `sortOrder` null = sort by date descending. Set integers to force order within a collection.
-- `PrintSize` valid values: `"A4"` `"A3"` `"A2"` `"A1"` `"A0"` `"30×30 cm"` `"40×40 cm"` `"50×50 cm"` `"20×25 cm"` `"20×30 cm"` `"30×40 cm"` `"30×45 cm"` `"40×60 cm"` `"50×75 cm"`
+- `PrintSize` valid values: `"A4"` `"A3"` `"A2"` `"A1"` `"A0"` `"30×30 cm"` `"40×40 cm"` `"50×50 cm"` `"20×25 cm"` `"20×30 cm"` `"30×40 cm"` `"30×45 cm"` `"40×60 cm"` `"50×75 cm"` — postcards are always `"A6"` (10×15 cm), not in this list
 - Local dev images live in `public/photography/dev/` — served via the proxy route at `/photography/images/[filename]`, not directly from `public/`.
 - **Never import `lib/photography.ts` from a client component** — it uses `fs/promises`. Only `import type` is safe across the boundary.
 
@@ -219,16 +226,18 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - [x] Blog: three-panel reader (desktop) + full-screen article (mobile). Reads from `content/blog/` via filesystem. Topic + tag filtering. Folder-per-post with co-located assets. PDF embed support. Footnotes work in all browsers.
 - [x] "Now Listening" widget: fixed pill (bottom-centre), animated bars. Update via `lib/listening.ts`.
 - [x] Hetzner VPS + Coolify + auto-deploy
-- [x] Photography section: sidebar nav + masonry grid + lightbox. Tag filtering. `lib/photography.ts` data layer with Nextcloud WebDAV + local dev fallback. Image proxy route.
+- [x] Photography section: dark stone-900 header + infinite collections carousel + free-text search + sidebar nav + masonry grid + lightbox. Tag + search filtering. `lib/photography.ts` data layer with Nextcloud WebDAV + local dev fallback. Image proxy route.
 - [x] Photography collections: `/photography/collections` index + `/photography/collections/[slug]` detail pages. Cover cards with vignette effect.
 - [x] Photo metadata: 13 photos with EXIF-sourced dates and camera/lens info. `PrintSize` type covers A0–A4, square, and traditional lab sizes. Price in Euro.
+- [x] Image optimisation: Next.js `<Image>` with AVIF/WebP formats, `sizes` prop on gallery/collection grids, server-side cache in `.next/cache/images`. Lightbox capped at 1200px. Copyright overlay on lightbox.
+- [x] Print shop architecture planned: postcards product type defined (recipient address, message text, handwritten/printed toggle, sender name). `printAvailable`/`printSizes` deprecated in favour of computed sizes from `widthPx`/`heightPx`.
 
 ## Roadmap
 
 ### In progress / next
 1. **Nextcloud photo integration** — `lib/photography.ts` and the image proxy route are already wired up for Nextcloud WebDAV (env vars: `NEXTCLOUD_WEBDAV_URL`, `NEXTCLOUD_USER`, `NEXTCLOUD_APP_PASSWORD`, `NEXTCLOUD_PHOTOS_PATH`). Currently using local dev files in `public/photography/dev/`. **Blocked on**: photography editing workflow decision (see global CLAUDE.md TODO).
 2. **CollectionView styling** — `components/CollectionView.tsx` hasn't been redesigned to match the new blue stone aesthetic yet.
-3. **Print shop** — see full architecture plan below. `printAvailable: true` and `PrintSize` type are in place. Pending decisions: paper types, price matrix, shipping scope, database choice.
+3. **Print shop** — see full architecture plan below. Pending decisions: paper types, price matrix, minimum print DPI, shipping scope, database choice.
 4. **Admin interface** — order management UI (list orders, mark dispatched, add tracking). Part of print shop phase 5.
 
 ### Planned
@@ -265,10 +274,25 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - **Stripe** — payment processor. Natively supports **iDEAL** (Netherlands) alongside cards and all EU payment methods. Enable iDEAL in Stripe dashboard — no separate integration.
 - Keys needed: `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`
 
+### Product types
+
+**Photo prints** — standard wall prints. Customer picks size + paper type.
+
+**Postcards** — any photo, printed at A6 (10×15 cm). Customer provides:
+- Recipient name + full destination address (street, city, postcode, country)
+- Message text (the written side of the postcard)
+- Text style: `"handwritten"` (Julian writes by hand) or `"printed"` (text printed on the card)
+- Sender name (appears on the postcard)
+
+Julian prints, addresses, and mails each postcard himself. No extra shipping address from the customer — the destination IS the mailing address.
+
+Each postcard in the cart is a unique item (different recipient/message), so quantity is always 1 per cart line.
+
 ### Pending decisions (required before starting)
 - [ ] Paper types (e.g. Glossy, Matte, Fine Art/Cotton, Metallic — depends on your printer)
-- [ ] Price matrix: price per size × paper type combination
-- [ ] Shipping scope: Netherlands only to start, or Europe/worldwide?
+- [ ] Price matrix: price per size × paper type combination; postcard price (flat rate)
+- [ ] Minimum print DPI threshold (e.g. 200 DPI) — determines which sizes are offered per photo
+- [ ] Shipping scope: Netherlands only to start, or Europe/worldwide? Postcards ship internationally by default (standard postage)
 - [ ] Database: Postgres on existing Hetzner VPS (free, full control) vs managed (PlanetScale/Supabase)
 
 ### Architecture overview
@@ -278,22 +302,22 @@ Cart (client state)
   └── React context + localStorage for persistence across pages
 
 Product catalogue
-  └── photos.json × paper/size price matrix in lib/shop.ts
+  └── photos.json × paper/size price matrix + postcard price in lib/shop.ts
 
 Checkout flow
   ├── /cart                        — cart page, line items, subtotal
-  ├── /checkout                    — shipping address form
+  ├── /checkout                    — shipping address form (prints only; postcards ship to recipient)
   └── Stripe Payment Element       — card + iDEAL + all enabled EU methods
 
 Server
   ├── app/api/checkout/route.ts          — creates Stripe PaymentIntent
   ├── app/api/webhooks/stripe/route.ts   — payment confirmed → save order, send emails
-  └── Database: orders + order_items tables
+  └── Database: orders + order_items + postcard_details tables
 
 Post-payment
   ├── /checkout/success            — confirmation page with order number
-  ├── Email to customer            — order confirmation with print details (via Resend)
-  └── Email to Julian              — new order notification with everything needed to print/ship
+  ├── Email to customer            — order confirmation with photo thumbnail + postcard details (via Resend)
+  └── Email to Julian              — new order notification with everything needed to print/write/mail
 
 Order management
   └── /admin/orders                — password-protected: list orders, mark dispatched, add tracking
@@ -302,33 +326,37 @@ Order management
 ### Implementation phases
 
 **Phase 1 — Product catalogue** (no backend needed)
-- Define paper types and price matrix in `lib/shop.ts`
-- Paper type + size selector on photo lightbox/detail
+- Define paper types and price matrix + postcard flat price in `lib/shop.ts`
+- Paper type + size selector on photo lightbox/detail for prints
+- "Order as postcard" button on lightbox → opens postcard form modal (recipient, message, text style, sender name)
 - "Add to cart" → React context + `localStorage`
 - Cart icon in nav with item count badge
 
 **Phase 2 — Cart & checkout**
-- `/cart` — line items, quantities, remove, subtotal
-- `/checkout` — name, shipping address, country
+- `/cart` — line items (prints show size/paper; postcards show recipient name + "handwritten"/"printed"), remove, subtotal
+- `/checkout` — name, email, and shipping address for prints; postcards have no separate shipping form (recipient address already captured per item)
 - Stripe Payment Element (auto-renders iDEAL + cards based on customer country)
 - `POST /api/checkout` creates PaymentIntent server-side
 
 **Phase 3 — Orders database**
 - `orders`: id, stripe_payment_id, customer name/email/address, status, created_at
-- `order_items`: order_id, photo filename, size, paper type, price, quantity
+- `order_items`: order_id, photo_filename, product_type ("print" | "postcard"), size, paper_type, price, quantity
+- `postcard_details`: order_item_id, recipient_name, address_line1, address_line2, city, postcode, country, message_text, text_style ("handwritten" | "printed"), sender_name
 - Webhook: `payment_intent.succeeded` → insert order → send emails
 
 **Phase 4 — Emails** (via Resend — no SMTP needed)
-- Customer: order confirmation with photo thumbnail, sizes, paper, estimated dispatch
-- Julian: new order notification with full print/ship details
+- Customer: order confirmation listing prints (with size/paper) and postcards (with recipient name, text style)
+- Julian: new order notification with full details — for postcards: recipient address, full message text, text style, sender name (everything needed to write and mail)
 
 **Phase 5 — Admin**
 - `/admin/orders` — simple password-protected page
-- List orders, mark as dispatched, add tracking number
-- Customer receives dispatch email with tracking
+- List orders, mark as dispatched, add tracking number (prints); mark as mailed (postcards)
+- Customer receives dispatch/mailed confirmation email
 
 ### Fulfilment
-Julian ships himself using his own photo printer. No print-on-demand API needed.
+Julian handles everything himself:
+- **Prints**: prints on own photo printer, packages, ships with tracking
+- **Postcards**: prints A6 postcard, handwrites or prints the message side, stamps, mails directly to recipient address
 
 ---
 
