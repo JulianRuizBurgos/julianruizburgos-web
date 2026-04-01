@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import type { Photo, Collection } from "@/lib/photography";
+import CollectionsPage from "@/app/photography/collections/page";
 
 // ── Lightbox ──────────────────────────────────────────────────────────────────
 function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
@@ -69,10 +70,7 @@ function Sidebar({
     <aside className="w-48 shrink-0 flex flex-col pt-28 pb-10 px-6 sticky top-0 h-screen overflow-y-auto">
       {/* Name */}
       <div className="mb-10">
-        <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-stone-400 mb-1">Photography</p>
-        <p className="font-serif text-xl font-semibold text-forest-900 leading-snug">
-          Julian<br />Ruiz Burgos
-        </p>
+        <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-stone-600 mb-1">Photography</p>
       </div>
 
       {/* All photos */}
@@ -89,14 +87,23 @@ function Sidebar({
 
       {/* Collections */}
       {collections.length > 0 && (
-        <div className="mt-6 mb-6">
-          <p className="text-[9px] font-medium uppercase tracking-[0.25em] text-stone-300 mb-2">Collections</p>
+        <div className="mt-6 mb-6"> 
+        <button
+          onClick={() => CollectionsPage()}
+          className={`text-left text-sm mb-1 transition-colors ${
+            activeTag === null
+              ? "text-[#1068b6] font-semibold"
+              : "text-stone-400 hover:text-stone-700"
+          }`}
+        >
+          Collections
+        </button>
           <ul className="space-y-1">
             {collections.map((col) => (
               <li key={col.slug}>
                 <Link
                   href={`/photography/collections/${col.slug}`}
-                  className="text-sm text-stone-400 hover:text-forest-900 transition-colors"
+                  className="text-sm text-stone-600 hover:text-stone-800 transition-colors"
                 >
                   {col.title}
                 </Link>

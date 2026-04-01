@@ -18,7 +18,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
           <p id="lightbox-desc" className="sr-only">{photo.description ?? photo.title}</p>
 
           <Dialog.Close
-            className="absolute top-5 right-6 text-stone-400 hover:text-white transition-colors text-2xl leading-none"
+            className="absolute top-5 right-6 text-stone-900 hover:text-white transition-colors text-2xl leading-none"
             aria-label="Close"
           >
             ×
@@ -35,7 +35,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
 
           <div className="mt-7 w-full max-w-xl text-center">
             <p className="font-serif text-lg font-semibold text-white">{photo.title}</p>
-            <p className="mt-1.5 text-sm text-stone-400">{photo.location} · {photo.displayDate}</p>
+            <p className="mt-1.5 text-sm text-stone-900">{photo.location} · {photo.displayDate}</p>
             {photo.camera && <p className="mt-1 text-xs text-stone-900">{photo.camera}</p>}
             {photo.description && (
               <p className="mt-3 text-sm leading-relaxed text-stone-900">{photo.description}</p>
@@ -65,11 +65,11 @@ export default function CollectionView({
     <>
       <div className="bg-stone-50 min-h-screen">
         {/* Header */}
-        <section className="pt-28 pb-10 px-6 lg:px-20 border-b border-stone-200">
+        <section className="pt-28 pb-10 px-6 lg:px-20 border-b border-stone-600">
           <div className="mx-auto max-w-6xl">
             <Link
               href="/photography/collections"
-              className="mb-8 inline-block text-xs font-medium uppercase tracking-[0.2em] text-stone-400 transition-colors hover:text-earth-800"
+              className="mb-8 inline-block text-xs font-medium uppercase tracking-[0.2em] text-stone-700 transition-colors hover:text-earth-800"
             >
               ← Collections
             </Link>
