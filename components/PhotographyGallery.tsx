@@ -57,24 +57,19 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
 function Sidebar({
-  collections,
   tagCounts,
   activeTag,
   onTagChange,
 }: {
-  collections: Collection[];
   tagCounts: { tag: string; count: number }[];
   activeTag: string | null;
   onTagChange: (tag: string | null) => void;
 }) {
   return (
     <aside className="w-48 shrink-0 flex flex-col pt-28 pb-10 px-6 sticky top-0 h-screen overflow-y-auto">
-      {/* Name */}
-      <div className="mb-10">
-        <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-stone-600 mb-1">Photography</p>
-      </div>
-
-      {/* All photos */}
+      <div className="mt-0">
+              {/* Tags */}
+            {/* All photos */}
       <button
         onClick={() => onTagChange(null)}
         className={`text-left text-sm mb-1 transition-colors ${
@@ -85,51 +80,24 @@ function Sidebar({
       >
         All photos
       </button>
-
-      {/* Collections */}
-      {collections.length > 0 && (
-        <div className="mt-6 mb-6"> 
-        <Link
-          href="/photography/collections"
-          className="text-[14px] font-extrabold uppercase tracking-[0.25em] text-stone-900 hover:text-stone-500 transition-colors mb-2"
-        >
-          Collections 
-        </Link>
-          <ul className="space-y-1">
-            {collections.map((col) => (
-              <li key={col.slug}>
-                <Link
-                  href={`/photography/collections/${col.slug}`}
-                  className="text-sm text-stone-900 hover:text-stone-500 transition-colors"
-                >
-                  {col.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Tags */}
-      <div className="mt-auto">
-        <p className="text-[14px] font-extrabold uppercase tracking-[0.25em] text-stone-500 mb-2">Filter</p>
-        <ul className="space-y-1">
-          {tagCounts.map(({ tag }) => (
-            <li key={tag}>
-              <button
-                onClick={() => onTagChange(activeTag === tag ? null : tag)}
-                className={`text-sm transition-colors ${
-                  activeTag === tag
-                    ? "text-[#1068b6] font-medium"
-                    : "text-stone-900 hover:text-stone-500"
-                }`}
-              >
-                {tag}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <p className="text-[14px] font-extrabold uppercase tracking-[0.25em] text-stone-500 mb-2">Filter</p>
+      <ul className="space-y-1">
+        {tagCounts.map(({ tag }) => (
+          <li key={tag}>
+            <button
+              onClick={() => onTagChange(activeTag === tag ? null : tag)}
+              className={`text-sm transition-colors ${
+                activeTag === tag
+                  ? "text-[#1068b6] font-medium"
+                  : "text-stone-900 hover:text-stone-500"
+              }`}
+            >
+              {tag}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
     </aside>
   );
 }
@@ -229,7 +197,7 @@ function CollectionsCarousel({
   };
 
   return (
-    <section className="bg-stone-100 py-8">
+    <section className="bg-stone-50 py-8">
       <div className="max-w-5xl mx-auto px-6">
         <div className="flex items-center justify-between mb-5">
           <p className="text-xs font-medium uppercase tracking-[0.25em] text-stone-800">Collections</p>
@@ -333,11 +301,10 @@ export default function PhotographyGallery({
         <div className="max-w-4xl">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-stone-400">Photography</p>
           <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl lg:text-7xl">
-            Photographs.
+            Portfolio.
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-stone-300 md:text-lg">
-            Landscape and wildlife photography from the Netherlands and beyond.
-            Moments from the field — birds, light, water, and the quiet edges of the natural world.
+            A cornucopia of photographs, dominated by landscapes and wildlife.
           </p>
         </div>
       </section>
@@ -390,7 +357,6 @@ export default function PhotographyGallery({
         {/* Sidebar (hidden on mobile) */}
         <div className="hidden md:block border-r border-stone-200">
           <Sidebar
-            collections={collections}
             tagCounts={tagCounts}
             activeTag={activeTag}
             onTagChange={setActiveTag}
