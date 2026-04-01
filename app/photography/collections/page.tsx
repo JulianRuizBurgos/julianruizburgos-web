@@ -8,19 +8,25 @@ export default async function CollectionsPage() {
   return (
     <div className="bg-stone-50 min-h-screen">
       {/* Header */}
-      <section className="pt-28 pb-10 px-8 lg:px-16 border-b border-stone-200">
-        <Link
-          href="/photography"
-          className="mb-8 inline-block text-xs font-medium uppercase tracking-[0.2em] text-stone-400 transition-colors hover:text-stone-600"
-        >
-          ← Photography
-        </Link>
-        <h1 className="font-serif text-5xl font-semibold leading-tight text-forest-900 md:text-6xl">
-          Collections.
-        </h1>
-        <p className="mt-4 max-w-lg text-base leading-relaxed text-stone-600">
-          Curated groups of photographs — by place, project, or theme.
-        </p>
+      <section
+        className="relative pt-28 pb-16 px-8 lg:px-16 border-b border-stone-200 overflow-hidden"
+        style={{ backgroundImage: `url(/photography/images/${encodeURIComponent("gotas en cristal.jpg")})`, backgroundSize: "cover", backgroundPosition: "center" }}
+      >
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10">
+          <Link
+            href="/photography"
+            className="mb-8 inline-block text-xs font-medium uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-white"
+          >
+            ← Photography
+          </Link>
+          <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl">
+            Collections.
+          </h1>
+          <p className="mt-4 max-w-lg text-base leading-relaxed text-white/80">
+            Curated groups of photographs — by place, project, or theme.
+          </p>
+        </div>
       </section>
 
       {/* Grid */}
