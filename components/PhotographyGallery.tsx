@@ -5,7 +5,6 @@ import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import type { Photo, Collection } from "@/lib/photography";
 
-// ── Lightbox ──────────────────────────────────────────────────────────────────
 function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
   return (
     <Dialog.Root open onOpenChange={(open) => { if (!open) onClose(); }}>
@@ -19,7 +18,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
           <p id="lightbox-desc" className="sr-only">{photo.description ?? photo.title}</p>
 
           <Dialog.Close
-            className="absolute top-5 right-6 text-stone-500 hover:text-white transition-colors text-2xl leading-none"
+            className="absolute top-5 right-6 text-white/60 hover:text-white transition-colors text-8xl leading-none"
             aria-label="Close"
           >
             ×
@@ -34,16 +33,16 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
             />
           </div>
 
-          <div className="mt-6 w-full max-w-lg text-center">
-            <p className="font-serif text-base font-semibold text-white">{photo.title}</p>
-            <p className="mt-1 text-xs text-stone-500">{photo.location} · {photo.displayDate}</p>
-            {photo.camera && <p className="mt-0.5 text-xs text-stone-600">{photo.camera}</p>}
+          <div className="mt-7 w-full max-w-xl text-center">
+            <p className="font-serif text-lg font-semibold text-white">{photo.title}</p>
+            <p className="mt-1.5 text-sm text-white">{photo.location} · {photo.displayDate}</p>
+            {photo.camera && <p className="mt-1 text-xs text-white">{photo.camera}</p>}
             {photo.description && (
-              <p className="mt-3 text-sm leading-relaxed text-stone-300">{photo.description}</p>
+              <p className="mt-3 text-sm leading-relaxed text-white">{photo.description}</p>
             )}
             {photo.printAvailable && (
-              <p className="mt-5 text-xs font-medium uppercase tracking-[0.2em] text-terracotta-400">
-                Fine art print available — from £{((photo.priceInEuro ?? 0) / 100).toFixed(0)}
+              <p className="mt-5 text-xs font-medium uppercase tracking-[0.2em] text-terracotta-600">
+                Fine art print available — from {((photo.priceInEuro ?? 0) / 100).toFixed(0)}€.
               </p>
             )}
           </div>

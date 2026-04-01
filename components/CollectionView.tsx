@@ -9,7 +9,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
   return (
     <Dialog.Root open onOpenChange={(open) => { if (!open) onClose(); }}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-stone-200/96 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-50 backdrop-blur-sm" style={{ backgroundColor: "rgba(52, 67, 76, 0.44)" }} />
         <Dialog.Content
           className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 md:p-12 outline-none"
           aria-describedby="lightbox-desc"
