@@ -41,8 +41,8 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
               <p className="mt-3 text-sm leading-relaxed text-white">{photo.description}</p>
             )}
             {photo.printAvailable && (
-              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.15em] text-terracotta-600 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
-                Fine art print available.
+              <p className="mt-1.5 text-m bg-terracotta-600 font-semibold uppercase tracking-[0.15em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+                Print available
               </p>
             )}
           </div>
@@ -109,7 +109,7 @@ export default function CollectionView({
                     <p className="font-serif text-m font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
                     <p className="mt-0.5 text-sm text-white drop-shadow">{photo.location}</p>
                     {photo.printAvailable && (
-                      <p className="mt-1.5 text-m font-semibold uppercase tracking-[0.15em] text-terracotta-600 drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+                      <p className="mt-1.5 text-m bg-terracotta-600 font-semibold uppercase tracking-[0.15em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
                         Print available
                       </p>
                     )}
