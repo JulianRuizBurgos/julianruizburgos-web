@@ -39,7 +39,7 @@ export default async function CollectionsPage() {
               <Link
                 key={col.slug}
                 href={`/photography/collections/${col.slug}`}
-                className="group relative aspect-4/3 overflow-hidden bg-stone-200"
+                className="group relative aspect-4/3 overflow-hidden rounded-xl bg-stone-200"
               >
                 {cover && (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -53,9 +53,9 @@ export default async function CollectionsPage() {
                 <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/50" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <p className="font-serif text-2xl font-semibold text-white drop-shadow">{col.title}</p>
-                  <p className="mt-1 text-sm text-stone-200 leading-relaxed drop-shadow">{col.description}</p>
-                  <p className="mt-2 text-xs text-stone-300 drop-shadow">{count} {count === 1 ? "photograph" : "photographs"}</p>
-                  <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-[#1068b6] opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                  <p className="mt-1 text-sm text-white leading-relaxed drop-shadow">{col.description}</p>
+                  <p className="mt-2 text-xs text-white drop-shadow">{count} {count === 1 ? "photograph" : "photographs"}</p>
+                  <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-white opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     Explore →
                   </p>
                 </div>
