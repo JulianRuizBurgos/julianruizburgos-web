@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
 import type { Photo, Collection } from "@/lib/photography";
-import CollectionsPage from "@/app/photography/collections/page";
 
 // ── Lightbox ──────────────────────────────────────────────────────────────────
 function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
@@ -88,16 +87,12 @@ function Sidebar({
       {/* Collections */}
       {collections.length > 0 && (
         <div className="mt-6 mb-6"> 
-        <button
-          onClick={() => CollectionsPage()}
-          className={`text-left text-sm mb-1 transition-colors ${
-            activeTag === null
-              ? "text-[#1068b6] font-semibold"
-              : "text-stone-400 hover:text-stone-700"
-          }`}
+        <Link
+          href="/photography/collections"
+          className="text-sm text-stone-400 hover:text-stone-700 transition-colors"
         >
           Collections
-        </button>
+        </Link>
           <ul className="space-y-1">
             {collections.map((col) => (
               <li key={col.slug}>
