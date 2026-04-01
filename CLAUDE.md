@@ -228,8 +228,8 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 ### In progress / next
 1. **Nextcloud photo integration** — `lib/photography.ts` and the image proxy route are already wired up for Nextcloud WebDAV (env vars: `NEXTCLOUD_WEBDAV_URL`, `NEXTCLOUD_USER`, `NEXTCLOUD_APP_PASSWORD`, `NEXTCLOUD_PHOTOS_PATH`). Currently using local dev files in `public/photography/dev/`. **Blocked on**: photography editing workflow decision (see global CLAUDE.md TODO).
 2. **CollectionView styling** — `components/CollectionView.tsx` hasn't been redesigned to match the new blue stone aesthetic yet.
-3. **Print shop + Stripe** — `printAvailable: true` and `PrintSize` type are in place. Need: product catalogue UI, Stripe checkout, order confirmation email. No user accounts needed to launch.
-4. **Admin interface** — manage content and orders without touching the repo.
+3. **Print shop** — see full architecture plan below. `printAvailable: true` and `PrintSize` type are in place. Pending decisions: paper types, price matrix, shipping scope, database choice.
+4. **Admin interface** — order management UI (list orders, mark dispatched, add tracking). Part of print shop phase 5.
 
 ### Planned
 4. **Automated translation** — serve the site in multiple languages. Decision needed: static (build-time, e.g. next-intl with translated markdown files) vs. dynamic (runtime machine translation API). Content-heavy so quality matters; ecology and IT writing should not sound like raw MT output.
@@ -253,9 +253,94 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 
 ### Parking lot
 - About page
-- Ecology section
+- Ecology section (see content plan below)
 - Configure health check in Coolify
 - Video hero background (clean, watermark-free source needed)
+
+---
+
+## Print shop — full architecture plan
+
+### Payment
+- **Stripe** — payment processor. Natively supports **iDEAL** (Netherlands) alongside cards and all EU payment methods. Enable iDEAL in Stripe dashboard — no separate integration.
+- Keys needed: `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`
+
+### Pending decisions (required before starting)
+- [ ] Paper types (e.g. Glossy, Matte, Fine Art/Cotton, Metallic — depends on your printer)
+- [ ] Price matrix: price per size × paper type combination
+- [ ] Shipping scope: Netherlands only to start, or Europe/worldwide?
+- [ ] Database: Postgres on existing Hetzner VPS (free, full control) vs managed (PlanetScale/Supabase)
+
+### Architecture overview
+
+```
+Cart (client state)
+  └── React context + localStorage for persistence across pages
+
+Product catalogue
+  └── photos.json × paper/size price matrix in lib/shop.ts
+
+Checkout flow
+  ├── /cart                        — cart page, line items, subtotal
+  ├── /checkout                    — shipping address form
+  └── Stripe Payment Element       — card + iDEAL + all enabled EU methods
+
+Server
+  ├── app/api/checkout/route.ts          — creates Stripe PaymentIntent
+  ├── app/api/webhooks/stripe/route.ts   — payment confirmed → save order, send emails
+  └── Database: orders + order_items tables
+
+Post-payment
+  ├── /checkout/success            — confirmation page with order number
+  ├── Email to customer            — order confirmation with print details (via Resend)
+  └── Email to Julian              — new order notification with everything needed to print/ship
+
+Order management
+  └── /admin/orders                — password-protected: list orders, mark dispatched, add tracking
+```
+
+### Implementation phases
+
+**Phase 1 — Product catalogue** (no backend needed)
+- Define paper types and price matrix in `lib/shop.ts`
+- Paper type + size selector on photo lightbox/detail
+- "Add to cart" → React context + `localStorage`
+- Cart icon in nav with item count badge
+
+**Phase 2 — Cart & checkout**
+- `/cart` — line items, quantities, remove, subtotal
+- `/checkout` — name, shipping address, country
+- Stripe Payment Element (auto-renders iDEAL + cards based on customer country)
+- `POST /api/checkout` creates PaymentIntent server-side
+
+**Phase 3 — Orders database**
+- `orders`: id, stripe_payment_id, customer name/email/address, status, created_at
+- `order_items`: order_id, photo filename, size, paper type, price, quantity
+- Webhook: `payment_intent.succeeded` → insert order → send emails
+
+**Phase 4 — Emails** (via Resend — no SMTP needed)
+- Customer: order confirmation with photo thumbnail, sizes, paper, estimated dispatch
+- Julian: new order notification with full print/ship details
+
+**Phase 5 — Admin**
+- `/admin/orders` — simple password-protected page
+- List orders, mark as dispatched, add tracking number
+- Customer receives dispatch email with tracking
+
+### Fulfilment
+Julian ships himself using his own photo printer. No print-on-demand API needed.
+
+---
+
+## Ecology section — content plan
+
+The ecology section establishes Julian's professional identity as an ecologist. It is **not** a blog — it is a professional profile, parallel to the IT consulting section. Planned content:
+
+- **Consulting** — services offered (ecological surveys, impact assessments, etc.), target clients
+- **Research** — summary of research background, topics, methods
+- **Publications** — list of academic/professional publications, with links where available
+
+Accent colour: **sage** (green tones, defined in globals.css). Editorial style matching the IT section (top-rule cards, forest-900 headings).
 
 ## Dev workflow
 ```bash
