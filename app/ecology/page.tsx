@@ -2,8 +2,11 @@ export default function Ecology() {
   return (
     <>
       {/* Dark header */}
-      <section className="bg-olive-700 pt-20 pb-20 px-6 lg:px-20">
-        <div className="max-w-4xl">
+      <section className="relative pt-20 pb-20 px-8 lg:px-16 border-b border-olive-200 overflow-hidden"
+      style={{ backgroundImage: `url(/images/ecology-page-header-background.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
+      >
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative max-w-4xl">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-olive-200">Ecology</p>
           <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl lg:text-7xl">
             Naturalist.

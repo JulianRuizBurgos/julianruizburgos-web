@@ -224,8 +224,11 @@ export default function BlogReader({
   return (
     <>
       {/* ── Intro ─────────────────────────────────────────────────────────── */}
-      <section className={`bg-earth-900 pt-20 pb-20 px-6 lg:px-20 ${activeSelected ? "hidden md:block" : "block"}`}>
-        <div className="max-w-4xl">
+      <section className={`relative pt-20 pb-20 px-6 lg:px-20 overflow-hidden ${activeSelected ? "hidden md:block" : "block"}`}
+        style={{ backgroundImage: "url(/images/blog-page-header-background.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+      >
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative max-w-4xl">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-earth-300">Writing</p>
           <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl lg:text-7xl">
             Notebook.
@@ -254,12 +257,12 @@ export default function BlogReader({
                 key={topic}
                 onClick={() => { setTopicFilter(topicFilter === topic ? null : topic); setTagFilter(null); }}
                 className={`flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.2em] transition-colors ${
-                  topicFilter === topic ? "text-terracotta-300" : "text-earth-600 hover:text-earth-300"
+                  topicFilter === topic ? "text-terracotta-300" : "text-earth-300 hover:text-earth-300"
                 }`}
               >
                 <span className={`h-1.5 w-1.5 rounded-full ${topicMeta[topic].dot} opacity-70`} />
                 {topicMeta[topic].label}
-                <span className="text-earth-400">({count})</span>
+                <span className="text-earth-200">({count})</span>
               </button>
             ))}
           </div>
@@ -274,7 +277,7 @@ export default function BlogReader({
                   className={`rounded-full border px-2.5 py-0.5 text-xs transition-colors ${
                     tagFilter === tag
                       ? "border-terracotta-400 bg-terracotta-400/10 text-terracotta-300"
-                      : "border-earth-700 text-earth-600 hover:border-earth-500 hover:text-earth-400"
+                      : "border-earth-400 text-earth-200 hover:border-earth-500 hover:text-earth-400"
                   }`}
                 >
                   #{tag}
