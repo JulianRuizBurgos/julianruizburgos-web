@@ -160,11 +160,11 @@ function PostCard({
         {post.title}
       </h3>
       <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-earth-600">{post.excerpt}</p>
-      <p className="mt-3 text-xs text-earth-400">{post.displayDate}</p>
+      <p className="mt-3 text-xs text-terracotta-800">{post.displayDate}</p>
       {post.tags.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1">
           {post.tags.slice(0, 3).map((tag) => (
-            <span key={tag} className="rounded-full bg-earth-100 px-2 py-0.5 text-xs text-earth-400">
+            <span key={tag} className="rounded-full font-semibold bg-earth-100 px-2 py-0.5 text-xs text-earth-500">
               #{tag}
             </span>
           ))}
@@ -330,10 +330,10 @@ export default function BlogReader({
             <ArticleView post={activeSelected} contentKey={contentKey} onBack={clearSelection} scrollContainer={mainRef} />
           ) : (
             <div className="flex h-full flex-col items-center justify-center px-10 text-center">
-              <p className="font-serif text-3xl font-semibold text-earth-200 leading-snug max-w-md">
+              <p className="font-serif text-3xl font-semibold text-earth-400 leading-snug max-w-md">
                 Select an entry to start reading.
               </p>
-              <p className="mt-6 text-sm text-earth-400 max-w-xs leading-relaxed">
+              <p className="mt-6 text-sm text-earth-600 max-w-xs leading-relaxed">
                 {visible.length} {visible.length === 1 ? "entry" : "entries"}{" "}
                 {topicFilter
                   ? `in ${topicMeta[topicFilter].label}`
@@ -347,7 +347,7 @@ export default function BlogReader({
 
         {/* Right sidebar — topics, tags, reading info */}
         <aside className="w-60 flex-shrink-0 overflow-y-auto border-l border-earth-200 bg-earth-50 px-6 py-8">
-          <p className="mb-5 text-xs font-medium uppercase tracking-[0.2em] text-earth-400">Topics</p>
+          <p className="mb-5 text-xs font-medium font-semibold uppercase tracking-[0.2em] text-earth-600">Topics</p>
           <div className="space-y-0">
             <button
               onClick={clearFilters}
@@ -356,7 +356,7 @@ export default function BlogReader({
               }`}
             >
               <span>All</span>
-              <span className="text-xs text-earth-400">{posts.length}</span>
+              <span className="text-xs text-terracotta-600">{posts.length}</span>
             </button>
             {topicCounts.map(({ topic, count }) => (
               <button
@@ -370,7 +370,7 @@ export default function BlogReader({
                   <span className={`h-1.5 w-1.5 rounded-full ${topicMeta[topic].dot}`} />
                   {topicMeta[topic].label}
                 </span>
-                <span className="text-xs text-earth-400">{count}</span>
+                <span className="text-xs text-terracotta-600">{count}</span>
               </button>
             ))}
           </div>
@@ -378,13 +378,13 @@ export default function BlogReader({
           {/* Tag list */}
           {allTags.length > 0 && (
             <div className="mt-8 border-t border-earth-200 pt-6">
-              <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-earth-400">Tags</p>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-earth-600">Tags</p>
               <div className="flex flex-wrap gap-1.5">
                 {allTags.map((tag) => (
                   <button
                     key={tag}
                     onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
-                    className={`rounded-full border px-2 py-0.5 text-xs transition-colors ${
+                    className={`rounded-full border px-2 py-0.5 text-xs transition-colors font-semibold ${
                       tagFilter === tag
                         ? "border-terracotta-400 bg-terracotta-400/10 text-terracotta-600"
                         : "border-earth-200 text-earth-400 hover:border-earth-400 hover:text-earth-600"
@@ -405,13 +405,6 @@ export default function BlogReader({
               <p className="mt-1 text-xs text-earth-600">{activeSelected.readTime}</p>
             </div>
           )}
-
-          <div className="mt-8 border-t border-earth-200 pt-8">
-            <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-earth-400">About</p>
-            <p className="text-xs leading-relaxed text-earth-600">
-              Written by Julian Ruiz Burgos — ecologist, IT consultant, and amateur photographer the Netherlands.
-            </p>
-          </div>
         </aside>
       </div>
     </>
