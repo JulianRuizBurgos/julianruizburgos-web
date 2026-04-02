@@ -224,11 +224,12 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - [x] Navigation: floating HOME + MENU, slide-in sidebar — section-aware background colour (stone/navy/olive/earth by pathname) at 60% opacity with backdrop blur
 - [x] IT Consulting page: dark navy-700 header + services + case studies (editorial style)
 - [x] IT case study detail page (`/it/[slug]`)
-- [x] Ecology page: dark olive-700 header (content placeholder — coming soon)
-- [x] Blog: three-panel reader (desktop) + full-screen article (mobile). Reads from `content/blog/` via filesystem. Topic + tag filtering. Folder-per-post with co-located assets. PDF embed support. Footnotes work in all browsers.
+- [x] Ecology page: header with background photo + dark overlay (content placeholder — coming soon)
+- [x] Blog: three-panel reader (desktop) + full-screen article (mobile). Header has background photo + dark overlay. Reads from `content/blog/` via filesystem. Topic + tag filtering. Folder-per-post with co-located assets. PDF embed support. Footnotes work in all browsers.
 - [x] "Now Listening" widget: fixed pill (bottom-centre), animated bars. Update via `lib/listening.ts`.
-- [x] Hetzner VPS + Coolify + auto-deploy
-- [x] Photography section: dark stone-900 header + infinite collections carousel (desktop) + mobile "See Collections" button + free-text search + sidebar nav (tag filter only) + masonry grid + lightbox. Tag + search filtering. `lib/photography.ts` data layer with Nextcloud WebDAV + local dev fallback. Image proxy route.
+- [x] Under construction banner: floating pill just below Now Listening widget (bottom-centre).
+- [x] Hetzner VPS + Coolify + auto-deploy. Persistent volume for Next.js image cache at `/app/.next/cache/images`. `minimumCacheTTL: 31536000` set in `next.config.ts`.
+- [x] Photography section: header with background photo + dark overlay + infinite collections carousel (desktop) + mobile "See Collections" button + free-text search + sidebar nav (tag filter only) + masonry grid + lightbox. Tag + search filtering. `lib/photography.ts` data layer with Nextcloud WebDAV + local dev fallback. Image proxy route.
 - [x] Lightbox close button: bottom-centre on mobile (thumb-reachable), top-right on desktop (`md:` breakpoint)
 - [x] Photography collections: `/photography/collections` index + `/photography/collections/[slug]` detail pages. Cover cards with vignette effect.
 - [x] Photo metadata: 13 photos with EXIF-sourced dates and camera/lens info. `PrintSize` type covers A0–A4, square, and traditional lab sizes. Price in Euro.

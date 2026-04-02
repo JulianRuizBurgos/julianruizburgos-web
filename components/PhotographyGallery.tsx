@@ -297,8 +297,11 @@ export default function PhotographyGallery({
   return (
     <>
       {/* ── Dark header ──────────────────────────────────────────────────── */}
-      <section className="bg-stone-900 pt-20 pb-20 px-6 lg:px-20">
-        <div className="max-w-4xl">
+      <section className="relative pt-20 pb-20 px-6 lg:px-20 overflow-hidden"
+        style={{ backgroundImage: "url(/images/photography-page-header-background.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+      >
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative max-w-4xl">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-stone-400">Photography</p>
           <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl lg:text-7xl">
             Portfolio.
