@@ -6,9 +6,9 @@ import type { BlogPost, Topic } from "@/lib/blog";
 
 // ── topic accent colours ──────────────────────────────────────────────────────
 const topicMeta: Record<Topic, { pill: string; dot: string; label: string }> = {
-  ecology:     { pill: "bg-sage-100 text-sage-700",             dot: "bg-sage-500",        label: "Ecology"     },
+  ecology:     { pill: "bg-olive-100 text-olive-700",             dot: "bg-olive-500",        label: "Ecology"     },
   photography: { pill: "bg-amber-100 text-amber-800",           dot: "bg-amber-500",       label: "Photography" },
-  technology:  { pill: "bg-plum-100 text-plum-700",             dot: "bg-plum-500",        label: "Technology"  },
+  technology:  { pill: "bg-navy-100 text-navy-700",             dot: "bg-navy-500",        label: "Technology"  },
   travel:      { pill: "bg-earth-200 text-earth-700",           dot: "bg-earth-500",       label: "Travel"      },
   personal:    { pill: "bg-terracotta-100 text-terracotta-700", dot: "bg-terracotta-400",  label: "Personal"    },
 };
@@ -94,7 +94,7 @@ function ArticleView({
         <span className="text-xs text-earth-400">{post.readTime}</span>
       </div>
 
-      <h1 className="mt-5 font-serif text-3xl font-semibold leading-tight text-forest-900 md:text-4xl lg:text-5xl">
+      <h1 className="mt-5 font-serif text-3xl font-semibold leading-tight text-earth-900 md:text-4xl lg:text-5xl">
         {post.title}
       </h1>
 
@@ -155,7 +155,7 @@ function PostCard({
         <span className="text-xs text-earth-400">{post.readTime}</span>
       </div>
       <h3 className={`mt-3 font-serif text-base font-semibold leading-snug transition-colors ${
-        active ? "text-forest-900" : "text-earth-800 group-hover:text-forest-900"
+        active ? "text-earth-900" : "text-earth-800 group-hover:text-earth-900"
       }`}>
         {post.title}
       </h3>
@@ -224,7 +224,7 @@ export default function BlogReader({
   return (
     <>
       {/* ── Intro ─────────────────────────────────────────────────────────── */}
-      <section className={`bg-earth-900 pt-28 pb-20 px-6 lg:px-20 ${activeSelected ? "hidden md:block" : "block"}`}>
+      <section className={`bg-earth-900 pt-20 pb-20 px-6 lg:px-20 ${activeSelected ? "hidden md:block" : "block"}`}>
         <div className="max-w-4xl">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-earth-300">Writing</p>
           <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl lg:text-7xl">
@@ -349,7 +349,7 @@ export default function BlogReader({
             <button
               onClick={clearFilters}
               className={`flex w-full items-center justify-between border-t border-earth-100 py-3 text-left text-sm transition-colors first:border-0 ${
-                topicFilter === null && tagFilter === null ? "text-forest-900 font-medium" : "text-earth-600 hover:text-earth-800"
+                topicFilter === null && tagFilter === null ? "text-earth-900 font-medium" : "text-earth-600 hover:text-earth-800"
               }`}
             >
               <span>All</span>
@@ -397,7 +397,7 @@ export default function BlogReader({
           {activeSelected && (
             <div className="mt-8 border-t border-earth-200 pt-8">
               <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-earth-400">Reading</p>
-              <p className="font-serif text-sm font-semibold leading-snug text-forest-900">{activeSelected.title}</p>
+              <p className="font-serif text-sm font-semibold leading-snug text-earth-900">{activeSelected.title}</p>
               <p className="mt-3 text-xs text-earth-600">{activeSelected.displayDate}</p>
               <p className="mt-1 text-xs text-earth-600">{activeSelected.readTime}</p>
             </div>

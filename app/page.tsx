@@ -18,14 +18,14 @@ const sections = [
     label: "Ecology",
     verticalLabel: "Ecology",
     image: "/images/main-page-ecology-section-card.jpg",
-    accentBg: "bg-sage-500",
+    accentBg: "bg-olive-500",
   },
   {
     href: "/it",
     label: "IT Consulting",
     verticalLabel: "IT",
     image: "/images/main-page-it-section-card.png",
-    accentBg: "bg-plum-500",
+    accentBg: "bg-navy-500",
   },
   {
     href: "/blog",

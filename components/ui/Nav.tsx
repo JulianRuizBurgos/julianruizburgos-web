@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { X } from "lucide-react";
 
 const sections = [
@@ -27,8 +28,17 @@ const sections = [
   },
 ];
 
+function sidebarBg(pathname: string): string {
+  if (pathname.startsWith("/photography")) return "bg-stone-900/60 backdrop-blur-md";
+  if (pathname.startsWith("/it"))          return "bg-navy-700/60 backdrop-blur-md";
+  if (pathname.startsWith("/ecology"))     return "bg-olive-700/60 backdrop-blur-md";
+  if (pathname.startsWith("/blog"))        return "bg-earth-800/60 backdrop-blur-md";
+  return "bg-earth-900/60 backdrop-blur-md";
+}
+
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <>
@@ -59,7 +69,7 @@ export default function Nav() {
 
       {/* Dark slide-in sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-80 bg-earth-900 text-white transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 z-50 w-80 text-white transition-transform duration-300 ease-in-out ${sidebarBg(pathname)} ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >

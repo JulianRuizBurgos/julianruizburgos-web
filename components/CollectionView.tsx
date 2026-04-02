@@ -19,7 +19,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
           <p id="lightbox-desc" className="sr-only">{photo.description ?? photo.title}</p>
 
           <Dialog.Close
-            className="absolute top-5 right-6 text-white/60 hover:text-white transition-colors text-8xl leading-none"
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 md:bottom-auto md:top-5 md:left-auto md:right-6 md:translate-x-0 text-white/60 hover:text-white transition-colors text-8xl leading-none"
             aria-label="Close"
           >
             ×
@@ -68,7 +68,7 @@ export default function CollectionView({
     <>
       <div className="bg-stone-50 min-h-screen">
         {/* Header */}
-        <section className="pt-28 pb-10 px-6 lg:px-20 border-b border-stone-600">
+        <section className="pt-20 pb-20 px-6 lg:px-20 border-b border-stone-600">
           <div className="mx-auto max-w-8xl">
             <Link
               href="/photography/collections"
@@ -77,7 +77,7 @@ export default function CollectionView({
               ← Collections
             </Link>
             <p className="mb-3 text-xs font-medium uppercase tracking-[0.25em] text-stone-600">Collection</p>
-            <h1 className="font-serif text-5xl font-semibold leading-tight text-forest-900 md:text-6xl">
+            <h1 className="font-serif text-5xl font-semibold leading-tight text-earth-900 md:text-6xl">
               {collection.title}.
             </h1>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-stone-700">

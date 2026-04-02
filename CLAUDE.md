@@ -27,12 +27,13 @@ Secondary sections: Ecology (professional identity — consulting, research, pub
 ### Colour palette (defined in `app/globals.css` via `@theme`)
 - **Page background**: `earth-50` (#faf8f5) — warm off-white
 - **Body text**: `earth-900` (#241c16) — near-black
-- **Headings on light bg**: `forest-900` (#1b2d1f) — dark woodland green
+- **Headings on light bg**: `earth-900` — merged with body text token (forest-900 removed)
 - **Muted text on light bg**: `earth-600` — minimum for secondary/caption text
 - **Muted text on dark bg**: `earth-300` or `earth-400`
 - **Accent**: `terracotta-*` — rust/terracotta, used sparingly for CTAs and hover states
-- **Section colours**: sage (ecology), plum (IT)
+- **Section colours**: `olive-*` (ecology), `navy-*` (IT — dark blue derived from the photography blue family)
 - **Photography section**: blue-tinted `stone-*` palette built around `#1068b6`. Active states use `#1068b6` directly. stone-50 through stone-900 all defined.
+- **Do not use plum, sage, or forest-* tokens** — removed from the palette as part of the 3-colour consolidation (2026-04-02)
 - **Do not use `earth-500` for text** — fails contrast on both light and dark backgrounds
 
 ### Layout principles
@@ -67,10 +68,10 @@ Homepage
 │   ├── Galleries             (landscape, wildlife, series)
 │   ├── Browse prints
 │   └── Checkout              (Stripe)
-├── IT freelancing            (plum)
+├── IT freelancing            (navy)
 │   ├── Services + case studies
 │   └── Contact
-├── Ecology                   (sage — full ecology identity)
+├── Ecology                   (olive — full ecology identity)
 │   ├── Consulting
 │   ├── Research
 │   └── Publications
@@ -215,18 +216,20 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - SSL via Let's Encrypt
 - GreenNet managing DNS and email (@julianruizburgos.net)
 
-## Current status (2026-04-01)
+## Current status (2026-04-03)
 - [x] Next.js 16.1.6 + TypeScript + Tailwind v4 + App Router
 - [x] shadcn/ui components installed
-- [x] Design system: forest-900 headings, earth-900 body text, terracotta accent
-- [x] Homepage: full-screen hero + Ken Burns animation + section cards
-- [x] Navigation: floating HOME + MENU, dark slide-in sidebar
-- [x] IT Consulting page: services + case studies (editorial style)
+- [x] Design system: 3-colour palette consolidated (terracotta / stone+navy / olive). plum and sage removed. forest-900 merged into earth-900.
+- [x] Homepage: full-screen hero + Ken Burns animation + section cards (section accent lines use correct palette colours)
+- [x] Navigation: floating HOME + MENU, slide-in sidebar — section-aware background colour (stone/navy/olive/earth by pathname) at 60% opacity with backdrop blur
+- [x] IT Consulting page: dark navy-700 header + services + case studies (editorial style)
 - [x] IT case study detail page (`/it/[slug]`)
+- [x] Ecology page: dark olive-700 header (content placeholder — coming soon)
 - [x] Blog: three-panel reader (desktop) + full-screen article (mobile). Reads from `content/blog/` via filesystem. Topic + tag filtering. Folder-per-post with co-located assets. PDF embed support. Footnotes work in all browsers.
 - [x] "Now Listening" widget: fixed pill (bottom-centre), animated bars. Update via `lib/listening.ts`.
 - [x] Hetzner VPS + Coolify + auto-deploy
 - [x] Photography section: dark stone-900 header + infinite collections carousel (desktop) + mobile "See Collections" button + free-text search + sidebar nav (tag filter only) + masonry grid + lightbox. Tag + search filtering. `lib/photography.ts` data layer with Nextcloud WebDAV + local dev fallback. Image proxy route.
+- [x] Lightbox close button: bottom-centre on mobile (thumb-reachable), top-right on desktop (`md:` breakpoint)
 - [x] Photography collections: `/photography/collections` index + `/photography/collections/[slug]` detail pages. Cover cards with vignette effect.
 - [x] Photo metadata: 13 photos with EXIF-sourced dates and camera/lens info. `PrintSize` type covers A0–A4, square, and traditional lab sizes. Price in Euro.
 - [x] Image optimisation: Next.js `<Image>` with AVIF/WebP formats, `sizes` prop on gallery/collection grids, server-side cache in `.next/cache/images`. Lightbox capped at 1200px. Copyright overlay on lightbox.
@@ -368,7 +371,7 @@ The ecology section establishes Julian's professional identity as an ecologist. 
 - **Research** — summary of research background, topics, methods
 - **Publications** — list of academic/professional publications, with links where available
 
-Accent colour: **sage** (green tones, defined in globals.css). Editorial style matching the IT section (top-rule cards, forest-900 headings).
+Accent colour: **olive** (yellow-green tones, defined in globals.css). Editorial style matching the IT section (top-rule cards, earth-900 headings).
 
 ## Dev workflow
 ```bash

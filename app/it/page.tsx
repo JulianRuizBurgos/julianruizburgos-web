@@ -13,31 +13,33 @@ export default function ITPage() {
   const projects = getAllProjects();
 
   return (
+    <>
+      {/* Dark header */}
+      <section className="bg-navy-700 pt-20 pb-20 px-6 lg:px-20">
+        <div className="max-w-4xl">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-navy-200">IT Consulting</p>
+          <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl lg:text-7xl">
+            Freelance.
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-navy-200 md:text-lg">
+            Software development and IT consulting — ERP implementation, bespoke web
+            applications, infrastructure, and technical advisory. I work with small organisations
+            and teams that need thoughtful, reliable engineering.
+          </p>
+        </div>
+      </section>
+
     <div className="mx-auto max-w-6xl px-6">
-      {/* Page header */}
-      <div className="pt-28 pb-16 border-b border-earth-200">
-        <p className="mb-3 text-xs font-medium uppercase tracking-widest text-plum-500">
-          Freelance
-        </p>
-        <h1 className="font-serif text-4xl font-semibold text-forest-900 md:text-5xl">
-          IT Consulting
-        </h1>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-earth-600">
-          Freelance software development and IT consulting — ERP implementation, bespoke web
-          applications, infrastructure, and technical advisory. I work with small organisations
-          and teams that need thoughtful, reliable engineering.
-        </p>
-      </div>
 
       <div className="space-y-20 py-16">
         {/* Services */}
         <section>
-          <h2 className="font-serif text-2xl font-semibold text-forest-900">What I do</h2>
+          <h2 className="font-serif text-2xl font-semibold text-earth-900">What I do</h2>
           <p className="mt-1 text-sm text-earth-400">Services available for hire</p>
           <div className="mt-10 grid gap-x-16 gap-y-10 sm:grid-cols-2">
             {services.map((service) => (
-              <div key={service.title} className="border-t-2 border-plum-400 pt-7">
-                <h3 className="font-serif text-xl font-semibold text-plum-700">
+              <div key={service.title} className="border-t-2 border-navy-400 pt-7">
+                <h3 className="font-serif text-xl font-semibold text-navy-700">
                   {service.title}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-earth-600">
@@ -47,7 +49,7 @@ export default function ITPage() {
                   {service.areas.map((area) => (
                     <li
                       key={area}
-                      className="rounded-full bg-plum-100 px-3 py-1 text-xs font-medium text-plum-600"
+                      className="rounded-full bg-navy-100 px-3 py-1 text-xs font-medium text-navy-600"
                     >
                       {area}
                     </li>
@@ -60,7 +62,7 @@ export default function ITPage() {
 
         {/* Projects */}
         <section>
-          <h2 className="font-serif text-2xl font-semibold text-forest-900">Projects</h2>
+          <h2 className="font-serif text-2xl font-semibold text-earth-900">Projects</h2>
           <p className="mt-1 text-sm text-earth-400">Selected client work</p>
           <div className="mt-10 grid gap-x-16 gap-y-10 sm:grid-cols-2">
             {projects.map((project) => (
@@ -72,7 +74,7 @@ export default function ITPage() {
                 <p className="text-xs font-medium uppercase tracking-widest text-earth-400">
                   {project.client}
                 </p>
-                <h3 className="mt-2 font-serif text-xl font-semibold text-forest-900">
+                <h3 className="mt-2 font-serif text-xl font-semibold text-earth-900">
                   {project.tagline}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-earth-600">
@@ -83,7 +85,7 @@ export default function ITPage() {
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full bg-plum-100 px-2.5 py-0.5 text-xs font-medium text-plum-600"
+                        className="rounded-full bg-navy-100 px-2.5 py-0.5 text-xs font-medium text-navy-600"
                       >
                         {tag}
                       </span>
@@ -99,5 +101,6 @@ export default function ITPage() {
         </section>
       </div>
     </div>
+    </>
   );
 }

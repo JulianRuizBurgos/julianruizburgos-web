@@ -9,7 +9,7 @@ export default async function CollectionsPage() {
     <div className="bg-stone-50 min-h-screen">
       {/* Header */}
       <section
-        className="relative pt-28 pb-16 px-8 lg:px-16 border-b border-stone-200 overflow-hidden"
+        className="relative pt-20 pb-20 px-8 lg:px-16 border-b border-stone-200 overflow-hidden"
         style={{ backgroundImage: `url(/photography/images/${encodeURIComponent("gotas en cristal.jpg")})`, backgroundSize: "cover", backgroundPosition: "center" }}
       >
         <div className="absolute inset-0 bg-black/50" />

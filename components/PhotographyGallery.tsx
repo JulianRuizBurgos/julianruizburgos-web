@@ -19,7 +19,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
           <p id="lightbox-desc" className="sr-only">{photo.description ?? photo.title}</p>
 
           <Dialog.Close
-            className="absolute top-5 right-6 text-white/60 hover:text-white transition-colors text-8xl leading-none"
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 md:bottom-auto md:top-5 md:left-auto md:right-6 md:translate-x-0 text-white/60 hover:text-white transition-colors text-8xl leading-none"
             aria-label="Close"
           >
             ×
@@ -229,7 +229,7 @@ function CollectionsCarousel({
             <Link
               key={`${col.slug}-${i}`}
               href={`/photography/collections/${col.slug}`}
-              className="group relative w-60 shrink-0 aspect-[4/3] rounded-2xl overflow-hidden bg-stone-200"
+              className="group relative w-60 shrink-0 aspect-4/3 rounded-2xl overflow-hidden bg-stone-200"
             >
               {cover && (
                 <Image
@@ -297,7 +297,7 @@ export default function PhotographyGallery({
   return (
     <>
       {/* ── Dark header ──────────────────────────────────────────────────── */}
-      <section className="bg-stone-900 pt-28 pb-10 px-6 lg:px-20">
+      <section className="bg-stone-900 pt-20 pb-20 px-6 lg:px-20">
         <div className="max-w-4xl">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-stone-400">Photography</p>
           <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl lg:text-7xl">
