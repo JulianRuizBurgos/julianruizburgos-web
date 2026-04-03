@@ -40,7 +40,7 @@ export default async function CollectionsPage() {
               <Link
                 key={col.slug}
                 href={`/photography/collections/${col.slug}`}
-                className="group relative aspect-4/3 overflow-hidden rounded-xl bg-stone-200"
+                className="group relative aspect-3/4 overflow-hidden rounded-xl bg-stone-200"
               >
                 {/* Cover image */}
                 {cover && (
@@ -62,7 +62,7 @@ export default async function CollectionsPage() {
                     {col.badges.map((badge) => (
                       <span
                         key={badge}
-                        className="rounded bg-earth-900/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-white backdrop-blur-sm"
+                        className="rounded bg-stone-700/80 px-1.5 py-1 text-[12px] font-semibold uppercase tracking-widest text-white backdrop-blur-sm"
                       >
                         {badge}
                       </span>
@@ -76,10 +76,10 @@ export default async function CollectionsPage() {
                     {col.title}
                   </p>
                   <div className="mt-3 border-t border-white/30" />
-                  <p className="mt-3 text-sm leading-relaxed text-white/80 drop-shadow">
+                  <p className="mt-3 text-sm font-semibold leading-relaxed text-white drop-shadow">
                     {col.description}
                   </p>
-                  <p className="mt-1.5 text-xs text-white/50">
+                  <p className="mt-1.5 text-xs font-semibold text-white">
                     {count} {count === 1 ? "photograph" : "photographs"}
                   </p>
                 </div>

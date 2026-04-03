@@ -7,19 +7,19 @@
     "photos": ["bluetailed_damselfly.jpg", "bumblebee.jpg", "burgundy_snail.jpg", "crane_flies.jpg", "dung_beetle.jpg", "ginger_cat.jpg", "highland_cow.jpg", "hornet.jpg", "lesser_spotted_woodpecker.jpg", "sparrow.jpg", "swan.jpg", "yellow_damselfly.jpg"]
   },
   {
-    "slug": "european_animals_2",
-    "title": "Animals of Europe",
-    "description": "Shots of different animal species found throughout Europe",
-    "coverPhoto": "burgundy_snail.jpg",
-    "badges": ["Coming soon"],
-    "photos": ["bluetailed_damselfly.jpg", "bumblebee.jpg", "burgundy_snail.jpg", "crane_flies.jpg", "dung_beetle.jpg", "ginger_cat.jpg", "highland_cow.jpg", "hornet.jpg", "lesser_spotted_woodpecker.jpg", "sparrow.jpg", "swan.jpg", "yellow_damselfly.jpg"]
+    "slug": "night_landscapes",
+    "title": "Landscapes at dusk",
+    "description": "Beautiful landscape photography just before complete darkness.",
+    "coverPhoto": "leenderbos-dusk-1.jpg",
+    "badges": ["New"],
+    "photos": ["leenderbos-dusk-1.jpg", "leenderbos-dusk-2.jpg", "leenderbos-dusk-3.jpg", "leenderbos-dusk-4.jpg", "leenderbos-dusk-5.jpg", "leenderbos-dusk-6.jpg"]
   },
   {
-    "slug": "european_animals_3",
-    "title": "Animals of Europe",
-    "description": "Shots of different animal species found throughout Europe",
+    "slug": "astrophotography",
+    "title": "Astrophotography",
+    "description": "A glimpse of what light pollution prevents us from seeing every night.",
     "coverPhoto": "burgundy_snail.jpg",
-    "badges": ["New collection", "20% off"],
+    "badges": ["Coming soon"],
     "photos": ["bluetailed_damselfly.jpg", "bumblebee.jpg", "burgundy_snail.jpg", "crane_flies.jpg", "dung_beetle.jpg", "ginger_cat.jpg", "highland_cow.jpg", "hornet.jpg", "lesser_spotted_woodpecker.jpg", "sparrow.jpg", "swan.jpg", "yellow_damselfly.jpg"]
   }
 ]
