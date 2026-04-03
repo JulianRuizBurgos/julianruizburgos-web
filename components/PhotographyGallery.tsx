@@ -54,6 +54,31 @@ function Sidebar({
 }
 
 // ── Masonry grid ──────────────────────────────────────────────────────────────
+function MasonryPhoto({ photo, onPhotoClick }: { photo: Photo; onPhotoClick: (photo: Photo) => void }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <button
+      onClick={() => onPhotoClick(photo)}
+      className="group relative w-full block break-inside-avoid mb-[15px] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1068b6]"
+      aria-label={`View ${photo.title}`}
+      style={{ aspectRatio: photo.aspectRatio }}
+    >
+      <Image
+        src={photo.imageUrl}
+        alt={photo.title}
+        fill
+        sizes="(max-width: 768px) 50vw, 33vw"
+        className={`object-cover transition-[transform,opacity] duration-700 group-hover:scale-[1.03] ${loaded ? "opacity-100" : "opacity-0"}`}
+        onLoad={() => setLoaded(true)}
+      />
+      <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/30" />
+      <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-1 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+        <p className="font-serif text-sm font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
+      </div>
+    </button>
+  );
+}
+
 function MasonryGrid({
   photos,
   onPhotoClick,
@@ -72,26 +97,7 @@ function MasonryGrid({
   return (
     <div className="columns-2 md:columns-3 gap-[15px]">
       {photos.map((photo) => (
-        <button
-          key={photo.filename}
-          onClick={() => onPhotoClick(photo)}
-          className="group relative w-full block break-inside-avoid mb-[15px] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1068b6]"
-          aria-label={`View ${photo.title}`}
-          style={{ aspectRatio: photo.aspectRatio }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={photo.imageUrl}
-            alt={photo.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/30" />
-          <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-1 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-            <p className="font-serif text-sm font-semibold text-white leading-snug drop-shadow">{photo.title}</p>
-            
-          </div>
-        </button>
+        <MasonryPhoto key={photo.filename} photo={photo} onPhotoClick={onPhotoClick} />
       ))}
     </div>
   );
