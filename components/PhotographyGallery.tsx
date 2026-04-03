@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import type { Photo, Collection } from "@/lib/photography";
+import type { Photo } from "@/lib/photography";
 import PrintLightbox from "@/components/PrintLightbox";
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
@@ -104,138 +104,17 @@ function MasonryGrid({
 }
 
 // ── Collections carousel ─────────────────────────────────────────────────────
-function CollectionsCarousel({
-  collections,
-  photoMap,
-}: {
-  collections: Collection[];
-  photoMap: Map<string, Photo>;
-}) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const stopAuto = () => {
-    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
-  };
-
-  const startAuto = () => {
-    stopAuto();
-    timerRef.current = setInterval(() => {
-      const el = scrollRef.current;
-      if (!el) return;
-      el.scrollLeft += 1;
-      // Seamless loop: when we reach the second copy, jump back to the first
-      if (el.scrollLeft >= el.scrollWidth / 2) {
-        el.scrollLeft -= el.scrollWidth / 2;
-      }
-    }, 45);
-  };
-
-  useEffect(() => {
-    startAuto();
-    return stopAuto;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const nudge = (dir: 1 | -1) => {
-    stopAuto();
-    const el = scrollRef.current;
-    if (!el) return;
-    // Nudging left near the start: teleport to the middle first so there's room to scroll back
-    if (dir === -1 && el.scrollLeft < 280) {
-      el.scrollLeft += el.scrollWidth / 2;
-    }
-    el.scrollBy({ left: dir * 280, behavior: "smooth" });
-    setTimeout(() => {
-      // After smooth scroll, correct if we've crossed the halfway point
-      if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft -= el.scrollWidth / 2;
-      startAuto();
-    }, 1000);
-  };
-
-  return (
-    <section className="bg-stone-50 py-8 hidden md:block">
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="flex items-center justify-between mb-5">
-          <p className="text-xs font-medium uppercase tracking-[0.25em] text-stone-800">Collections</p>
-          <Link
-            href="/photography/collections"
-            className="text-sm font-semibold text-stone-400 hover:text-stone-600 transition-colors"
-          >
-            See all →
-          </Link>
-        </div>
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => nudge(-1)}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-300 text-stone-500 hover:border-stone-600 hover:text-stone-800 transition-colors"
-          aria-label="Scroll left"
-        >
-          <span className="text-4xl leading-none">←</span>
-        </button>
-
-        <div
-          ref={scrollRef}
-          className="flex flex-1 gap-5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          onMouseEnter={stopAuto}
-          onMouseLeave={startAuto}
-        >
-        {[...collections, ...collections].map((col, i) => {
-          const cover = photoMap.get(col.coverPhoto);
-          return (
-            <Link
-              key={`${col.slug}-${i}`}
-              href={`/photography/collections/${col.slug}`}
-              className="group relative w-60 shrink-0 aspect-4/3 rounded-2xl overflow-hidden bg-stone-200"
-            >
-              {cover && (
-                <Image
-                  src={cover.imageUrl}
-                  alt={col.title}
-                  fill
-                  sizes="240px"
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                />
-              )}
-              <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/50" />
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <p className="font-serif text-base font-semibold text-white leading-snug drop-shadow">{col.title}</p>
-                <p className="mt-0.5 text-sm font-semibold text-white leading-snug drop-shadow">{col.photos.length} {col.photos.length === 1 ? "photograph" : "photographs"}</p>
-              </div>
-            </Link>
-          );
-        })}
-        
-        </div>
-
-        <button
-          onClick={() => nudge(1)}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-300 text-stone-500 hover:border-stone-600 hover:text-stone-800 transition-colors"
-          aria-label="Scroll right"
-        >
-          <span className="text-4xl leading-none">→</span>
-        </button>
-      </div>
-      </div>
-    </section>
-  );
-}
-
 // ── Main component ────────────────────────────────────────────────────────────
 export default function PhotographyGallery({
   photos,
   tagCounts,
-  collections,
 }: {
   photos: Photo[];
   tagCounts: { tag: string; count: number }[];
-  collections: Collection[];
 }) {
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [lightboxPhoto, setLightboxPhoto] = useState<Photo | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-
-  const photoMap = new Map(photos.map((p) => [p.filename, p]));
 
   const searchLower = searchQuery.toLowerCase().trim();
   const visible = photos.filter((p) => {
@@ -267,8 +146,8 @@ export default function PhotographyGallery({
             A cornucopia of photographs, dominated by landscapes and wildlife.
           </p>
         </div>
-        {/* ── Mobile: See Collections button ──────────────────────────────── */}
-        <div className="relative md:hidden mt-10">
+        {/* ── See Collections button ──────────────────────────────────────── */}
+        <div className="relative mt-10">
           <Link
             href="/photography/collections"
             className="inline-block border border-stone-600 px-5 py-2 text-xs font-medium uppercase tracking-[0.2em] text-stone-300 hover:border-stone-400 hover:text-white transition-colors"
@@ -277,13 +156,6 @@ export default function PhotographyGallery({
           </Link>
         </div>
       </section>
-
-      
-
-      {/* ── Collections carousel ─────────────────────────────────────────── */}
-      {collections.length > 0 && (
-        <CollectionsCarousel collections={collections} photoMap={photoMap} />
-      )}
 
       {/* ── Search ───────────────────────────────────────────────────────── */}
       <div className="bg-stone-50 px-6 lg:px-20 py-6 flex flex-col items-center">

@@ -11,6 +11,7 @@
     "title": "Animals of Europe",
     "description": "Shots of different animal species found throughout Europe",
     "coverPhoto": "burgundy_snail.jpg",
+    "badges": ["Coming soon"],
     "photos": ["bluetailed_damselfly.jpg", "bumblebee.jpg", "burgundy_snail.jpg", "crane_flies.jpg", "dung_beetle.jpg", "ginger_cat.jpg", "highland_cow.jpg", "hornet.jpg", "lesser_spotted_woodpecker.jpg", "sparrow.jpg", "swan.jpg", "yellow_damselfly.jpg"]
   },
   {
@@ -18,6 +19,7 @@
     "title": "Animals of Europe",
     "description": "Shots of different animal species found throughout Europe",
     "coverPhoto": "burgundy_snail.jpg",
+    "badges": ["New collection", "20% off"],
     "photos": ["bluetailed_damselfly.jpg", "bumblebee.jpg", "burgundy_snail.jpg", "crane_flies.jpg", "dung_beetle.jpg", "ginger_cat.jpg", "highland_cow.jpg", "hornet.jpg", "lesser_spotted_woodpecker.jpg", "sparrow.jpg", "swan.jpg", "yellow_damselfly.jpg"]
   }
 ]

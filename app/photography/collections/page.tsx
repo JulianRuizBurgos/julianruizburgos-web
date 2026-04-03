@@ -1,5 +1,6 @@
 import { getAllCollections, getAllPhotos } from "@/lib/photography";
 import Link from "next/link";
+import Image from "next/image";
 
 export default async function CollectionsPage() {
   const [collections, allPhotos] = await Promise.all([getAllCollections(), getAllPhotos()]);
@@ -41,23 +42,45 @@ export default async function CollectionsPage() {
                 href={`/photography/collections/${col.slug}`}
                 className="group relative aspect-4/3 overflow-hidden rounded-xl bg-stone-200"
               >
+                {/* Cover image */}
                 {cover && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={cover.imageUrl}
                     alt={col.title}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                    loading="lazy"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                 )}
+
+                {/* Overlay */}
                 <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/50" />
-                <div className="absolute inset-0 pointer-events-none rounded-xl" style={{ boxShadow: "inset 0 0 80px 30px rgba(0,0,0,0.55)" }} />
+
+                {/* Badges — top left */}
+                {col.badges && col.badges.length > 0 && (
+                  <div className="absolute top-4 left-4 flex flex-wrap gap-1.5">
+                    {col.badges.map((badge) => (
+                      <span
+                        key={badge}
+                        className="rounded bg-earth-900/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-white backdrop-blur-sm"
+                      >
+                        {badge}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Bottom panel */}
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <p className="font-serif text-2xl font-semibold text-white drop-shadow">{col.title}</p>
-                  <p className="mt-1 text-sm text-white leading-relaxed drop-shadow">{col.description}</p>
-                  <p className="mt-2 text-xs text-white drop-shadow">{count} {count === 1 ? "photograph" : "photographs"}</p>
-                  <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-white opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                    Explore →
+                  <p className="font-serif text-2xl font-semibold text-white drop-shadow leading-snug">
+                    {col.title}
+                  </p>
+                  <div className="mt-3 border-t border-white/30" />
+                  <p className="mt-3 text-sm leading-relaxed text-white/80 drop-shadow">
+                    {col.description}
+                  </p>
+                  <p className="mt-1.5 text-xs text-white/50">
+                    {count} {count === 1 ? "photograph" : "photographs"}
                   </p>
                 </div>
               </Link>

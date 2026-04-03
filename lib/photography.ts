@@ -39,6 +39,7 @@ export interface Collection {
   description: string;
   coverPhoto: string;
   photos: string[]; // ordered filenames
+  badges?: string[]; // e.g. ["Coming soon"], ["New collection"], ["20% discount"]
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
