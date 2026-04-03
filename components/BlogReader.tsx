@@ -310,7 +310,7 @@ export default function BlogReader({
       <div className="hidden md:flex md:sticky md:top-0 md:h-screen md:overflow-hidden border-t border-earth-800">
 
         {/* Left sidebar — post list */}
-        <aside className="w-72 flex-shrink-0 overflow-y-auto border-r border-earth-200 bg-earth-50">
+        <aside className="w-72 shrink-0 overflow-y-auto border-r border-earth-200 bg-earth-50">
           {visible.length === 0 && (
             <p className="px-6 py-10 text-sm text-earth-400">No entries for this filter.</p>
           )}
@@ -346,8 +346,8 @@ export default function BlogReader({
         </main>
 
         {/* Right sidebar — topics, tags, reading info */}
-        <aside className="w-60 flex-shrink-0 overflow-y-auto border-l border-earth-200 bg-earth-50 px-6 py-8">
-          <p className="mb-5 text-xs font-medium font-semibold uppercase tracking-[0.2em] text-earth-600">Topics</p>
+        <aside className="w-60 shrink-0 overflow-y-auto border-l border-earth-200 bg-earth-50 px-6 py-8">
+          <p className="mb-5 text-xs font-medium uppercase tracking-[0.2em] text-earth-600">Topics</p>
           <div className="space-y-0">
             <button
               onClick={clearFilters}
