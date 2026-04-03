@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X } from "lucide-react";
+import { X, ShoppingBag } from "lucide-react";
+import { useCart } from "@/lib/cart";
 
 const sections = [
   {
@@ -39,6 +40,7 @@ function sidebarBg(pathname: string): string {
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { itemCount } = useCart();
 
   return (
     <>
@@ -48,6 +50,20 @@ export default function Nav() {
         className="fixed top-6 left-8 z-50 text-xs font-medium uppercase tracking-widest text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
       >
         Home
+      </Link>
+
+      {/* Cart icon — fixed, left of MENU */}
+      <Link
+        href="/cart"
+        aria-label={`Cart (${itemCount} items)`}
+        className="fixed top-5 right-20 z-50 flex items-center gap-1.5 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+      >
+        <ShoppingBag size={16} strokeWidth={1.8} />
+        {itemCount > 0 && (
+          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#1068b6] text-[10px] font-bold text-white">
+            {itemCount > 9 ? "9+" : itemCount}
+          </span>
+        )}
       </Link>
 
       {/* Floating MENU button — overlays the page */}

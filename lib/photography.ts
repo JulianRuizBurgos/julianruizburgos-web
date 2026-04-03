@@ -17,10 +17,17 @@ export interface Photo {
   location: string;
   description: string | null;
   tags: string[];
+  /** @deprecated use getAvailablePrintSizes() from lib/shop.ts */
   printAvailable: boolean;
+  /** @deprecated use getAvailablePrintSizes() from lib/shop.ts */
   printSizes: PrintSize[];
+  /** @deprecated use PRICE_MATRIX_CENTS from lib/shop.ts */
   priceInEuro: number | null;
   aspectRatio: number;
+  /** Pixel width from EXIF — required for print size computation */
+  widthPx: number;
+  /** Pixel height from EXIF — required for print size computation */
+  heightPx: number;
   camera: string | null;
   sortOrder: number | null;
   imageUrl: string; // proxied: /photography/images/<filename>
@@ -56,6 +63,8 @@ function toPhoto(raw: Record<string, unknown>): Photo {
     printSizes: Array.isArray(raw.printSizes) ? raw.printSizes.map(String) as PrintSize[] : [],
     priceInEuro: typeof raw.priceInEuro === "number" ? raw.priceInEuro : null,
     aspectRatio: typeof raw.aspectRatio === "number" ? raw.aspectRatio : 1.5,
+    widthPx: typeof raw.widthPx === "number" ? raw.widthPx : 0,
+    heightPx: typeof raw.heightPx === "number" ? raw.heightPx : 0,
     camera: raw.camera != null ? String(raw.camera) : null,
     sortOrder: typeof raw.sortOrder === "number" ? raw.sortOrder : null,
     imageUrl: `/photography/images/${encodeURIComponent(filename)}`,
