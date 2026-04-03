@@ -17,7 +17,8 @@ export default function middleware(req: NextRequest) {
 
     if (auth.startsWith("Basic ")) {
       const decoded = Buffer.from(auth.slice(6), "base64").toString("utf-8");
-      const [, pass] = decoded.split(":");
+      const colonIndex = decoded.indexOf(":");
+      const pass = colonIndex !== -1 ? decoded.slice(colonIndex + 1) : "";
       authorised = pass === secret;
     }
 
