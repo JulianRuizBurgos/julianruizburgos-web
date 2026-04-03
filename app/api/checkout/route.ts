@@ -92,8 +92,7 @@ export async function POST(req: NextRequest) {
   const payment = await mollie.payments.create({
     amount: { currency: "EUR", value: amountValue },
     description,
-    // {id} is a Mollie template variable — replaced with the payment ID on redirect
-    redirectUrl: `${baseUrl}/checkout/success?ref={id}`,
+    redirectUrl: `${baseUrl}/checkout/success`,
     webhookUrl: `${baseUrl}/api/webhooks/mollie`,
     metadata: {
       customerName,
@@ -118,5 +117,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Could not create payment" }, { status: 500 });
   }
 
-  return NextResponse.json({ checkoutUrl });
+  return NextResponse.json({ checkoutUrl, paymentId: payment.id });
 }

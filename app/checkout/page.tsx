@@ -78,7 +78,8 @@ export default function CheckoutPage() {
       return;
     }
 
-    const { checkoutUrl } = await res.json();
+    const { checkoutUrl, paymentId } = await res.json();
+    if (paymentId) sessionStorage.setItem("mollie_payment_id", paymentId);
     // Full redirect to Mollie's hosted payment page
     window.location.href = checkoutUrl;
   }

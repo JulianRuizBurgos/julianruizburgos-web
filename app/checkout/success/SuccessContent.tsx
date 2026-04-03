@@ -1,27 +1,26 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
 
 export default function SuccessContent() {
-  const params = useSearchParams();
   const { clearCart } = useCart();
   const cleared = useRef(false);
+  const [ref, setRef] = useState<string | null>(null);
 
-  // Mollie redirects here with ?ref=<payment_id> after the customer pays.
-  // Clear the cart once on arrival.
   useEffect(() => {
     if (!cleared.current) {
       clearCart();
       cleared.current = true;
     }
+    // Read payment ID stored before redirect, then clean up
+    const paymentId = sessionStorage.getItem("mollie_payment_id");
+    if (paymentId) {
+      setRef(paymentId.slice(-8).toUpperCase());
+      sessionStorage.removeItem("mollie_payment_id");
+    }
   }, [clearCart]);
-
-  // Last 8 chars of the Mollie payment ID as a short display reference
-  const mollieRef = params.get("ref");
-  const ref = mollieRef ? mollieRef.slice(-8).toUpperCase() : null;
 
   return (
     <div className="bg-earth-50 min-h-screen pt-28 px-6">
