@@ -169,6 +169,19 @@
     "sortOrder": null
   },
   {
+    "filename": "astrophotography-switzerland-1.jpg",
+    "title": "Astrophotography — Switzerland",
+    "date": "2022-07-01",
+    "location": "Switzerland",
+    "description": null,
+    "tags": ["astrophotography", "landscape", "night", "sky"],
+    "aspectRatio": 0.667,
+    "widthPx": 2304,
+    "heightPx": 3456,
+    "camera": "Olympus OM-D E-M5 Mark II · 12-40mm F2.8",
+    "sortOrder": null
+  },
+  {
     "filename": "leenderbos-dusk-1.jpg",
     "title": "Leenderbos at Dusk I",
     "date": "2024-01-01",
