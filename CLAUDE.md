@@ -221,7 +221,7 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - [x] shadcn/ui components installed
 - [x] Design system: 3-colour palette consolidated (terracotta / stone+navy / olive). plum and sage removed. forest-900 merged into earth-900.
 - [x] Homepage: full-screen hero + Ken Burns animation + section cards (section accent lines use correct palette colours)
-- [x] Navigation: floating HOME + MENU, slide-in sidebar — section-aware background colour (stone/navy/olive/earth by pathname) at 60% opacity with backdrop blur
+- [x] Navigation: floating HOME + MENU + cart icon, slide-in sidebar — section-aware background colour (stone/navy/olive/earth by pathname) at 60% opacity with backdrop blur
 - [x] IT Consulting page: dark navy-700 header + services + case studies (editorial style)
 - [x] IT case study detail page (`/it/[slug]`)
 - [x] Ecology page: header with background photo + dark overlay (content placeholder — coming soon)
@@ -232,17 +232,22 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - [x] Photography section: header with background photo + dark overlay + infinite collections carousel (desktop) + mobile "See Collections" button + free-text search + sidebar nav (tag filter only) + masonry grid + lightbox. Tag + search filtering. `lib/photography.ts` data layer with Nextcloud WebDAV + local dev fallback. Image proxy route.
 - [x] Lightbox close button: bottom-centre on mobile (thumb-reachable), top-right on desktop (`md:` breakpoint)
 - [x] Photography collections: `/photography/collections` index + `/photography/collections/[slug]` detail pages. Cover cards with vignette effect.
-- [x] Photo metadata: 13 photos with EXIF-sourced dates and camera/lens info. `PrintSize` type covers A0–A4, square, and traditional lab sizes. Price in Euro.
+- [x] Photo metadata: 13 photos with EXIF-sourced dates and camera/lens info. `PrintSize` type covers A0–A4, square, and traditional lab sizes.
 - [x] Image optimisation: Next.js `<Image>` with AVIF/WebP formats, `sizes` prop on gallery/collection grids, server-side cache in `.next/cache/images`. Lightbox capped at 1200px. Copyright overlay on lightbox.
-- [x] Print shop architecture planned: postcards product type defined (recipient address, message text, handwritten/printed toggle, sender name). `printAvailable`/`printSizes` deprecated in favour of computed sizes from `widthPx`/`heightPx`.
+- [x] **Print shop** — fully built, merged 2026-04-03. Code complete, awaiting env var configuration to go live. See shop section below for architecture details and go-live checklist.
 
 ## Roadmap
 
 ### In progress / next
-1. **Nextcloud photo integration** — `lib/photography.ts` and the image proxy route are already wired up for Nextcloud WebDAV (env vars: `NEXTCLOUD_WEBDAV_URL`, `NEXTCLOUD_USER`, `NEXTCLOUD_APP_PASSWORD`, `NEXTCLOUD_PHOTOS_PATH`). Currently using local dev files in `public/photography/dev/`. **Blocked on**: photography editing workflow decision (see global CLAUDE.md TODO).
-2. **CollectionView styling** — `components/CollectionView.tsx` hasn't been redesigned to match the new blue stone aesthetic yet.
-3. **Print shop** — see full architecture plan below. Pending decisions: paper types, price matrix, minimum print DPI, shipping scope, database choice.
-4. **Admin interface** — order management UI (list orders, mark dispatched, add tracking). Part of print shop phase 5.
+1. **Print shop go-live** — code is merged and deployed. Needs infrastructure setup before accepting real orders:
+   - [ ] PostgreSQL running on Hetzner VPS, `DATABASE_URL` set in Coolify
+   - [ ] Stripe keys set (`STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`)
+   - [ ] Stripe webhook registered at `/api/webhooks/stripe`, `STRIPE_WEBHOOK_SECRET` set
+   - [ ] Resend domain verified, `RESEND_API_KEY` set
+   - [ ] `ADMIN_SECRET` set for `/admin/orders`
+   - [ ] End-to-end test with Stripe test card `4242 4242 4242 4242`
+2. **Nextcloud photo integration** — `lib/photography.ts` and the image proxy route are already wired up for Nextcloud WebDAV (env vars: `NEXTCLOUD_WEBDAV_URL`, `NEXTCLOUD_USER`, `NEXTCLOUD_APP_PASSWORD`, `NEXTCLOUD_PHOTOS_PATH`). Currently using local dev files in `public/photography/dev/`. **Blocked on**: photography editing workflow decision (see global CLAUDE.md TODO).
+3. **Real EXIF metadata for photos** — `photos.json` currently has placeholder `widthPx`/`heightPx` values (4000×4000). Sync real EXIF data to get accurate print size availability per photo. Use `identify -format "%wx%h" file.jpg` (ImageMagick).
 
 ### Planned
 4. **Automated translation** — serve the site in multiple languages. Decision needed: static (build-time, e.g. next-intl with translated markdown files) vs. dynamic (runtime machine translation API). Content-heavy so quality matters; ecology and IT writing should not sound like raw MT output.
@@ -272,7 +277,7 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 
 ---
 
-## Print shop — full architecture plan
+## Print shop — built (merged 2026-04-03, awaiting env var config to go live)
 
 ### Payment
 - **Stripe** — payment processor. Natively supports **iDEAL** (Netherlands) alongside cards and all EU payment methods. Enable iDEAL in Stripe dashboard — no separate integration.
@@ -292,12 +297,12 @@ Julian prints, addresses, and mails each postcard himself. No extra shipping add
 
 Each postcard in the cart is a unique item (different recipient/message), so quantity is always 1 per cart line.
 
-### Pending decisions (required before starting)
-- [ ] Paper types (e.g. Glossy, Matte, Fine Art/Cotton, Metallic — depends on your printer)
-- [ ] Price matrix: price per size × paper type combination; postcard price (flat rate)
-- [ ] Minimum print DPI threshold (e.g. 200 DPI) — determines which sizes are offered per photo
-- [ ] Shipping scope: Netherlands only to start, or Europe/worldwide? Postcards ship internationally by default (standard postage)
-- [ ] Database: Postgres on existing Hetzner VPS (free, full control) vs managed (PlanetScale/Supabase)
+### Decisions made (implemented in `lib/shop.ts`)
+- **Paper types**: Glossy (€25–€130), Matte (€28–€155), Fine Art Cotton (€45–€220)
+- **Postcard price**: €5 flat rate
+- **Minimum print DPI**: 200 DPI
+- **Shipping**: NL €4.50 / EU €7.50 / Worldwide €12.00
+- **Database**: PostgreSQL on Hetzner VPS (schema auto-initialises on first use)
 
 ### Architecture overview
 
@@ -327,35 +332,20 @@ Order management
   └── /admin/orders                — password-protected: list orders, mark dispatched, add tracking
 ```
 
-### Implementation phases
-
-**Phase 1 — Product catalogue** (no backend needed)
-- Define paper types and price matrix + postcard flat price in `lib/shop.ts`
-- Paper type + size selector on photo lightbox/detail for prints
-- "Order as postcard" button on lightbox → opens postcard form modal (recipient, message, text style, sender name)
-- "Add to cart" → React context + `localStorage`
-- Cart icon in nav with item count badge
-
-**Phase 2 — Cart & checkout**
-- `/cart` — line items (prints show size/paper; postcards show recipient name + "handwritten"/"printed"), remove, subtotal
-- `/checkout` — name, email, and shipping address for prints; postcards have no separate shipping form (recipient address already captured per item)
-- Stripe Payment Element (auto-renders iDEAL + cards based on customer country)
-- `POST /api/checkout` creates PaymentIntent server-side
-
-**Phase 3 — Orders database**
-- `orders`: id, stripe_payment_id, customer name/email/address, status, created_at
-- `order_items`: order_id, photo_filename, product_type ("print" | "postcard"), size, paper_type, price, quantity
-- `postcard_details`: order_item_id, recipient_name, address_line1, address_line2, city, postcode, country, message_text, text_style ("handwritten" | "printed"), sender_name
-- Webhook: `payment_intent.succeeded` → insert order → send emails
-
-**Phase 4 — Emails** (via Resend — no SMTP needed)
-- Customer: order confirmation listing prints (with size/paper) and postcards (with recipient name, text style)
-- Julian: new order notification with full details — for postcards: recipient address, full message text, text style, sender name (everything needed to write and mail)
-
-**Phase 5 — Admin**
-- `/admin/orders` — simple password-protected page
-- List orders, mark as dispatched, add tracking number (prints); mark as mailed (postcards)
-- Customer receives dispatch/mailed confirmation email
+### Key files
+- `lib/shop.ts` — paper types, price matrix, print size availability logic (min 200 DPI, ±7% aspect ratio tolerance)
+- `lib/cart.tsx` — React context + localStorage cart state
+- `lib/db.ts` — PostgreSQL schema + connection pool (tables: `orders`, `order_items`, `postcard_details`)
+- `lib/email.ts` — Resend email templates (customer confirmation, Julian notification, dispatch)
+- `components/PrintLightbox.tsx` — unified lightbox: image + size/paper selector or postcard form
+- `app/cart/page.tsx` — cart page
+- `app/checkout/page.tsx` — contact/shipping form + Stripe Payment Element
+- `app/checkout/success/` — confirmation page
+- `app/api/checkout/route.ts` — creates PaymentIntent, verifies prices server-side
+- `app/api/webhooks/stripe/route.ts` — `payment_intent.succeeded` → save order → send emails (idempotent)
+- `app/api/orders/[id]/route.ts` — admin API: update status + tracking
+- `app/admin/orders/` — Basic Auth protected order management UI
+- `middleware.ts` — routing-level Basic Auth enforcement for `/admin/*`
 
 ### Fulfilment
 Julian handles everything himself:
