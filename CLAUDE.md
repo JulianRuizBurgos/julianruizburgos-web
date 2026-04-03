@@ -41,6 +41,7 @@ Secondary sections: Ecology (professional identity — consulting, research, pub
 - Generous negative space throughout
 - No white cards with shadows — editorial top-rule style (`border-t-2`) on inner pages
 - Homepage section cards: full-height photo cards (80vh on desktop), grayscale→colour on hover, vertical serif label, dark overlay lifts on hover, terracotta "Explore →" fades up, thin accent line grows from left at bottom
+- **Page header sections** (Photography, Collections, Ecology, etc.) default to `pt-20 pb-20` — do not use larger values unless there is a specific reason (e.g. a full-screen hero)
 
 ### Navigation
 - **No sticky nav** — two fixed floating elements overlay the page:

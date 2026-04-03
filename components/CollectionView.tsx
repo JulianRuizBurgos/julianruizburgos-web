@@ -19,22 +19,32 @@ export default function CollectionView({
     <>
       <div className="bg-stone-50 min-h-screen">
         {/* Header */}
-        <section className="pt-20 pb-20 px-6 lg:px-20 border-b border-stone-600">
-          <div className="mx-auto max-w-8xl">
+        <section className="relative overflow-hidden pt-20 pb-20 px-6 lg:px-20">
+          {photos[0] && (
+            <Image
+              src={photos[0].imageUrl}
+              alt=""
+              fill
+              className="object-cover object-center"
+              priority
+            />
+          )}
+          <div className="absolute inset-0 bg-black/55" />
+          <div className="relative mx-auto max-w-8xl">
             <Link
               href="/photography/collections"
-              className="mb-8 inline-block text-xs font-medium uppercase tracking-[0.2em] text-stone-600 transition-colors hover:text-earth-800"
+              className="mb-8 inline-block text-xs font-medium uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-white"
             >
               ← Collections
             </Link>
-            <p className="mb-3 text-xs font-medium uppercase tracking-[0.25em] text-stone-600">Collection</p>
-            <h1 className="font-serif text-5xl font-semibold leading-tight text-earth-900 md:text-6xl">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.25em] text-white/60">Collection</p>
+            <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl">
               {collection.title}.
             </h1>
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-stone-700">
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-white/80">
               {collection.description}
             </p>
-            <p className="mt-2 text-sm text-stone-600">
+            <p className="mt-2 text-sm text-white/60">
               {photos.length} {photos.length === 1 ? "photograph" : "photographs"}
             </p>
           </div>

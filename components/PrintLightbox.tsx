@@ -324,7 +324,7 @@ function PrintSelector({
 
 // ── Main lightbox ─────────────────────────────────────────────────────────────
 
-type View = "info" | "postcard" | "added";
+type View = "info" | "shop" | "postcard" | "added";
 
 export default function PrintLightbox({
   photo,
@@ -404,13 +404,13 @@ export default function PrintLightbox({
           </p>
 
           {/* ── Image panel ────────────────────────────────────────────── */}
-          <div className="relative flex min-h-[55vw] flex-1 items-center justify-center bg-black/20 p-4 md:p-10 md:min-h-0">
+          <div className="relative flex h-[50vh] shrink-0 md:h-auto md:flex-1 items-center justify-center bg-black/20 p-4 md:p-10">
             <Image
               src={photo.imageUrl}
               alt={photo.title}
               width={1200}
               height={Math.round(1200 / photo.aspectRatio)}
-              className="max-h-[55vh] md:max-h-[calc(100vh-4rem)] max-w-full object-contain"
+              className="max-h-full md:max-h-[calc(100vh-4rem)] max-w-full object-contain"
               quality={85}
               priority
             />
@@ -420,7 +420,7 @@ export default function PrintLightbox({
           </div>
 
           {/* ── Info + shop panel ───────────────────────────────────────── */}
-          <div className="w-full md:w-80 md:shrink-0 flex flex-col bg-stone-900 text-white overflow-y-auto">
+          <div className="w-full md:w-80 md:shrink-0 flex flex-col bg-stone-900/80 backdrop-blur-sm text-white overflow-y-auto">
             {/* Close button */}
             <div className="flex justify-end p-4 md:p-5">
               <Dialog.Close
@@ -472,13 +472,37 @@ export default function PrintLightbox({
                   onAdd={handleAddPostcard}
                   onCancel={() => setView("info")}
                 />
+              ) : view === "shop" ? (
+                <div className="flex flex-col gap-4">
+                  <button
+                    onClick={() => setView("info")}
+                    className="self-start text-xs text-stone-500 hover:text-white transition-colors"
+                  >
+                    ← Back
+                  </button>
+                  <PrintSelector
+                    photo={photo}
+                    availableSizes={availableSizes}
+                    onAdd={handleAddPrint}
+                    onPostcard={() => setView("postcard")}
+                  />
+                </div>
               ) : (
-                <PrintSelector
-                  photo={photo}
-                  availableSizes={availableSizes}
-                  onAdd={handleAddPrint}
-                  onPostcard={() => setView("postcard")}
-                />
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => setView("shop")}
+                    className="flex items-center justify-center gap-2 rounded bg-[#1068b6] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0d56a0]"
+                  >
+                    <ShoppingBag size={15} />
+                    Order as print
+                  </button>
+                  <button
+                    onClick={() => setView("postcard")}
+                    className="text-sm text-stone-400 underline underline-offset-2 hover:text-white transition-colors"
+                  >
+                    Order as postcard (A6 · 10×15 cm) — {formatPrice(POSTCARD_PRICE_CENTS)}
+                  </button>
+                </div>
               )}
             </div>
           </div>
