@@ -1,22 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
+import { createMollieClient } from "@mollie/api-client";
 import type { CartItem } from "@/lib/shop";
 
-function getStripe(): Stripe {
-  if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error("STRIPE_SECRET_KEY is not set");
+function getMollie() {
+  if (!process.env.MOLLIE_API_KEY) {
+    throw new Error("MOLLIE_API_KEY is not set");
   }
-  return new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: "2026-03-25.dahlia",
-  });
+  return createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 }
 
 export async function POST(req: NextRequest) {
-  if (!process.env.STRIPE_SECRET_KEY) {
-    return NextResponse.json({ error: "Stripe is not configured" }, { status: 503 });
+  if (!process.env.MOLLIE_API_KEY) {
+    return NextResponse.json({ error: "Payment not configured" }, { status: 503 });
   }
 
-  const stripe = getStripe();
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  if (!baseUrl) {
+    return NextResponse.json({ error: "Base URL not configured" }, { status: 503 });
+  }
 
   let body: {
     items: CartItem[];
@@ -58,67 +59,64 @@ export async function POST(req: NextRequest) {
   }
   const total = subtotal + (shippingCents ?? 0);
 
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: total,
-    currency: "eur",
-    automatic_payment_methods: { enabled: true },
-    receipt_email: customerEmail,
+  // Mollie requires amount as a string with 2 decimal places
+  const amountValue = (total / 100).toFixed(2);
+
+  const itemCount = items.length;
+  const description = `julianruizburgos.net — ${itemCount} item${itemCount !== 1 ? "s" : ""}`;
+
+  // Serialise cart into metadata (Mollie metadata is a plain object, no size limits per key)
+  const cartJson = JSON.stringify(
+    items.map((i) => ({
+      t: i.type,
+      f: i.photoFilename,
+      n: i.photoTitle,
+      ...(i.type === "print"
+        ? { s: i.size, p: i.paper }
+        : {
+            rn: i.recipientName,
+            a1: i.addressLine1,
+            a2: i.addressLine2,
+            c: i.city,
+            pc: i.postcode,
+            co: i.country,
+            m: i.messageText,
+            ts: i.textStyle,
+            sn: i.senderName,
+          }),
+    }))
+  );
+
+  const mollie = getMollie();
+
+  const payment = await mollie.payments.create({
+    amount: { currency: "EUR", value: amountValue },
+    description,
+    // {id} is a Mollie template variable — replaced with the payment ID on redirect
+    redirectUrl: `${baseUrl}/checkout/success?ref={id}`,
+    webhookUrl: `${baseUrl}/api/webhooks/mollie`,
     metadata: {
       customerName,
       customerEmail,
-      itemCount: String(items.length),
-      hasShipping: shipping ? "true" : "false",
+      cart: cartJson,
+      shippingCents: String(shippingCents ?? 0),
+      ...(shipping
+        ? {
+            shippingName: shipping.name,
+            shippingAddress1: shipping.address1,
+            shippingAddress2: shipping.address2 || "",
+            shippingCity: shipping.city,
+            shippingPostcode: shipping.postcode,
+            shippingCountry: shipping.country,
+          }
+        : {}),
     },
-    shipping: shipping
-      ? {
-          name: shipping.name,
-          address: {
-            line1: shipping.address1,
-            line2: shipping.address2 || undefined,
-            city: shipping.city,
-            postal_code: shipping.postcode,
-            country: shipping.country,
-          },
-        }
-      : undefined,
-    // Store full cart as metadata so the webhook can save it
-    // Stripe metadata values must be <500 chars each; split if needed
-    // For production use a session store (Redis/DB); for now JSON-truncate safely
   });
 
-  // Attach cart as a separate update (metadata has 40-key limit, 500-char per value)
-  // We store the serialised cart in the PaymentIntent's metadata via a follow-up
-  // (if it fits); the webhook falls back to line-by-line metadata if absent.
-  try {
-    const cartJson = JSON.stringify(
-      items.map((i) => ({
-        t: i.type,
-        f: i.photoFilename,
-        n: i.photoTitle,
-        ...(i.type === "print"
-          ? { s: i.size, p: i.paper }
-          : {
-              rn: i.recipientName,
-              a1: i.addressLine1,
-              a2: i.addressLine2,
-              c: i.city,
-              pc: i.postcode,
-              co: i.country,
-              m: i.messageText,
-              ts: i.textStyle,
-              sn: i.senderName,
-            }),
-      }))
-    );
-
-    if (cartJson.length <= 500) {
-      await stripe.paymentIntents.update(paymentIntent.id, {
-        metadata: { ...paymentIntent.metadata, cart: cartJson },
-      });
-    }
-  } catch {
-    // Non-fatal: webhook will handle gracefully
+  const checkoutUrl = payment._links.checkout?.href;
+  if (!checkoutUrl) {
+    return NextResponse.json({ error: "Could not create payment" }, { status: 500 });
   }
 
-  return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+  return NextResponse.json({ checkoutUrl });
 }

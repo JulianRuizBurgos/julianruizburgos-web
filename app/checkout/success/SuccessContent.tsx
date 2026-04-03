@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
@@ -8,38 +8,20 @@ import { useCart } from "@/lib/cart";
 export default function SuccessContent() {
   const params = useSearchParams();
   const { clearCart } = useCart();
-  const [cleared, setCleared] = useState(false);
+  const cleared = useRef(false);
 
-  const paymentIntent = params.get("payment_intent");
-  const status = params.get("redirect_status");
-
+  // Mollie redirects here with ?ref=<payment_id> after the customer pays.
+  // Clear the cart once on arrival.
   useEffect(() => {
-    if (status === "succeeded" && !cleared) {
+    if (!cleared.current) {
       clearCart();
-      setCleared(true);
+      cleared.current = true;
     }
-  }, [status, cleared, clearCart]);
+  }, [clearCart]);
 
-  if (status !== "succeeded") {
-    return (
-      <div className="bg-earth-50 min-h-screen pt-28 px-6">
-        <div className="max-w-lg mx-auto py-20 text-center">
-          <p className="font-serif text-3xl text-earth-900">Payment unsuccessful.</p>
-          <p className="mt-3 text-earth-600">
-            Your payment could not be processed. No charge was made.
-          </p>
-          <Link
-            href="/checkout"
-            className="mt-8 inline-block text-sm text-[#1068b6] underline underline-offset-2 hover:opacity-80 transition-opacity"
-          >
-            Return to checkout →
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const ref = paymentIntent?.slice(-8).toUpperCase() ?? "—";
+  // Last 8 chars of the Mollie payment ID as a short display reference
+  const mollieRef = params.get("ref");
+  const ref = mollieRef ? mollieRef.slice(-8).toUpperCase() : null;
 
   return (
     <div className="bg-earth-50 min-h-screen pt-28 px-6">
@@ -55,10 +37,12 @@ export default function SuccessContent() {
             Your order has been received. You&apos;ll get a confirmation email shortly,
             and another when your prints are dispatched.
           </p>
-          <p className="mt-4 text-sm text-earth-600">
-            Order reference:{" "}
-            <span className="font-mono font-semibold text-earth-900">{ref}</span>
-          </p>
+          {ref && (
+            <p className="mt-4 text-sm text-earth-600">
+              Payment reference:{" "}
+              <span className="font-mono font-semibold text-earth-900">{ref}</span>
+            </p>
+          )}
           <p className="mt-1 text-sm text-earth-600">
             Questions? Write to{" "}
             <a

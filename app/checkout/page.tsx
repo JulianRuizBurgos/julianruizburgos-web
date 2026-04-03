@@ -1,76 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
 import { useCart } from "@/lib/cart";
 import { formatPrice, shippingCents } from "@/lib/shop";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
-);
-
-// ── Stripe payment form ───────────────────────────────────────────────────────
-
-function PaymentForm({
-  clientSecret,
-  totalCents,
-}: {
-  clientSecret: string;
-  totalCents: number;
-}) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [paying, setPaying] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!stripe || !elements) return;
-    setPaying(true);
-    setError(null);
-
-    const { error: stripeError } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/checkout/success`,
-      },
-    });
-
-    if (stripeError) {
-      setError(stripeError.message ?? "Payment failed. Please try again.");
-      setPaying(false);
-    }
-    // On success, Stripe redirects to return_url — no need to handle here
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      <PaymentElement />
-
-      {error && (
-        <p className="rounded border border-terracotta-400/40 bg-terracotta-50 px-4 py-3 text-sm text-terracotta-600">
-          {error}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        disabled={!stripe || paying}
-        className="rounded bg-earth-900 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-earth-800 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {paying ? "Processing…" : `Pay ${formatPrice(totalCents)}`}
-      </button>
-    </form>
-  );
-}
 
 // ── Shipping form ─────────────────────────────────────────────────────────────
 
@@ -97,11 +30,9 @@ const EMPTY_SHIPPING: ShippingFields = {
 // ── Main checkout page ────────────────────────────────────────────────────────
 
 export default function CheckoutPage() {
-  const { items, totalCents, clearCart } = useCart();
-  const router = useRouter();
+  const { items, totalCents } = useCart();
 
   const [shipping, setShipping] = useState<ShippingFields>(EMPTY_SHIPPING);
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -122,7 +53,7 @@ export default function CheckoutPage() {
         shipping.postcode.trim() &&
         shipping.country.trim()));
 
-  async function handleProceed(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!formValid || items.length === 0) return;
     setLoading(true);
@@ -147,9 +78,9 @@ export default function CheckoutPage() {
       return;
     }
 
-    const { clientSecret: secret } = await res.json();
-    setClientSecret(secret);
-    setLoading(false);
+    const { checkoutUrl } = await res.json();
+    // Full redirect to Mollie's hosted payment page
+    window.location.href = checkoutUrl;
   }
 
   if (items.length === 0) {
@@ -213,166 +144,127 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* Step 1: Shipping / contact form */}
-        {!clientSecret && (
-          <form onSubmit={handleProceed} className="flex flex-col gap-5">
-            <div className="border-t-2 border-earth-900 pt-5">
-              <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-earth-600">
-                Contact
-              </p>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-earth-600 uppercase tracking-wider">
-                    Full name
-                  </label>
-                  <input
-                    required
-                    value={shipping.name}
-                    onChange={(e) => set("name", e.target.value)}
-                    className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
-                  />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-earth-600 uppercase tracking-wider">
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={shipping.email}
-                    onChange={(e) => set("email", e.target.value)}
-                    className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {hasPrints && (
-              <div className="border-t border-earth-200 pt-4">
-                <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-earth-600">
-                  Shipping address
-                </p>
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs text-earth-600 uppercase tracking-wider">
-                      Address
-                    </label>
-                    <input
-                      required
-                      value={shipping.address1}
-                      onChange={(e) => set("address1", e.target.value)}
-                      placeholder="Street and number"
-                      className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
-                    />
-                    <input
-                      value={shipping.address2}
-                      onChange={(e) => set("address2", e.target.value)}
-                      placeholder="Apartment, floor, etc. (optional)"
-                      className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs text-earth-600 uppercase tracking-wider">
-                        City
-                      </label>
-                      <input
-                        required
-                        value={shipping.city}
-                        onChange={(e) => set("city", e.target.value)}
-                        className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs text-earth-600 uppercase tracking-wider">
-                        Postcode
-                      </label>
-                      <input
-                        required
-                        value={shipping.postcode}
-                        onChange={(e) => set("postcode", e.target.value)}
-                        className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs text-earth-600 uppercase tracking-wider">
-                      Country
-                    </label>
-                    <input
-                      required
-                      value={shipping.country}
-                      onChange={(e) => set("country", e.target.value)}
-                      placeholder="NL, DE, GB…"
-                      className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none uppercase"
-                    />
-                    <p className="text-xs text-earth-400">
-                      Use ISO 3166-1 alpha-2 code (e.g. NL, DE, GB, US)
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {apiError && (
-              <p className="rounded border border-terracotta-400/40 bg-terracotta-50 px-4 py-3 text-sm text-terracotta-600">
-                {apiError}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={!formValid || loading}
-              className="rounded bg-earth-900 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-earth-800 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {loading ? "Loading payment…" : "Continue to payment"}
-            </button>
-
-            <Link
-              href="/cart"
-              className="text-center text-sm text-earth-600 underline underline-offset-2 hover:text-earth-900 transition-colors"
-            >
-              ← Back to cart
-            </Link>
-          </form>
-        )}
-
-        {/* Step 2: Stripe payment element */}
-        {clientSecret && (
-          <div className="flex flex-col gap-6">
-            <div className="border-t-2 border-earth-900 pt-5">
-              <p className="mb-5 text-sm font-semibold uppercase tracking-widest text-earth-600">
-                Payment
-              </p>
-              <Elements
-                stripe={stripePromise}
-                options={{
-                  clientSecret,
-                  appearance: {
-                    theme: "stripe",
-                    variables: {
-                      colorPrimary: "#241c16",
-                      colorBackground: "#faf8f5",
-                      borderRadius: "4px",
-                      fontFamily: "Inter, system-ui, sans-serif",
-                    },
-                  },
-                }}
-              >
-                <PaymentForm
-                  clientSecret={clientSecret}
-                  totalCents={grandTotalCents}
+        {/* Contact + shipping form */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <div className="border-t-2 border-earth-900 pt-5">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-earth-600">
+              Contact
+            </p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-earth-600 uppercase tracking-wider">
+                  Full name
+                </label>
+                <input
+                  required
+                  value={shipping.name}
+                  onChange={(e) => set("name", e.target.value)}
+                  className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
                 />
-              </Elements>
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-earth-600 uppercase tracking-wider">
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={shipping.email}
+                  onChange={(e) => set("email", e.target.value)}
+                  className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
+                />
+              </div>
             </div>
-            <button
-              onClick={() => setClientSecret(null)}
-              className="text-center text-sm text-earth-600 underline underline-offset-2 hover:text-earth-900 transition-colors"
-            >
-              ← Change contact / address
-            </button>
           </div>
-        )}
+
+          {hasPrints && (
+            <div className="border-t border-earth-200 pt-4">
+              <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-earth-600">
+                Shipping address
+              </p>
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-earth-600 uppercase tracking-wider">
+                    Address
+                  </label>
+                  <input
+                    required
+                    value={shipping.address1}
+                    onChange={(e) => set("address1", e.target.value)}
+                    placeholder="Street and number"
+                    className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
+                  />
+                  <input
+                    value={shipping.address2}
+                    onChange={(e) => set("address2", e.target.value)}
+                    placeholder="Apartment, floor, etc. (optional)"
+                    className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-earth-600 uppercase tracking-wider">
+                      City
+                    </label>
+                    <input
+                      required
+                      value={shipping.city}
+                      onChange={(e) => set("city", e.target.value)}
+                      className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-earth-600 uppercase tracking-wider">
+                      Postcode
+                    </label>
+                    <input
+                      required
+                      value={shipping.postcode}
+                      onChange={(e) => set("postcode", e.target.value)}
+                      className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-earth-600 uppercase tracking-wider">
+                    Country
+                  </label>
+                  <input
+                    required
+                    value={shipping.country}
+                    onChange={(e) => set("country", e.target.value)}
+                    placeholder="NL, DE, GB…"
+                    className="rounded border border-earth-200 bg-white px-3 py-2.5 text-sm text-earth-900 placeholder:text-earth-400 focus:border-[#1068b6] focus:outline-none uppercase"
+                  />
+                  <p className="text-xs text-earth-400">
+                    Use ISO 3166-1 alpha-2 code (e.g. NL, DE, GB, US)
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {apiError && (
+            <p className="rounded border border-terracotta-400/40 bg-terracotta-50 px-4 py-3 text-sm text-terracotta-600">
+              {apiError}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={!formValid || loading}
+            className="rounded bg-earth-900 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-earth-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {loading ? "Redirecting to payment…" : `Pay ${formatPrice(grandTotalCents)}`}
+          </button>
+
+          <Link
+            href="/cart"
+            className="text-center text-sm text-earth-600 underline underline-offset-2 hover:text-earth-900 transition-colors"
+          >
+            ← Back to cart
+          </Link>
+        </form>
       </div>
     </div>
   );
