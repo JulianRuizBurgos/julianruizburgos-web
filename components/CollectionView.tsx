@@ -19,7 +19,7 @@ export default function CollectionView({
     <>
       <div className="bg-stone-50 min-h-screen">
         {/* Header */}
-        <section className="relative overflow-hidden pt-20 pb-20 px-6 lg:px-20">
+        <section className="relative overflow-hidden bg-stone-900 pt-20 pb-20 px-6 lg:px-20">
           {photos[0] && (
             <Image
               src={photos[0].imageUrl}

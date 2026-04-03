@@ -16,7 +16,7 @@ export default function ITPage() {
   return (
     <>
       {/* Dark header */}
-      <section className="relative overflow-hidden pt-20 pb-20 px-6 lg:px-20">
+      <section className="relative overflow-hidden bg-navy-900 pt-20 pb-20 px-6 lg:px-20">
         <Image
           src="/images/it-page-header-background.jpg"
           alt=""

@@ -133,7 +133,7 @@ export default function PhotographyGallery({
   return (
     <>
       {/* ── Dark header ──────────────────────────────────────────────────── */}
-      <section className="relative pt-20 pb-20 px-6 lg:px-20 overflow-hidden"
+      <section className="relative pt-20 pb-20 px-6 lg:px-20 overflow-hidden bg-stone-900"
         style={{ backgroundImage: "url(/images/photography-page-header-background.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
       >
         <div className="absolute inset-0 bg-black/50" />

@@ -224,7 +224,7 @@ export default function BlogReader({
   return (
     <>
       {/* ── Intro ─────────────────────────────────────────────────────────── */}
-      <section className={`relative pt-20 pb-20 px-6 lg:px-20 overflow-hidden ${activeSelected ? "hidden md:block" : "block"}`}
+      <section className={`relative pt-20 pb-20 px-6 lg:px-20 overflow-hidden bg-earth-900 ${activeSelected ? "hidden md:block" : "block"}`}
         style={{ backgroundImage: "url(/images/blog-page-header-background.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
       >
         <div className="absolute inset-0 bg-black/60" />
