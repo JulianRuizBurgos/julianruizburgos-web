@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+import itHeaderBg from "@/public/images/it-page-header-background.jpg";
 import { getAllServices, getAllProjects } from "@/lib/it";
 
 export const metadata: Metadata = {
@@ -18,9 +19,11 @@ export default function ITPage() {
       {/* Dark header */}
       <section className="relative overflow-hidden bg-navy-900 pt-20 pb-20 px-6 lg:px-20">
         <Image
-          src="/images/it-page-header-background.jpg"
+          src={itHeaderBg}
           alt=""
           fill
+          sizes="100vw"
+          placeholder="blur"
           className="object-cover object-center"
           priority
         />

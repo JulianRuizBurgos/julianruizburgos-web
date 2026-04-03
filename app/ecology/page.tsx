@@ -1,10 +1,12 @@
+import Image from "next/image";
+import ecologyHeaderBg from "@/public/images/ecology-page-header-background.jpg";
+
 export default function Ecology() {
   return (
     <>
       {/* Dark header */}
-      <section className="relative pt-20 pb-20 px-8 lg:px-16 border-b border-olive-200 overflow-hidden bg-olive-900"
-      style={{ backgroundImage: `url(/images/ecology-page-header-background.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
-      >
+      <section className="relative pt-20 pb-20 px-8 lg:px-16 border-b border-olive-200 overflow-hidden bg-olive-900">
+        <Image src={ecologyHeaderBg} alt="" fill sizes="100vw" placeholder="blur" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative max-w-4xl">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-olive-200">Ecology</p>

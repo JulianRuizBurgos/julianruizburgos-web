@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import type { RefObject } from "react";
+import Image from "next/image";
 import type { BlogPost, Topic } from "@/lib/blog";
+import blogHeaderBg from "@/public/images/blog-page-header-background.jpg";
 
 // ── topic accent colours ──────────────────────────────────────────────────────
 const topicMeta: Record<Topic, { pill: string; dot: string; label: string }> = {
@@ -224,9 +226,8 @@ export default function BlogReader({
   return (
     <>
       {/* ── Intro ─────────────────────────────────────────────────────────── */}
-      <section className={`relative pt-20 pb-20 px-6 lg:px-20 overflow-hidden bg-earth-900 ${activeSelected ? "hidden md:block" : "block"}`}
-        style={{ backgroundImage: "url(/images/blog-page-header-background.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
-      >
+      <section className={`relative pt-20 pb-20 px-6 lg:px-20 overflow-hidden bg-earth-900 ${activeSelected ? "hidden md:block" : "block"}`}>
+        <Image src={blogHeaderBg} alt="" fill sizes="100vw" placeholder="blur" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative max-w-4xl">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-earth-300">Writing</p>

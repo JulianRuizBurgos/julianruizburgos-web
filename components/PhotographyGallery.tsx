@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import photographyHeaderBg from "@/public/images/photography-page-header-background.jpg";
 import type { Photo } from "@/lib/photography";
 import PrintLightbox from "@/components/PrintLightbox";
 
@@ -133,9 +134,8 @@ export default function PhotographyGallery({
   return (
     <>
       {/* ── Dark header ──────────────────────────────────────────────────── */}
-      <section className="relative pt-20 pb-20 px-6 lg:px-20 overflow-hidden bg-stone-900"
-        style={{ backgroundImage: "url(/images/photography-page-header-background.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
-      >
+      <section className="relative pt-20 pb-20 px-6 lg:px-20 overflow-hidden bg-stone-900">
+        <Image src={photographyHeaderBg} alt="" fill sizes="100vw" placeholder="blur" className="object-cover object-center" priority />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative max-w-4xl">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-stone-400">Photography</p>

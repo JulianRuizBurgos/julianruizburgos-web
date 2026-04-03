@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
+import heroBg from "@/public/images/main-page-backgound-crop-ultrawide.jpg";
 
 const sections = [
   {
@@ -127,11 +128,12 @@ export default function Home() {
       {/* Full-screen hero */}
       <section className="relative h-screen w-full overflow-hidden">
         <Image
-          src="/images/main-page-backgound-crop-ultrawide.jpg"
+          src={heroBg}
           alt="Landscape photograph"
           fill
           sizes="100vw"
           quality={90}
+          placeholder="blur"
           className="object-cover object-center animate-kenburns"
           priority
         />
