@@ -134,7 +134,7 @@ export default function Home() {
           sizes="100vw"
           quality={90}
           placeholder="blur"
-          className="object-cover object-center animate-kenburns"
+          className="object-cover object-center animate-kenburns will-change-transform"
           priority
         />
         <div className="absolute inset-0 bg-black/30" />

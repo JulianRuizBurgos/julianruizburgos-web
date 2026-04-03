@@ -10,7 +10,7 @@ function Bars() {
       {[1, 2, 3].map((i) => (
         <span
           key={i}
-          className="w-[2px] rounded-sm bg-terracotta-400 animate-listening-bar"
+          className="w-[2px] h-3 rounded-sm bg-terracotta-400 animate-listening-bar origin-bottom"
           style={{ animationDelay: `${(i - 1) * 0.15}s` }}
         />
       ))}

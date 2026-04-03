@@ -30,6 +30,13 @@
     "stripe": "^22.0.0",
     "tailwind-merge": "^3.5.0"
   },
+  "browserslist": [
+    "chrome >= 96",
+    "edge >= 96",
+    "firefox >= 94",
+    "safari >= 15.4",
+    "not dead"
+  ],
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
