@@ -25,7 +25,7 @@ const sections = [
     href: "/it",
     label: "IT Consulting",
     verticalLabel: "IT",
-    image: "/images/main-page-it-section-card.png",
+    image: "/images/main-page-it-section-card.jpg",
     accentBg: "bg-navy-500",
   },
   {
