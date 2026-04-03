@@ -7,7 +7,7 @@ const resend = process.env.RESEND_API_KEY
   : null;
 
 const FROM_ADDRESS = "Julian Ruiz Burgos <orders@julianruizburgos.net>";
-const JULIAN_EMAIL = "julian@julianruizburgos.net";
+const JULIAN_EMAIL = "printshop@julianruizburgos.net";
 
 function itemDescription(item: OrderItem, postcard?: PostcardDetail): string {
   if (item.product_type === "postcard" && postcard) {

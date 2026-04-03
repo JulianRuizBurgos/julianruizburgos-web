@@ -45,10 +45,10 @@ export default function SuccessContent() {
           <p className="mt-1 text-sm text-earth-600">
             Questions? Write to{" "}
             <a
-              href="mailto:julian@julianruizburgos.net"
+              href="mailto:printshop@julianruizburgos.net"
               className="underline underline-offset-2 hover:text-earth-900 transition-colors"
             >
-              julian@julianruizburgos.net
+              printshop@julianruizburgos.net
             </a>
           </p>
         </div>
