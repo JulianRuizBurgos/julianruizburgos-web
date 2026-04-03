@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, ShoppingBag } from "lucide-react";
+import { X, ShoppingBag, House, Menu } from "lucide-react";
 import { useCart } from "@/lib/cart";
 
 const sections = [
@@ -47,9 +47,10 @@ export default function Nav() {
       {/* Home link — fixed top left */}
       <Link
         href="/"
-        className="fixed top-6 left-8 z-50 text-xs font-medium uppercase tracking-widest text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+        aria-label="Home"
+        className="fixed top-5 left-8 z-50 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
       >
-        Home
+        <House size={18} strokeWidth={1.8} />
       </Link>
 
       {/* Cart icon — fixed, left of MENU */}
@@ -70,9 +71,9 @@ export default function Nav() {
       <button
         onClick={() => setOpen(true)}
         aria-label="Open menu"
-        className="fixed top-6 right-8 z-50 text-xs font-medium uppercase tracking-widest text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
+        className="fixed top-5 right-8 z-50 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]"
       >
-        MENU
+        <Menu size={18} strokeWidth={1.8} />
       </button>
 
       {/* Backdrop */}
@@ -85,8 +86,8 @@ export default function Nav() {
 
       {/* Dark slide-in sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-80 text-white transition-transform duration-300 ease-in-out ${sidebarBg(pathname)} ${
-          open ? "translate-x-0" : "-translate-x-full"
+        className={`fixed inset-y-0 right-0 z-50 w-80 text-white transition-transform duration-300 ease-in-out ${sidebarBg(pathname)} ${
+          open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex h-full flex-col px-8 py-8">
