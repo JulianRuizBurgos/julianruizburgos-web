@@ -157,7 +157,7 @@ export default function Home() {
       <div className="h-24 bg-linear-to-b from-black/50 to-earth-50" />
 
       {/* Section cards */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-earth-200">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 bg-earth-200">
         {sections.map((s) => (
           <SectionCard key={s.href} {...s} />
         ))}
