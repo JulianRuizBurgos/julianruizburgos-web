@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
 import { getAllServices, getAllProjects } from "@/lib/it";
 
@@ -16,16 +15,8 @@ export default function ITPage() {
   return (
     <>
       {/* Dark header */}
-      <section className="relative overflow-hidden pt-20 pb-20 px-6 lg:px-20">
-        <Image
-          src="/images/it-page-header-background.png"
-          alt=""
-          fill
-          className="object-cover object-center"
-          priority
-        />
-        <div className="absolute inset-0 bg-navy-900/75" />
-        <div className="relative max-w-4xl">
+      <section className="bg-navy-700 pt-20 pb-20 px-6 lg:px-20">
+        <div className="max-w-4xl">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-navy-200">IT Consulting</p>
           <h1 className="font-serif text-5xl font-semibold leading-tight text-white md:text-6xl lg:text-7xl">
             Freelance.
