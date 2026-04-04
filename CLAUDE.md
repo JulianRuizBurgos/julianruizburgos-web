@@ -15,7 +15,7 @@ Secondary sections: Ecology (professional identity — consulting, research, pub
 - **Version control**: GitHub
 - **Hosting**: Hetzner CX23 VPS (Helsinki) — live at https://julianruizburgos.net
 - **Deployment**: Coolify — auto-deploy on push to `main`, active
-- **Payments**: Stripe (for print shop, not yet implemented)
+- **Payments**: Mollie (EU-based payment processor, replaces Stripe)
 - **Node**: v20+ required (v18 will fail the build)
 
 ## Design system
@@ -68,7 +68,7 @@ Homepage
 ├── Photography & prints      (amber — combined gallery + shop)
 │   ├── Galleries             (landscape, wildlife, series)
 │   ├── Browse prints
-│   └── Checkout              (Stripe)
+│   └── Checkout              (Mollie)
 ├── IT freelancing            (navy)
 │   ├── Services + case studies
 │   └── Contact
@@ -235,20 +235,28 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - [x] Photography collections: `/photography/collections` index + `/photography/collections/[slug]` detail pages. Cover cards with vignette effect.
 - [x] Photo metadata: 13 photos with EXIF-sourced dates and camera/lens info. `PrintSize` type covers A0–A4, square, and traditional lab sizes.
 - [x] Image optimisation: Next.js `<Image>` with AVIF/WebP formats, `sizes` prop on gallery/collection grids, server-side cache in `.next/cache/images`. Lightbox capped at 1200px. Copyright overlay on lightbox.
-- [x] **Print shop** — fully built, merged 2026-04-03. Code complete, awaiting env var configuration to go live. See shop section below for architecture details and go-live checklist.
+- [x] **Print shop** — fully built and tested end-to-end with Mollie test mode (2026-04-04). Code complete. NOT going live yet — blocked on photography editing workflow (real EXIF data needed for correct print size availability) and price/paper type validation. See shop section below.
 
 ## Roadmap
 
 ### In progress / next
-1. **Print shop go-live** — code is merged and deployed. Needs infrastructure setup before accepting real orders:
-   - [ ] PostgreSQL running on Hetzner VPS, `DATABASE_URL` set in Coolify
-   - [ ] Stripe keys set (`STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`)
-   - [ ] Stripe webhook registered at `/api/webhooks/stripe`, `STRIPE_WEBHOOK_SECRET` set
-   - [ ] Resend domain verified, `RESEND_API_KEY` set
-   - [ ] `ADMIN_SECRET` set for `/admin/orders`
-   - [ ] End-to-end test with Stripe test card `4242 4242 4242 4242`
-2. **Nextcloud photo integration** — `lib/photography.ts` and the image proxy route are already wired up for Nextcloud WebDAV (env vars: `NEXTCLOUD_WEBDAV_URL`, `NEXTCLOUD_USER`, `NEXTCLOUD_APP_PASSWORD`, `NEXTCLOUD_PHOTOS_PATH`). Currently using local dev files in `public/photography/dev/`. **Blocked on**: photography editing workflow decision (see global CLAUDE.md TODO).
-3. **Real EXIF metadata for photos** — `photos.json` currently has placeholder `widthPx`/`heightPx` values (4000×4000). Sync real EXIF data to get accurate print size availability per photo. Use `identify -format "%wx%h" file.jpg` (ImageMagick).
+1. **Photography editing workflow** — prerequisite for everything below. Three decisions needed (see global CLAUDE.md TODO): editing tool (Darktable recommended), Nextcloud folder/metadata convention, print product spec (sizes, prices, paper types). Current prices and paper types in `lib/shop.ts` are placeholders — Julian must validate before going live.
+
+2. **Nextcloud photo integration** — code is ready (`lib/photography.ts` + image proxy route wired for WebDAV). Env vars needed: `NEXTCLOUD_WEBDAV_URL`, `NEXTCLOUD_USER`, `NEXTCLOUD_APP_PASSWORD`, `NEXTCLOUD_PHOTOS_PATH`. **Blocked on**: photography editing workflow decision.
+
+3. **Real EXIF metadata for photos** — `photos.json` currently has placeholder `widthPx`/`heightPx` values (4000×4000). Sync real EXIF data for accurate print size availability. Use `identify -format "%wx%h" file.jpg` (ImageMagick). **Blocked on**: real photos being in place.
+
+4. **Print shop go-live** — end-to-end tested with Mollie test mode (2026-04-04). **Blocked on**: items 1–3 above (real photos, correct EXIF, validated prices). Also needs:
+   - [x] PostgreSQL on Hetzner VPS — live
+   - [x] `DATABASE_URL` set in Coolify
+   - [x] `MOLLIE_API_KEY` set (test key — swap to live key when ready)
+   - [x] `NEXT_PUBLIC_BASE_URL` set
+   - [x] `ADMIN_SECRET` set
+   - [x] End-to-end test with Mollie test mode — passed
+   - [ ] Mollie onboarding complete (business activity, ID doc, bank account — in progress)
+   - [ ] Swap `MOLLIE_API_KEY` to live key
+   - [ ] `RESEND_API_KEY` set (Resend domain verification needed)
+   - [ ] Validate and set real prices + paper types in `lib/shop.ts`
 
 ### Planned
 4. **Automated translation** — serve the site in multiple languages. Decision needed: static (build-time, e.g. next-intl with translated markdown files) vs. dynamic (runtime machine translation API). Content-heavy so quality matters; ecology and IT writing should not sound like raw MT output.
@@ -275,14 +283,15 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - Ecology section (see content plan below)
 - Configure health check in Coolify
 - Video hero background (clean, watermark-free source needed)
+- **Analytics dashboard** — deploy Umami (open source, self-hosted, GDPR-compliant) as a Docker container via Coolify on the same VPS. Add tracking script to `app/layout.tsx`. Access at a subdomain (e.g. `analytics.julianruizburgos.net`). Needs a second PostgreSQL DB and a GreenNet DNS subdomain.
 
 ---
 
-## Print shop — built (merged 2026-04-03, awaiting env var config to go live)
+## Print shop — built and tested (2026-04-04), not yet live
 
 ### Payment
-- **Stripe** — payment processor. Natively supports **iDEAL** (Netherlands) alongside cards and all EU payment methods. Enable iDEAL in Stripe dashboard — no separate integration.
-- Keys needed: `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`
+- **Mollie** — EU-based payment processor (migrated from Stripe 2026-04-03). Supports iDEAL, cards, and all major EU payment methods natively.
+- Keys needed: `MOLLIE_API_KEY`, `NEXT_PUBLIC_MOLLIE_PROFILE_ID`, `MOLLIE_WEBHOOK_SECRET`
 
 ### Product types
 
@@ -297,6 +306,14 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 Julian prints, addresses, and mails each postcard himself. No extra shipping address from the customer — the destination IS the mailing address.
 
 Each postcard in the cart is a unique item (different recipient/message), so quantity is always 1 per cart line.
+
+### Edition numbering (not yet implemented)
+- Branding on prints/packaging/certificate: logo mark only, no text — "Ruiz Burgos Ecology and Software" tagline doesn't belong on photography materials
+- Open edition — no maximum, prints on demand
+- Each photo has a sequential print counter in the DB; increments on each order
+- The number is recorded on the order and included on the certificate of authenticity
+- e.g. "Leenderbos at Dusk II — print #47" — a personal record, not a scarcity claim
+- DB change needed: `print_edition_number` column on `order_items`; `edition_count` counter per photo (separate table or on a future `photos` table)
 
 ### Decisions made (implemented in `lib/shop.ts`)
 - **Paper types**: Glossy (€25–€130), Matte (€28–€155), Fine Art Cotton (€45–€220)
@@ -317,11 +334,11 @@ Product catalogue
 Checkout flow
   ├── /cart                        — cart page, line items, subtotal
   ├── /checkout                    — shipping address form (prints only; postcards ship to recipient)
-  └── Stripe Payment Element       — card + iDEAL + all enabled EU methods
+  └── Mollie hosted checkout       — card + iDEAL + all enabled EU methods
 
 Server
-  ├── app/api/checkout/route.ts          — creates Stripe PaymentIntent
-  ├── app/api/webhooks/stripe/route.ts   — payment confirmed → save order, send emails
+  ├── app/api/checkout/route.ts          — creates Mollie payment
+  ├── app/api/webhooks/mollie/route.ts   — payment confirmed → save order, send emails
   └── Database: orders + order_items + postcard_details tables
 
 Post-payment
@@ -340,10 +357,10 @@ Order management
 - `lib/email.ts` — Resend email templates (customer confirmation, Julian notification, dispatch)
 - `components/PrintLightbox.tsx` — unified lightbox: image + size/paper selector or postcard form
 - `app/cart/page.tsx` — cart page
-- `app/checkout/page.tsx` — contact/shipping form + Stripe Payment Element
+- `app/checkout/page.tsx` — contact/shipping form + redirects to Mollie hosted checkout
 - `app/checkout/success/` — confirmation page
-- `app/api/checkout/route.ts` — creates PaymentIntent, verifies prices server-side
-- `app/api/webhooks/stripe/route.ts` — `payment_intent.succeeded` → save order → send emails (idempotent)
+- `app/api/checkout/route.ts` — creates Mollie payment, verifies prices server-side
+- `app/api/webhooks/mollie/route.ts` — `payment.paid` → save order → send emails (idempotent)
 - `app/api/orders/[id]/route.ts` — admin API: update status + tracking
 - `app/admin/orders/` — Basic Auth protected order management UI
 - `middleware.ts` — routing-level Basic Auth enforcement for `/admin/*`
