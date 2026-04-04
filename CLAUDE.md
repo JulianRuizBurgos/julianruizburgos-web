@@ -242,7 +242,7 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 ### In progress / next
 1. **Photography editing workflow** — prerequisite for everything below. Three decisions needed (see global CLAUDE.md TODO): editing tool (Darktable recommended), Nextcloud folder/metadata convention, print product spec (sizes, prices, paper types). Current prices and paper types in `lib/shop.ts` are placeholders — Julian must validate before going live.
 
-2. **Nextcloud photo integration** — code is ready (`lib/photography.ts` + image proxy route wired for WebDAV). Env vars needed: `NEXTCLOUD_WEBDAV_URL`, `NEXTCLOUD_USER`, `NEXTCLOUD_APP_PASSWORD`, `NEXTCLOUD_PHOTOS_PATH`. **Blocked on**: photography editing workflow decision.
+2. **Nextcloud photo integration** — code is ready (`lib/photography.ts` + image proxy route wired for WebDAV). Env vars needed: `NEXTCLOUD_WEBDAV_URL`, `NEXTCLOUD_USER`, `NEXTCLOUD_APP_PASSWORD`, `NEXTCLOUD_PHOTOS_PATH` (will point to `Photography/03_Exports/Shop/`). **Blocked on**: photography editing workflow decision.
 
 3. **Real EXIF metadata for photos** — `photos.json` currently has placeholder `widthPx`/`heightPx` values (4000×4000). Sync real EXIF data for accurate print size availability. Use `identify -format "%wx%h" file.jpg` (ImageMagick). **Blocked on**: real photos being in place.
 
