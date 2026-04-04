@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import type { Order, OrderItem } from "@/lib/db";
+import type { Order } from "@/lib/db";
+import type { OrderItemWithPostcard } from "./page";
 import { formatPrice } from "@/lib/shop";
 
-type OrderWithItems = Order & { items: OrderItem[] };
+type OrderWithItems = Order & { items: OrderItemWithPostcard[] };
 
 const STATUS_LABELS: Record<string, string> = {
   paid:       "Paid",
@@ -90,16 +91,28 @@ function OrderRow({ order }: { order: OrderWithItems }) {
           {/* Items */}
           <div className="rounded bg-earth-50 border border-earth-100 px-4 py-3 text-sm">
             {order.items.map((item) => (
-              <div key={item.id} className="flex justify-between py-1 border-b border-earth-50 last:border-0">
-                <span className="text-earth-700">
-                  {item.photo_title}
-                  {item.product_type === "print"
-                    ? ` — ${item.size}, ${item.paper_type}`
-                    : " — Postcard"}
-                </span>
-                <span className="text-earth-900 font-medium ml-4">
-                  {formatPrice(item.price_cents)}
-                </span>
+              <div key={item.id} className="py-2 border-b border-earth-100 last:border-0">
+                <div className="flex justify-between">
+                  <span className="text-earth-700">
+                    {item.photo_title}
+                    {item.product_type === "print"
+                      ? ` — ${item.size}, ${item.paper_type}`
+                      : " — Postcard"}
+                  </span>
+                  <span className="text-earth-900 font-medium ml-4">
+                    {formatPrice(item.price_cents)}
+                  </span>
+                </div>
+                {item.product_type === "postcard" && item.postcard && (
+                  <div className="mt-2 ml-2 border-l-2 border-terracotta-200 pl-3 text-xs text-earth-600 space-y-0.5">
+                    <p><span className="font-semibold text-earth-700">To:</span> {item.postcard.recipient_name}</p>
+                    <p>{item.postcard.address_line1}{item.postcard.address_line2 ? `, ${item.postcard.address_line2}` : ""}</p>
+                    <p>{item.postcard.city}, {item.postcard.postcode}, {item.postcard.country}</p>
+                    <p><span className="font-semibold text-earth-700">From:</span> {item.postcard.sender_name}</p>
+                    <p><span className="font-semibold text-earth-700">Style:</span> {item.postcard.text_style}</p>
+                    <p className="mt-1 italic text-earth-500">&ldquo;{item.postcard.message_text}&rdquo;</p>
+                  </div>
+                )}
               </div>
             ))}
             {order.shipping_cents > 0 && (

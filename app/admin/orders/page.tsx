@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import type { Order, OrderItem } from "@/lib/db";
+import type { Order, OrderItem, PostcardDetail } from "@/lib/db";
 import AdminOrdersClient from "./AdminOrdersClient";
 
 // ── Server-side auth check (HTTP Basic) ───────────────────────────────────────
@@ -21,7 +21,9 @@ async function checkAuth(): Promise<boolean> {
 
 // ── Data fetching ─────────────────────────────────────────────────────────────
 
-async function fetchOrders(): Promise<(Order & { items: OrderItem[] })[]> {
+export type OrderItemWithPostcard = OrderItem & { postcard?: PostcardDetail };
+
+async function fetchOrders(): Promise<(Order & { items: OrderItemWithPostcard[] })[]> {
   try {
     const { initSchema, query } = await import("@/lib/db");
     await initSchema();
@@ -35,10 +37,27 @@ async function fetchOrders(): Promise<(Order & { items: OrderItem[] })[]> {
       [orders.map((o) => o.id)]
     );
 
-    const itemsByOrder = new Map<string, OrderItem[]>();
+    const postcardItemIds = items
+      .filter((i) => i.product_type === "postcard")
+      .map((i) => i.id);
+
+    const postcardDetails =
+      postcardItemIds.length > 0
+        ? await query<PostcardDetail>(
+            `SELECT * FROM postcard_details WHERE order_item_id = ANY($1)`,
+            [postcardItemIds]
+          )
+        : [];
+
+    const postcardByItem = new Map<string, PostcardDetail>();
+    for (const pd of postcardDetails) {
+      postcardByItem.set(pd.order_item_id, pd);
+    }
+
+    const itemsByOrder = new Map<string, OrderItemWithPostcard[]>();
     for (const item of items) {
       const list = itemsByOrder.get(item.order_id) ?? [];
-      list.push(item);
+      list.push({ ...item, postcard: postcardByItem.get(item.id) });
       itemsByOrder.set(item.order_id, list);
     }
 
