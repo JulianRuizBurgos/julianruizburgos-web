@@ -64,7 +64,7 @@ function OrderRow({ order }: { order: OrderWithItems }) {
           <p className="text-sm text-earth-600">{order.customer_email}</p>
           <p className="mt-0.5 text-xs text-earth-400">{date}</p>
           <p className="mt-0.5 font-mono text-xs text-earth-400">
-            {order.id.slice(0, 8)}
+            ref: {order.stripe_payment_id.slice(-8).toUpperCase()}
           </p>
         </div>
 
