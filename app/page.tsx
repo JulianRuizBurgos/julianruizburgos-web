@@ -146,7 +146,7 @@ export default function Home() {
             Julian Ruiz Burgos
           </h1>
           <p className="mt-5 text-sm font-semibold uppercase tracking-[0.3em] text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
-            Ecologist&nbsp;&nbsp;·&nbsp;&nbsp;IT Consultant&nbsp;&nbsp;·&nbsp;&nbsp;Photographer
+            Ecology&nbsp;&nbsp;·&nbsp;&nbsp;Photography&nbsp;&nbsp;·&nbsp;&nbsp;IT & Software
           </p>
         </div>
 
