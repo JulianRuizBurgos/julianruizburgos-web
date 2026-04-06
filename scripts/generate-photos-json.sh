@@ -3,16 +3,24 @@
 # Reads JPEG metadata from a folder and generates/updates content/photography/photos.json
 #
 # Requirements: exiftool, jq
-# Usage: bash scripts/generate-photos-json.sh <photos-dir> <photos.json>
+# Usage: bash scripts/generate-photos-json.sh <photos-dir> <photos.json> [--sync]
+#
+# --sync: copy the output photos.json into <photos-dir> after generation
+#         so Nextcloud picks it up automatically.
+#
 # Example:
 #   bash scripts/generate-photos-json.sh \
-#     ~/Nextcloud/Photography/Camera\ workspace/03_Exports/Shop \
-#     content/photography/photos.json
+#     ~/Nextcloud/Photography/Workspace/03_Exports/Shop \
+#     content/photography/photos.json --sync
 
 set -euo pipefail
 
-PHOTOS_DIR="${1:?Usage: $0 <photos-dir> <photos.json>}"
-JSON_FILE="${2:?Usage: $0 <photos-dir> <photos.json>}"
+PHOTOS_DIR="${1:?Usage: $0 <photos-dir> <photos.json> [--sync]}"
+JSON_FILE="${2:?Usage: $0 <photos-dir> <photos.json> [--sync]}"
+SYNC=false
+for arg in "${@:3}"; do
+  [[ "$arg" == "--sync" ]] && SYNC=true
+done
 
 for cmd in exiftool jq; do
   if ! command -v "$cmd" &>/dev/null; then
@@ -104,4 +112,10 @@ if [[ "$REMOVED" != "[]" ]]; then
   echo "Warning: the following entries were in the existing JSON but not found in $PHOTOS_DIR:"
   echo "$REMOVED" | jq -r '.[]'
   echo "They have been removed from $JSON_FILE. Re-add manually if needed."
+fi
+
+if [[ "$SYNC" == "true" ]]; then
+  cp "$JSON_FILE" "$PHOTOS_DIR/photos.json"
+  echo ""
+  echo "Synced to $PHOTOS_DIR/photos.json (Nextcloud will sync automatically)"
 fi
