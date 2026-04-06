@@ -242,7 +242,7 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 **Print availability:**
 - All photos are available as prints and postcards — no per-photo flag needed
 - Available print sizes are computed at runtime in `lib/shop.ts` from `widthPx`/`heightPx` and `aspectRatio`
-- Logic: filter the master size list to those whose long edge fits within the photo's resolution at a minimum print DPI (e.g. 200 DPI); then filter to sizes whose aspect ratio matches the photo's aspect ratio within a tolerance (e.g. ±5%)
+- Logic: filter the master size list to those whose long edge fits within the photo's resolution at a minimum print DPI (e.g. 200 DPI); then filter to sizes whose aspect ratio matches the photo's aspect ratio within a tolerance (e.g. ±7%)
 - `printAvailable` and `printSizes` fields in existing `photos.json` entries are **deprecated** — remove when implementing the shop
 - The "Print available" badge in `PhotographyGallery.tsx` and `CollectionView.tsx` should be removed at that point too
 
@@ -261,7 +261,7 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 - `aspectRatio`, `widthPx`, and `heightPx` all come from EXIF — do not enter manually. Use `scripts/generate-photos-json.sh` to populate them. Values are cached in `photos.json` so the site never needs to read EXIF at request time (important for Nextcloud images in production).
 - `widthPx`/`heightPx` are used by `lib/shop.ts` to compute which print sizes are available at sufficient quality.
 - `sortOrder` null = sort by date descending. Set integers to force order within a collection.
-- `PrintSize` valid values: `"A4"` `"A3"` `"A3+"` `"50×70 cm"` `"A2"` `"A2+"` — postcards are always `"A6"` (10×15 cm), not in this list. **A2+ is the maximum size** (printer limit). A0/A1 and the old square/custom sizes are retired.
+- `PrintSize` valid values: `"A4"` `"A3"` `"A3+"` `"20×30 cm"` `"30×40 cm"` `"40×60 cm"` `"50×70 cm"` `"A2"` `"60×80 cm"` `"A2+"` — postcards are always `"A6"` (10×15 cm), not in this list. **A2+ is the maximum size** (printer limit). A0/A1 and the old square/custom sizes are retired. See the pricing section for aspect ratio guidance — `30×40 cm` and `60×80 cm` are the recommended primary sizes for Julian's 4:3 Olympus images.
 - Local dev images live in `public/photography/dev/` — served via the proxy route at `/photography/images/[filename]`, not directly from `public/`.
 - **Never import `lib/photography.ts` from a client component** — it uses `fs/promises`. Only `import type` is safe across the boundary.
 
@@ -451,13 +451,48 @@ The reason is that shipping costs vary dramatically by destination: a NL domesti
 
 The correct pattern is:
 
-1. **Gallery and product pages** show the print price only (e.g. "A3, Fine Art Cotton — €80"). No shipping mentioned here beyond a note like "Shipping calculated at checkout."
+1. **Gallery and product pages** show the print price only (e.g. "30×40 cm, Fine Art Cotton — €80"). No shipping mentioned here beyond a note like "Shipping calculated at checkout."
 2. **Cart page** shows the print subtotal + a "Shipping — calculated at checkout" placeholder line. The total shown in the cart is therefore the print subtotal only, clearly labelled as such.
 3. **Checkout page** collects the delivery country (or full address) first. Once the country is known, the correct shipping zone and cost are resolved and shown before the customer proceeds to payment.
 4. **`app/api/checkout/route.ts`** resolves the final shipping cost server-side from the country → zone → package category lookup (see table below) and adds it to the Mollie payment amount. The server always recomputes this — never trust a shipping cost passed from the client.
 5. **The Mollie payment amount** = print subtotal + shipping cost + any applicable VAT.
 
 The one deliberate exception: for NL domestic orders, consider absorbing the €6.35–7.45 shipping cost and displaying "Free shipping in the Netherlands." The amount is small relative to any print price and removes a friction point for local buyers. If you do this, the server-side route must still add €0 for shipping (not skip the calculation step entirely) so the logic path stays consistent.
+
+### Aspect ratios and print sizing — design decision
+
+**This section explains why the shop offers traditional photographic sizes (30×40, 60×80 cm etc.) alongside A-series, and how they should be handled in `lib/shop.ts`.**
+
+The Olympus OM-D E-M5 Mark II produces images at a **4:3 aspect ratio** (width:height = 1.333). This is the native format of Micro Four Thirds sensors.
+
+ISO A-series paper (A4, A3, A2…) follows a different ratio — **√2:1 ≈ 1.414** — by design, so that sheets halve cleanly. This means a 4:3 image printed on A-series paper is a mismatch. The image will either be cropped slightly to fill the paper edge-to-edge (changing the composition) or printed with white borders on two sides. The ±7% aspect ratio tolerance in `lib/shop.ts` means A-series sizes will pass the filter for 4:3 images, but the print will need borders or a minor crop in practice. This should be communicated to customers, not silently assumed.
+
+Traditional photographic print sizes, by contrast, were designed around common sensor and film ratios and are standardised to fit off-the-shelf frames in homeware stores:
+
+| Size | Ratio | Match for 4:3 Olympus | Off-the-shelf frames (NL/EU) |
+|------|-------|-----------------------|------------------------------|
+| 20×30 cm | 3:2 | ~11% crop needed | IKEA, HEMA, Xenos — very common |
+| **30×40 cm** | **4:3** | **✓ perfect match** | **IKEA Ribba, HEMA — most popular frame size in NL** |
+| 40×60 cm | 3:2 | ~11% crop needed | Available at larger homeware stores |
+| **60×80 cm** | **4:3** | **✓ perfect match** | Specialty framers; less off-the-shelf but findable |
+| 50×70 cm | 7:5 (1.4) | ~5% crop or tiny borders | Very popular NL poster/print size |
+| A4 (21×29.7) | √2 | White borders on 4:3 | Universal — everywhere |
+| A3 (29.7×42) | √2 | White borders on 4:3 | Universal — everywhere |
+
+**Recommendation for `lib/shop.ts`:** Structure the size list with two tiers, and surface this to customers:
+
+**Primary sizes** (image fills the paper, no borders, best framing experience):
+- `"30×40 cm"` — flagship; perfect 4:3 match; most-framed size in European homes. This should be the default/highlighted option in the UI.
+- `"60×80 cm"` — large premium format; same 4:3 match; beautiful statement piece.
+- `"50×70 cm"` — very popular NL/European large format; tiny 5% crop from 4:3 is imperceptible.
+
+**Secondary sizes** (A-series with white borders, or 3:2 with minor crop):
+- `"A4"` and `"A3"` — accessible entry tier; cheap universal frames; white border is a classical fine art presentation style, not a defect, but must be described in the UI.
+- `"40×60 cm"` — 3:2 ratio; requires a visible crop from 4:3 images; only offer for photos where the crop is pre-approved or the image has been composed with extra headroom.
+
+**What to show in `components/PrintLightbox.tsx`:** Consider adding a small "Fits standard frames" badge or note next to 30×40 and 60×80. For A-series sizes, show a note like "Printed with white border to fit A-series frames." For 40×60, consider flagging that a crop will be applied. This reduces purchase anxiety and returns significantly.
+
+**The ±7% aspect ratio tolerance in `lib/shop.ts`:** This tolerance correctly allows 4:3 images to be offered in A-series sizes (√2:1 is ~6% away from 4:3) and in 50×70 (7:5 is ~5% away). It will also allow 4:3 images in 40×60 (3:2 is ~11% away — this is outside the ±7% tolerance and will be correctly filtered out, which is the right behaviour). Do not widen the tolerance to accommodate 40×60 — the crop would be noticeable.
 
 ### Paper types (three tiers)
 
@@ -471,31 +506,37 @@ Replace the placeholder paper types in `lib/shop.ts` with these:
 
 ### Production costs per print (€)
 
-These are the internal cost components — not shown to customers, used to verify margin.
+These are the internal cost components — not shown to customers, used to verify margin. Labour (€15.00) is added once per order, not per print.
 
-| Size | Dimensions | Paper: Matte | Paper: Cotton | Paper: Baryta | Ink | Packaging |
-|------|------------|-------------|--------------|--------------|-----|-----------|
-| A4   | 21 × 29.7 cm | 0.90 | 1.80 | 2.00 | 1.00 | 2.00 |
-| A3   | 29.7 × 42 cm | 1.60 | 3.20 | 3.60 | 1.80 | 2.50 |
-| A3+  | 32 × 45 cm   | 2.00 | 4.00 | 4.50 | 2.20 | 3.00 |
-| 50×70 | 50 × 70 cm  | 3.50 | 6.50 | 7.00 | 3.80 | 3.80 |
-| A2   | 42 × 59.4 cm | 3.20 | 6.00 | 6.80 | 3.50 | 3.50 |
-| A2+  | 43.2 × 61 cm | *TBD* | *TBD* | *TBD* | *TBD* | 3.50 |
-
-Labour (€15.00) is added once per order, not per print.
+| Size | Dimensions | Ratio | Paper: Matte | Paper: Cotton | Paper: Baryta | Ink | Packaging |
+|------|------------|-------|-------------|--------------|--------------|-----|-----------|
+| A4        | 21 × 29.7 cm  | √2:1  | 0.90  | 1.80  | 2.00  | 1.00 | 2.00 |
+| 20×30 cm  | 20 × 30 cm    | 3:2   | 0.85  | 1.70  | 1.90  | 1.10 | 2.00 |
+| A3        | 29.7 × 42 cm  | √2:1  | 1.60  | 3.20  | 3.60  | 1.80 | 2.50 |
+| 30×40 cm  | 30 × 40 cm    | 4:3 ✓ | 1.50 | 3.00  | 3.40  | 1.90 | 2.50 |
+| A3+       | 32 × 45 cm    | √2:1  | 2.00  | 4.00  | 4.50  | 2.20 | 3.00 |
+| 40×60 cm  | 40 × 60 cm    | 3:2   | 3.00  | 5.80  | 6.50  | 3.30 | 3.50 |
+| 50×70 cm  | 50 × 70 cm    | 7:5   | 3.50  | 6.50  | 7.00  | 3.80 | 3.80 |
+| A2        | 42 × 59.4 cm  | √2:1  | 3.20  | 6.00  | 6.80  | 3.50 | 3.50 |
+| 60×80 cm  | 60 × 80 cm    | 4:3 ✓ | 6.00 | 11.50 | 13.00 | 6.50 | 5.00 |
+| A2+       | 43.2 × 61 cm  | √2:1  | 3.40  | 6.50  | 7.20  | 3.80 | 3.80 |
 
 ### Validated retail prices (€, open edition, excl. shipping)
 
-These are the values to set in `lib/shop.ts`. Rounded to nearest €5, based on 3.5× markup.
+These are the values to set in `lib/shop.ts`. Rounded to nearest €5, based on 3.5× markup. Sizes marked ✓ are the recommended primary options for Julian's 4:3 Olympus images.
 
-| Size | Matte | Cotton | Baryta |
-|------|-------|--------|--------|
-| A4   | 35    | 50     | 55     |
-| A3   | 55    | 80     | 85     |
-| A3+  | 65    | 95     | 100    |
-| 50×70 | 100  | 145    | 155    |
-| A2   | 90    | 135    | 145    |
-| A2+  | *TBD* | *TBD*  | *TBD*  |
+| Size | Ratio | Matte | Cotton | Baryta |
+|------|-------|-------|--------|--------|
+| A4        | √2:1  | 35    | 50     | 55     |
+| 20×30 cm  | 3:2   | 40    | 55     | 60     |
+| A3        | √2:1  | 55    | 80     | 85     |
+| **30×40 cm** ✓ | **4:3** | **55** | **80** | **85** |
+| A3+       | √2:1  | 65    | 95     | 100    |
+| 40×60 cm  | 3:2   | 85    | 120    | 130    |
+| 50×70 cm  | 7:5   | 100   | 145    | 155    |
+| A2        | √2:1  | 90    | 135    | 145    |
+| **60×80 cm** ✓ | **4:3** | **140** | **200** | **215** |
+| A2+       | √2:1  | 95    | 140    | 150    |
 
 ### Edition multipliers
 
@@ -513,12 +554,11 @@ Used to sanity-check pricing is competitive. Sources: Dutch market (Fotografie v
 
 | Size | Matte | Cotton | Baryta |
 |------|-------|--------|--------|
-| A4   | €30–€50 | €40–€65 | €45–€70 |
-| A3   | €45–€70 | €65–€95 | €70–€100 |
-| A3+  | €55–€85 | €80–€115 | €90–€120 |
-| 50×70 | €90–€130 | €130–€180 | €140–€195 |
-| A2   | €80–€120 | €115–€160 | €125–€170 |
-| A2+  | *TBD* | *TBD* | *TBD* |
+| A4 / 20×30 cm  | €30–€50  | €40–€65   | €45–€70   |
+| A3 / 30×40 cm  | €45–€70  | €65–€95   | €70–€100  |
+| A3+ / 40×60 cm | €55–€90  | €80–€120  | €90–€130  |
+| 50×70 / A2     | €90–€130 | €130–€180 | €140–€195 |
+| 60×80 / A2+    | €120–€170| €175–€250 | €190–€270 |
 
 ### Shipping zones and rates (PostNL January 2026 tariffs)
 
@@ -528,9 +568,9 @@ Replace the three flat rates (`NL €4.50 / EU €7.50 / Worldwide €12.00`) in
 
 | Print size | Package category | Approx. weight | Packaging method |
 |------------|----------------|----------------|-----------------|
-| A4, A3 | `small` | ~400–600 g | Flat rigid mailer |
-| A3+, 50×70, A2 | `medium` | ~700–1200 g | Postal tube or flat box |
-| A2+ | `large` | ~1500 g | Large postal tube |
+| A4, A3, 20×30 cm, 30×40 cm | `small` | ~400–700 g | Flat rigid mailer |
+| A3+, 40×60 cm, 50×70 cm, A2, A2+ | `medium` | ~700–1400 g | Postal tube or flat box |
+| 60×80 cm | `large` | ~1500 g | Large postal tube |
 
 **Shipping cost per zone and package category (€, online franking, track & trace included):**
 
