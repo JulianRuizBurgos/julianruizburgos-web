@@ -195,8 +195,10 @@ export function getAvailableSizes(
       // Resolution: long edge must meet 200 DPI against paper long edge
       const requiredPx = (longMm / 25.4) * MIN_PRINT_DPI;
       if (longPx < requiredPx) continue;
-      // Aspect ratio: must match paper within ±7%
-      const ratioDiff = Math.abs(aspectRatio - paperAspect) / paperAspect;
+      // Aspect ratio: normalise photo to long/short (>=1) before comparing,
+      // so portrait images (aspectRatio < 1) are handled correctly
+      const photoAspect = Math.max(aspectRatio, 1 / aspectRatio);
+      const ratioDiff = Math.abs(photoAspect - paperAspect) / paperAspect;
       if (ratioDiff > ASPECT_RATIO_TOLERANCE) continue;
     } else {
       // bordered: resolution check against image area (not full paper)
