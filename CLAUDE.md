@@ -164,7 +164,39 @@ tags: ["tag one", "tag two"]
 
 ## Photography content pipeline
 
-Photos are described in `content/photography/photos.json` (local dev) or fetched from Nextcloud WebDAV in production. Collections are in `content/photography/collections.json`.
+Photos are served from Nextcloud WebDAV in production (`Photography/Workspace/03_Exports/Shop/`), with `content/photography/photos.json` as the local dev fallback and repo backup. Collections are in `content/photography/collections.json` (same pattern).
+
+### Scripts
+
+```bash
+# 1. Scan Shop folder and update photos.json with EXIF data
+bash scripts/generate-photos-json.sh \
+  ~/Nextcloud/Photography/Workspace/03_Exports/Shop \
+  content/photography/photos.json --sync
+
+# 2. Enrich photos with Claude Sonnet 4.6 vision (converts TIF/PNG, renames, writes EXIF)
+ANTHROPIC_API_KEY=sk-ant-... node scripts/enrich-photo-metadata.mjs \
+  ~/Nextcloud/Photography/Workspace/03_Exports/Shop \
+  content/photography/photos.json \
+  content/photography/collections.json --sync
+
+# 3. Auto-generate/update collections from filename prefixes
+node scripts/generate-collections.mjs \
+  content/photography/photos.json \
+  content/photography/collections.json \
+  --sync ~/Nextcloud/Photography/Workspace/03_Exports/Shop
+```
+
+- `--sync` copies the JSON(s) into the Nextcloud Shop folder so the live site picks them up without redeploying.
+- The enrich script skips photos that already have a title — safe to re-run.
+- Filename convention after enrichment: `<category>_<location>_<title>.jpg` (e.g. `landscape_norway_glacier_descending_through_autumn_valley.jpg`)
+- The generate-collections script merges with existing collections (preserves descriptions, badges, coverPhoto).
+
+### Nextcloud env vars (set in Coolify)
+- `NEXTCLOUD_WEBDAV_URL`: `https://221015zlatrl2k5kune.nextcloud.hosting.zone/remote.php/dav/files/JulianRuizBurgos`
+- `NEXTCLOUD_USER`: `JulianRuizBurgos`
+- `NEXTCLOUD_APP_PASSWORD`: (app password — not login password)
+- `NEXTCLOUD_PHOTOS_PATH`: `Photography/Workspace/03_Exports/Shop`
 
 **`photos.json` entry shape:**
 ```json
@@ -202,7 +234,7 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 ```
 
 **Key rules:**
-- `aspectRatio`, `widthPx`, and `heightPx` all come from EXIF (`PixelXDimension`, `PixelYDimension`) — do not enter manually. Use the metadata sync script (to be written) or read with `identify -format "%wx%h" file.jpg` (ImageMagick). Values are cached in `photos.json` so the site never needs to read EXIF at request time (important for Nextcloud images in production).
+- `aspectRatio`, `widthPx`, and `heightPx` all come from EXIF — do not enter manually. Use `scripts/generate-photos-json.sh` to populate them. Values are cached in `photos.json` so the site never needs to read EXIF at request time (important for Nextcloud images in production).
 - `widthPx`/`heightPx` are used by `lib/shop.ts` to compute which print sizes are available at sufficient quality.
 - `sortOrder` null = sort by date descending. Set integers to force order within a collection.
 - `PrintSize` valid values: `"A4"` `"A3"` `"A2"` `"A1"` `"A0"` `"30×30 cm"` `"40×40 cm"` `"50×50 cm"` `"20×25 cm"` `"20×30 cm"` `"30×40 cm"` `"30×45 cm"` `"40×60 cm"` `"50×75 cm"` — postcards are always `"A6"` (10×15 cm), not in this list
@@ -217,7 +249,7 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - SSL via Let's Encrypt
 - GreenNet managing DNS and email (@julianruizburgos.net)
 
-## Current status (2026-04-03)
+## Current status (2026-04-06)
 - [x] Next.js 16.1.6 + TypeScript + Tailwind v4 + App Router
 - [x] shadcn/ui components installed
 - [x] Design system: 3-colour palette consolidated (terracotta / stone+navy / olive). plum and sage removed. forest-900 merged into earth-900.
@@ -233,20 +265,16 @@ Photos are described in `content/photography/photos.json` (local dev) or fetched
 - [x] Photography section: header with background photo + dark overlay + infinite collections carousel (desktop) + mobile "See Collections" button + free-text search + sidebar nav (tag filter only) + masonry grid + lightbox. Tag + search filtering. `lib/photography.ts` data layer with Nextcloud WebDAV + local dev fallback. Image proxy route.
 - [x] Lightbox close button: bottom-centre on mobile (thumb-reachable), top-right on desktop (`md:` breakpoint)
 - [x] Photography collections: `/photography/collections` index + `/photography/collections/[slug]` detail pages. Cover cards with vignette effect.
-- [x] Photo metadata: 13 photos with EXIF-sourced dates and camera/lens info. `PrintSize` type covers A0–A4, square, and traditional lab sizes.
 - [x] Image optimisation: Next.js `<Image>` with AVIF/WebP formats, `sizes` prop on gallery/collection grids, server-side cache in `.next/cache/images`. Lightbox capped at 1200px. Copyright overlay on lightbox.
-- [x] **Print shop** — fully built and tested end-to-end with Mollie test mode (2026-04-04). Code complete. NOT going live yet — blocked on photography editing workflow (real EXIF data needed for correct print size availability) and price/paper type validation. See shop section below.
+- [x] **Print shop** — fully built and tested end-to-end with Mollie test mode (2026-04-04). Code complete. NOT going live yet — blocked on Mollie onboarding + price/paper type validation. See shop section below.
+- [x] **Nextcloud photo integration live** (2026-04-06) — 60+ photos served from Nextcloud WebDAV. Real EXIF data in `photos.json`. Env vars set in Coolify (see Infrastructure section).
+- [x] **Photography metadata pipeline** (2026-04-06) — three scripts in `scripts/` handle the full workflow from raw export to published gallery (see Photography content pipeline below).
+- [x] **6 collections live**: Urban Photography, Landscapes, Macro & Nature, Architecture, Still Life, Astrophotography.
 
 ## Roadmap
 
 ### In progress / next
-1. **Photography editing workflow** — prerequisite for everything below. Three decisions needed (see global CLAUDE.md TODO): editing tool (Darktable recommended), Nextcloud folder/metadata convention, print product spec (sizes, prices, paper types). Current prices and paper types in `lib/shop.ts` are placeholders — Julian must validate before going live.
-
-2. **Nextcloud photo integration** — code is ready (`lib/photography.ts` + image proxy route wired for WebDAV). Env vars needed: `NEXTCLOUD_WEBDAV_URL`, `NEXTCLOUD_USER`, `NEXTCLOUD_APP_PASSWORD`, `NEXTCLOUD_PHOTOS_PATH` (will point to `Photography/03_Exports/Shop/`). **Blocked on**: photography editing workflow decision.
-
-3. **Real EXIF metadata for photos** — `photos.json` currently has placeholder `widthPx`/`heightPx` values (4000×4000). Sync real EXIF data for accurate print size availability. Use `identify -format "%wx%h" file.jpg` (ImageMagick). **Blocked on**: real photos being in place.
-
-4. **Print shop go-live** — end-to-end tested with Mollie test mode (2026-04-04). **Blocked on**: items 1–3 above (real photos, correct EXIF, validated prices). Also needs:
+1. **Print shop go-live** — end-to-end tested with Mollie test mode (2026-04-04). **Blocked on**:
    - [x] PostgreSQL on Hetzner VPS — live
    - [x] `DATABASE_URL` set in Coolify
    - [x] `MOLLIE_API_KEY` set (test key — swap to live key when ready)
