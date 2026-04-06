@@ -197,7 +197,7 @@ bash scripts/warm-cache.sh                       # production
 bash scripts/warm-cache.sh http://localhost:3000 # local dev
 ```
 
-- `--sync` copies the JSON(s) into the Nextcloud Shop folder so the live site picks them up without redeploying.
+- `--sync` copies the JSON(s) into the Nextcloud Shop folder so the live site picks them up without redeployed.
 - The enrich script skips photos that already have a title — safe to re-run.
 - Filename convention after enrichment: `<category>_<location>_<title>.jpg` (e.g. `landscape_norway_glacier_descending_through_autumn_valley.jpg`)
 - The generate-collections script merges with existing collections (preserves descriptions, badges, coverPhoto).
@@ -241,8 +241,7 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 
 **Print availability:**
 - All photos are available as prints and postcards — no per-photo flag needed
-- Available print sizes are computed at runtime in `lib/shop.ts` from `widthPx`/`heightPx` and `aspectRatio`
-- Logic: filter the master size list to those whose long edge fits within the photo's resolution at a minimum print DPI (e.g. 200 DPI); then filter to sizes whose aspect ratio matches the photo's aspect ratio within a tolerance (e.g. ±7%)
+- Available print sizes are computed at runtime in `lib/shop.ts` from `widthPx`/`heightPx`, `aspectRatio`, and the customer's chosen `presentationStyle` (`'bordered'` or `'borderless'`) — see the pricing section for the full logic
 - `printAvailable` and `printSizes` fields in existing `photos.json` entries are **deprecated** — remove when implementing the shop
 - The "Print available" badge in `PhotographyGallery.tsx` and `CollectionView.tsx` should be removed at that point too
 
@@ -262,6 +261,7 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 - `widthPx`/`heightPx` are used by `lib/shop.ts` to compute which print sizes are available at sufficient quality.
 - `sortOrder` null = sort by date descending. Set integers to force order within a collection.
 - `PrintSize` valid values: `"A4"` `"A3"` `"A3+"` `"20×30 cm"` `"30×40 cm"` `"40×60 cm"` `"50×70 cm"` `"A2"` `"60×80 cm"` `"A2+"` — postcards are always `"A6"` (10×15 cm), not in this list. **A2+ is the maximum size** (printer limit). A0/A1 and the old square/custom sizes are retired. See the pricing section for aspect ratio guidance — `30×40 cm` and `60×80 cm` are the recommended primary sizes for Julian's 4:3 Olympus images.
+- `PresentationStyle` type: `'bordered' | 'borderless'` — stored on each cart line item and order record. See the pricing section for the full design decision and implementation guidance.
 - Local dev images live in `public/photography/dev/` — served via the proxy route at `/photography/images/[filename]`, not directly from `public/`.
 - **Never import `lib/photography.ts` from a client component** — it uses `fs/promises`. Only `import type` is safe across the boundary.
 
@@ -349,7 +349,7 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 
 ### Product types
 
-**Photo prints** — standard wall prints. Customer picks size + paper type.
+**Photo prints** — standard wall prints. Customer picks size + paper type + presentation style.
 
 **Postcards** — any photo, printed at A6 (10×15 cm). Customer provides:
 - Recipient name + full destination address (street, city, postcode, country)
@@ -371,6 +371,7 @@ Each postcard in the cart is a unique item (different recipient/message), so qua
 
 ### Decisions made (implemented in `lib/shop.ts`)
 - **Paper types**: see pricing section below for validated values — replace the placeholder ranges
+- **Presentation style**: `bordered` (default) or `borderless` — see pricing section for full design decision and implementation
 - **Postcard price**: €5 flat rate
 - **Minimum print DPI**: 200 DPI
 - **Shipping**: see pricing section below for real PostNL 2026 zone-based rates — replace the placeholder flat rates
@@ -382,7 +383,7 @@ Cart (client state)
   └── React context + localStorage for persistence across pages
 
 Product catalogue
-  └── photos.json × paper/size price matrix + postcard price in lib/shop.ts
+  └── photos.json × paper/size/presentationStyle matrix in lib/shop.ts
 
 Checkout flow
   ├── /cart                        — cart page, line items, subtotal
@@ -404,11 +405,11 @@ Order management
 ```
 
 ### Key files
-- `lib/shop.ts` — paper types, price matrix, print size availability logic (min 200 DPI, ±7% aspect ratio tolerance)
+- `lib/shop.ts` — paper types, price matrix, presentation style logic, print size availability (min 200 DPI, ±7% aspect ratio tolerance for borderless; image-area DPI check with no ratio constraint for bordered)
 - `lib/cart.tsx` — React context + localStorage cart state
 - `lib/db.ts` — PostgreSQL schema + connection pool (tables: `orders`, `order_items`, `postcard_details`)
 - `lib/email.ts` — Resend email templates (customer confirmation, Julian notification, dispatch)
-- `components/PrintLightbox.tsx` — unified lightbox: image + size/paper selector or postcard form
+- `components/PrintLightbox.tsx` — unified lightbox: image + size/paper/presentation selector or postcard form
 - `app/cart/page.tsx` — cart page
 - `app/checkout/page.tsx` — contact/shipping form + redirects to Mollie hosted checkout
 - `app/checkout/success/` — confirmation page
@@ -420,7 +421,7 @@ Order management
 
 ### Fulfilment
 Julian handles everything himself:
-- **Prints**: prints on own photo printer, packages, ships with tracking
+- **Prints**: prints on own photo printer, packages, ships with tracking. The `presentationStyle` field in the order determines whether the print driver is configured with margins (`bordered`) or full-bleed (`borderless`).
 - **Postcards**: prints A6 postcard, handwrites or prints the message side, stamps, mails directly to recipient address
 
 ---
@@ -465,7 +466,7 @@ The one deliberate exception: for NL domestic orders, consider absorbing the €
 
 The Olympus OM-D E-M5 Mark II produces images at a **4:3 aspect ratio** (width:height = 1.333). This is the native format of Micro Four Thirds sensors.
 
-ISO A-series paper (A4, A3, A2…) follows a different ratio — **√2:1 ≈ 1.414** — by design, so that sheets halve cleanly. This means a 4:3 image printed on A-series paper is a mismatch. The image will either be cropped slightly to fill the paper edge-to-edge (changing the composition) or printed with white borders on two sides. The ±7% aspect ratio tolerance in `lib/shop.ts` means A-series sizes will pass the filter for 4:3 images, but the print will need borders or a minor crop in practice. This should be communicated to customers, not silently assumed.
+ISO A-series paper (A4, A3, A2…) follows a different ratio — **√2:1 ≈ 1.414** — by design, so that sheets halve cleanly. This means a 4:3 image printed on A-series paper is a mismatch. The image will either be cropped slightly to fill the paper edge-to-edge (changing the composition) or printed with white borders on two sides. The ±7% aspect ratio tolerance in `lib/shop.ts` means A-series sizes will pass the filter for 4:3 images in borderless mode, but the print will need borders or a minor crop in practice. This should be communicated to customers, not silently assumed.
 
 Traditional photographic print sizes, by contrast, were designed around common sensor and film ratios and are standardised to fit off-the-shelf frames in homeware stores:
 
@@ -490,9 +491,98 @@ Traditional photographic print sizes, by contrast, were designed around common s
 - `"A4"` and `"A3"` — accessible entry tier; cheap universal frames; white border is a classical fine art presentation style, not a defect, but must be described in the UI.
 - `"40×60 cm"` — 3:2 ratio; requires a visible crop from 4:3 images; only offer for photos where the crop is pre-approved or the image has been composed with extra headroom.
 
-**What to show in `components/PrintLightbox.tsx`:** Consider adding a small "Fits standard frames" badge or note next to 30×40 and 60×80. For A-series sizes, show a note like "Printed with white border to fit A-series frames." For 40×60, consider flagging that a crop will be applied. This reduces purchase anxiety and returns significantly.
+**The ±7% aspect ratio tolerance in `lib/shop.ts`:** This tolerance correctly allows 4:3 images to be offered in A-series sizes (√2:1 is ~6% away from 4:3) and in 50×70 (7:5 is ~5% away). It will also allow 4:3 images in 40×60 (3:2 is ~11% away — this is outside the ±7% tolerance and will be correctly filtered out for borderless, which is the right behaviour). Do not widen the tolerance to accommodate 40×60 in borderless mode — the crop would be noticeable. Note that in bordered mode, the aspect ratio filter does not apply at all (see section below).
 
-**The ±7% aspect ratio tolerance in `lib/shop.ts`:** This tolerance correctly allows 4:3 images to be offered in A-series sizes (√2:1 is ~6% away from 4:3) and in 50×70 (7:5 is ~5% away). It will also allow 4:3 images in 40×60 (3:2 is ~11% away — this is outside the ±7% tolerance and will be correctly filtered out, which is the right behaviour). Do not widen the tolerance to accommodate 40×60 — the crop would be noticeable.
+### Bordered vs borderless presentation — design decision and implementation
+
+**The customer chooses a presentation style for each print. The default is `bordered`. Both options are the same price.**
+
+**What each means:**
+
+`bordered` (default, Julian's preference): The image is printed smaller than the paper, centred within it, surrounded by a clean white margin on all sides. This is the traditional fine art / gallery presentation — it is what you see on museum prints and in photography galleries. The white border gives the image visual breathing room, protects the image when framed (the frame grip covers border rather than image), and allows the print to be re-matted in different frame configurations without touching the image itself. Julian personally prefers this for framing and it should be the default option.
+
+`borderless`: The image fills the paper completely, edge to edge. This is the commercial / poster presentation style. It is appropriate when the customer has a specific frame and wants the image to fill it without any white space.
+
+**How presentation style affects size availability — this is the critical logic change:**
+
+For `borderless` prints, the existing availability logic applies unchanged: the image's aspect ratio must match the paper's aspect ratio within ±7%, and the image must have sufficient resolution to fill the paper at 200 DPI minimum.
+
+For `bordered` prints, the logic is different in two important ways. First, the aspect ratio check is **dropped entirely** — the image is printed at its native ratio regardless of the paper shape; the border absorbs any ratio difference. A 4:3 image on A3 paper with a border simply has slightly asymmetric left/right vs top/bottom borders, which is normal and intentional. Second, the DPI check is applied to the **image area** (paper minus the borders), not the full paper size. Since the image area is smaller than the paper, the same photo qualifies for a larger range of sizes in bordered mode than in borderless mode.
+
+The practical consequence is that switching from borderless to bordered in the UI will unlock more available sizes for most photos. This should be reflected in real time in `components/PrintLightbox.tsx` — the size list should update when the customer toggles between the two styles.
+
+**Standard border widths — export these as `BORDER_WIDTH_MM` in `lib/shop.ts`:**
+
+| Package category | Border width | Applies to |
+|-----------------|-------------|------------|
+| `small` | 20 mm | A4, A3, 20×30 cm, 30×40 cm |
+| `medium` | 25 mm | A3+, 40×60 cm, 50×70 cm, A2, A2+ |
+| `large` | 30 mm | 60×80 cm |
+
+The convention is equal margins on all four sides. The image is centred. There is no "extra space at top" variant for now — equal borders are simpler and look clean.
+
+**Image area dimensions for each size** (paper minus 2× border width, used for DPI check in bordered mode):
+
+| Size | Paper (mm) | Border | Image area (mm) | Image area (cm) |
+|------|-----------|--------|-----------------|-----------------|
+| A4        | 210 × 297  | 20 mm | 170 × 257 | 17.0 × 25.7 |
+| 20×30 cm  | 200 × 300  | 20 mm | 160 × 260 | 16.0 × 26.0 |
+| A3        | 297 × 420  | 25 mm | 247 × 370 | 24.7 × 37.0 |
+| 30×40 cm  | 300 × 400  | 25 mm | 250 × 350 | 25.0 × 35.0 |
+| A3+       | 320 × 450  | 25 mm | 270 × 400 | 27.0 × 40.0 |
+| 40×60 cm  | 400 × 600  | 25 mm | 350 × 550 | 35.0 × 55.0 |
+| 50×70 cm  | 500 × 700  | 25 mm | 450 × 650 | 45.0 × 65.0 |
+| A2        | 420 × 594  | 25 mm | 370 × 544 | 37.0 × 54.4 |
+| 60×80 cm  | 600 × 800  | 30 mm | 540 × 740 | 54.0 × 74.0 |
+| A2+       | 432 × 610  | 25 mm | 382 × 560 | 38.2 × 56.0 |
+
+**Implementation guidance for `lib/shop.ts`:**
+
+Export a `PresentationStyle` type: `'bordered' | 'borderless'`.
+
+Add a `getAvailableSizes(photo: Photo, style: PresentationStyle): PrintSize[]` function with this logic:
+
+```typescript
+// For borderless: existing logic — both ratio check AND paper-level DPI check
+// For bordered: image-area DPI check only — NO ratio check
+function getAvailableSizes(photo: Photo, style: PresentationStyle): PrintSize[] {
+  return ALL_SIZES.filter(size => {
+    if (style === 'borderless') {
+      // Must have sufficient resolution to fill the paper at 200 DPI
+      const requiredPx = size.longEdgeMm * (200 / 25.4)
+      if (photo.longEdgePx < requiredPx) return false
+      // Must match paper aspect ratio within ±7%
+      const ratioDiff = Math.abs(photo.aspectRatio - size.aspectRatio) / size.aspectRatio
+      return ratioDiff <= 0.07
+    } else {
+      // bordered: check resolution against image area, not paper
+      const imageArea = getImageArea(size) // returns { longEdgeMm, shortEdgeMm }
+      const requiredPx = imageArea.longEdgeMm * (200 / 25.4)
+      return photo.longEdgePx >= requiredPx
+      // No aspect ratio check — border absorbs the difference
+    }
+  })
+}
+```
+
+Also export `getImageArea(size: PrintSize): { longEdgeMm: number, shortEdgeMm: number }` — this is used both in the availability logic above and in the UI to show the customer the actual image dimensions.
+
+**What to store on each order line item:**
+
+`presentationStyle: PresentationStyle` must be stored on `order_items` in the database. Julian needs this when printing — it determines whether to configure the printer driver with margins (`bordered`) or full-bleed (`borderless`). It must also appear in the Julian notification email and the order management UI (`/admin/orders`).
+
+**UI guidance for `components/PrintLightbox.tsx`:**
+
+Show a toggle or two-option selector near the top of the print configuration panel, before the size selector. Label the options clearly:
+
+- "With white border" (default, shown first) — add a parenthetical like "(recommended for framing)"
+- "Borderless / full-bleed"
+
+When the customer switches between the two options, recalculate and re-render the available size list immediately. Sizes that were unavailable in borderless mode may appear in bordered mode, and the customer should see this happen — it communicates that the bordered option gives more choice.
+
+For any given size, show the customer both the paper dimensions and, for bordered prints, the image area: e.g. "30×40 cm paper · image printed at 25×35 cm." This is important because a customer who plans to mount the print with a cut mat needs to know the actual image dimensions.
+
+Do not add a price difference between the two options. The paper cost is the same (same sheet); the ink is marginally less for bordered prints but the difference is negligible. Presentation style is a free choice.
 
 ### Paper types (three tiers)
 
@@ -523,7 +613,7 @@ These are the internal cost components — not shown to customers, used to verif
 
 ### Validated retail prices (€, open edition, excl. shipping)
 
-These are the values to set in `lib/shop.ts`. Rounded to nearest €5, based on 3.5× markup. Sizes marked ✓ are the recommended primary options for Julian's 4:3 Olympus images.
+These are the values to set in `lib/shop.ts`. Rounded to nearest €5, based on 3.5× markup. Prices are the same regardless of presentation style (bordered or borderless). Sizes marked ✓ are the recommended primary options for Julian's 4:3 Olympus images.
 
 | Size | Ratio | Matte | Cotton | Baryta |
 |------|-------|-------|--------|--------|
