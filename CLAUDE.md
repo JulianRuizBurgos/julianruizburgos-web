@@ -441,7 +441,23 @@ retail = (paper_cost + ink_cost + packaging_cost + labour_cost) × markup × edi
 - **Labour per order**: €15.00 (printing + QC + packaging + admin, ~20 min at €35–40/hr — often under-counted, do not remove)
 - **Minimum viable price**: production cost (excl. shipping) × 1.20, rounded up to nearest €5
 - All retail prices are rounded to the nearest €5
-- Shipping is always shown and charged separately at checkout
+- **Shipping is never included in the print price — it is always a separate line item added at checkout** (see design principle below)
+
+### Shipping separation — core design principle
+
+**Do not bundle shipping into the print price. This is a firm architectural decision, not a convenience choice.**
+
+The reason is that shipping costs vary dramatically by destination: a NL domestic order costs €6–7, while shipping to the US runs €21–36 for the same print. If shipping were folded into the displayed price, you would face an impossible tradeoff: either set a price that overcharges EU buyers to cover the worst-case international rate, or show different prices for the same print depending on where the visitor is browsing from — which is confusing, looks inconsistent in the gallery, and breaks price caching.
+
+The correct pattern is:
+
+1. **Gallery and product pages** show the print price only (e.g. "A3, Fine Art Cotton — €80"). No shipping mentioned here beyond a note like "Shipping calculated at checkout."
+2. **Cart page** shows the print subtotal + a "Shipping — calculated at checkout" placeholder line. The total shown in the cart is therefore the print subtotal only, clearly labelled as such.
+3. **Checkout page** collects the delivery country (or full address) first. Once the country is known, the correct shipping zone and cost are resolved and shown before the customer proceeds to payment.
+4. **`app/api/checkout/route.ts`** resolves the final shipping cost server-side from the country → zone → package category lookup (see table below) and adds it to the Mollie payment amount. The server always recomputes this — never trust a shipping cost passed from the client.
+5. **The Mollie payment amount** = print subtotal + shipping cost + any applicable VAT.
+
+The one deliberate exception: for NL domestic orders, consider absorbing the €6.35–7.45 shipping cost and displaying "Free shipping in the Netherlands." The amount is small relative to any print price and removes a friction point for local buyers. If you do this, the server-side route must still add €0 for shipping (not skip the calculation step entirely) so the logic path stays consistent.
 
 ### Paper types (three tiers)
 
@@ -530,11 +546,11 @@ Replace the three flat rates (`NL €4.50 / EU €7.50 / Worldwide €12.00`) in
 
 Source: PostNL tarievenfolder January 2026 (official PDF, verified April 2026).
 
-**Implementation notes for `lib/shop.ts`:**
-- Map the customer's shipping country (ISO code) to a zone at checkout
-- The checkout form should collect country; zone lookup happens server-side in `app/api/checkout/route.ts`
-- Consider restricting to EU + UK initially — US shipping is expensive and subject to new import regulations (10-digit HS codes required from August 2025, increased duties from August 2025)
-- NL domestic: consider absorbing the €6.35–7.45 into print price as "free shipping" for NL buyers — it is small enough relative to print price that it simplifies the purchase decision
+**Implementation notes:**
+- Map the customer's delivery country (ISO 3166-1 alpha-2 code) to a zone in `app/api/checkout/route.ts`. The mapping lives server-side only.
+- The checkout form collects the full delivery address including country before the customer proceeds to the Mollie payment step.
+- Always recompute the shipping cost server-side from the submitted country — never accept a shipping amount from the client payload.
+- Consider restricting to EU + UK initially — US shipping is expensive and subject to ongoing regulatory changes (10-digit HS codes required and increased import duties effective August 2025).
 
 ### VAT
 
