@@ -261,7 +261,7 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 - `aspectRatio`, `widthPx`, and `heightPx` all come from EXIF — do not enter manually. Use `scripts/generate-photos-json.sh` to populate them. Values are cached in `photos.json` so the site never needs to read EXIF at request time (important for Nextcloud images in production).
 - `widthPx`/`heightPx` are used by `lib/shop.ts` to compute which print sizes are available at sufficient quality.
 - `sortOrder` null = sort by date descending. Set integers to force order within a collection.
-- `PrintSize` valid values: `"A4"` `"A3"` `"A2"` `"A1"` `"A0"` `"30×30 cm"` `"40×40 cm"` `"50×50 cm"` `"20×25 cm"` `"20×30 cm"` `"30×40 cm"` `"30×45 cm"` `"40×60 cm"` `"50×75 cm"` — postcards are always `"A6"` (10×15 cm), not in this list
+- `PrintSize` valid values: `"A4"` `"A3"` `"A3+"` `"50×70 cm"` `"A2"` `"A2+"` — postcards are always `"A6"` (10×15 cm), not in this list. **A2+ is the maximum size** (printer limit). A0/A1 and the old square/custom sizes are retired.
 - Local dev images live in `public/photography/dev/` — served via the proxy route at `/photography/images/[filename]`, not directly from `public/`.
 - **Never import `lib/photography.ts` from a client component** — it uses `fs/promises`. Only `import type` is safe across the boundary.
 
@@ -480,7 +480,7 @@ These are the internal cost components — not shown to customers, used to verif
 | A3+  | 32 × 45 cm   | 2.00 | 4.00 | 4.50 | 2.20 | 3.00 |
 | 50×70 | 50 × 70 cm  | 3.50 | 6.50 | 7.00 | 3.80 | 3.80 |
 | A2   | 42 × 59.4 cm | 3.20 | 6.00 | 6.80 | 3.50 | 3.50 |
-| A1   | 59.4 × 84 cm | 5.80 | 11.00 | 12.00 | 6.20 | 4.50 |
+| A2+  | 43.2 × 61 cm | *TBD* | *TBD* | *TBD* | *TBD* | 3.50 |
 
 Labour (€15.00) is added once per order, not per print.
 
@@ -495,7 +495,7 @@ These are the values to set in `lib/shop.ts`. Rounded to nearest €5, based on 
 | A3+  | 65    | 95     | 100    |
 | 50×70 | 100  | 145    | 155    |
 | A2   | 90    | 135    | 145    |
-| A1   | 145   | 215    | 230    |
+| A2+  | *TBD* | *TBD*  | *TBD*  |
 
 ### Edition multipliers
 
@@ -518,7 +518,7 @@ Used to sanity-check pricing is competitive. Sources: Dutch market (Fotografie v
 | A3+  | €55–€85 | €80–€115 | €90–€120 |
 | 50×70 | €90–€130 | €130–€180 | €140–€195 |
 | A2   | €80–€120 | €115–€160 | €125–€170 |
-| A1   | €130–€190 | €185–€260 | €200–€280 |
+| A2+  | *TBD* | *TBD* | *TBD* |
 
 ### Shipping zones and rates (PostNL January 2026 tariffs)
 
@@ -530,7 +530,7 @@ Replace the three flat rates (`NL €4.50 / EU €7.50 / Worldwide €12.00`) in
 |------------|----------------|----------------|-----------------|
 | A4, A3 | `small` | ~400–600 g | Flat rigid mailer |
 | A3+, 50×70, A2 | `medium` | ~700–1200 g | Postal tube or flat box |
-| A1 | `large` | ~1500 g | Large postal tube |
+| A2+ | `large` | ~1500 g | Large postal tube |
 
 **Shipping cost per zone and package category (€, online franking, track & trace included):**
 
