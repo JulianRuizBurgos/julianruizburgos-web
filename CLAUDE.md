@@ -487,6 +487,12 @@ retail = (paper_cost + ink_cost + packaging_cost + labour_cost) × markup × edi
 - All retail prices are rounded to the nearest €5
 - **Shipping is never included in the print price — it is always a separate line item added at checkout** (see design principle below)
 
+### Markup and pricing architecture — current vs planned
+
+**Current implementation** (`lib/shop.ts`): validated retail prices are stored as `BASE_PRICE_CENTS` hardcoded at `MARKUP = 3.5`. Changing `MARKUP` scales all prices proportionally via `BASE_PRICE_CENTS[size][paper] × (MARKUP / 3.5)`. This works, but requires code changes and a redeploy to reprice.
+
+**Planned improvement** (deferred until admin interface is built): move base production costs and the markup multiplier into the database — a `pricing` table (base cost per size/paper) and a `settings` table (markup, VAT rate). The checkout API and price display apply markup at runtime. This allows repricing without touching code or redeploying. Prerequisite: admin UI with a pricing management screen.
+
 ### Shipping separation — core design principle
 
 **Do not bundle shipping into the print price. This is a firm architectural decision, not a convenience choice.**

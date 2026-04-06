@@ -138,7 +138,7 @@ Fully built, end-to-end tested with Mollie test mode. Not yet live — blocked o
 - 10 fixed print sizes + panoramic roll prints (variable-length, ratio > 1.375)
 - 3 paper types: Premium Matte, Fine Art Cotton, Baryta
 - Bordered (default) and borderless presentation styles
-- Prices computed from production costs × markup (change `MARKUP` in `lib/shop.ts` to reprice all)
+- Prices: validated retail prices stored as `BASE_PRICE_CENTS` at `MARKUP = 3.5`; changing `MARKUP` scales all proportionally. Future: move to DB table for admin-UI repricing without redeploy.
 - Zone-based PostNL shipping (7 zones × 3 package categories, PostNL Jan 2026 tariffs)
 - Postcards: any photo, A6, handwritten or printed, mailed directly to recipient
 - 9% BTW (Dutch reduced artwork rate) applied at checkout
