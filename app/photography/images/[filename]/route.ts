@@ -11,7 +11,7 @@ const MIME: Record<string, string> = {
 const WEBDAV_URL = process.env.NEXTCLOUD_WEBDAV_URL;
 const NC_USER = process.env.NEXTCLOUD_USER;
 const NC_PASS = process.env.NEXTCLOUD_APP_PASSWORD;
-const PHOTOS_PATH = process.env.NEXTCLOUD_PHOTOS_PATH ?? "Photography/Web-ready";
+const PHOTOS_PATH = process.env.NEXTCLOUD_PHOTOS_PATH ?? "Photography/03_Exports/Shop";
 
 export async function GET(
   _req: NextRequest,
