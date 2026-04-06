@@ -198,6 +198,13 @@ node scripts/generate-collections.mjs \
 - `NEXTCLOUD_APP_PASSWORD`: (app password — not login password)
 - `NEXTCLOUD_PHOTOS_PATH`: `Photography/Workspace/03_Exports/Shop`
 
+**On-demand cache revalidation:**
+After running `--sync` to push updated JSONs to Nextcloud, force an immediate cache bust (instead of waiting up to 5 min):
+```bash
+curl -X POST "https://julianruizburgos.net/api/revalidate?secret=YOUR_ADMIN_SECRET"
+```
+Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
+
 **`photos.json` entry shape:**
 ```json
 {
@@ -270,6 +277,7 @@ node scripts/generate-collections.mjs \
 - [x] **Nextcloud photo integration live** (2026-04-06) — 60+ photos served from Nextcloud WebDAV. Real EXIF data in `photos.json`. Env vars set in Coolify (see Infrastructure section).
 - [x] **Photography metadata pipeline** (2026-04-06) — three scripts in `scripts/` handle the full workflow from raw export to published gallery (see Photography content pipeline below).
 - [x] **6 collections live**: Urban Photography, Landscapes, Macro & Nature, Architecture, Still Life, Astrophotography.
+- [x] **On-demand cache revalidation** (2026-04-07) — `POST /api/revalidate?secret=...` busts `photos` cache tag immediately after Nextcloud sync. Photos cache window: 5 min. See Photography content pipeline section for usage.
 
 ## Roadmap
 
