@@ -1,10 +1,11 @@
 import type { PrintSize } from "@/lib/photography";
 
-// ── Markup & labour ───────────────────────────────────────────────────────────
-// Change MARKUP to reprice all prints automatically. Labour is per order.
+// ── Markup ────────────────────────────────────────────────────────────────────
+// Base prices below are calibrated at MARKUP = 3.5 (validated against NL market,
+// April 2026). Changing MARKUP scales all prices proportionally — e.g. 4.0
+// raises everything by ~14%. Prices are rounded to the nearest €5 after scaling.
 
 export const MARKUP = 3.5;
-export const LABOUR_PER_ORDER_CENTS = 1500; // €15.00 — not added to item price
 
 // ── Paper types ───────────────────────────────────────────────────────────────
 
@@ -72,76 +73,33 @@ export function getImageAreaMm(size: Exclude<PrintSize, "Panoramic">): { shortMm
   return { shortMm: short - 2 * border, longMm: long - 2 * border };
 }
 
-// ── Production costs (€ cents, excl. labour and shipping) ────────────────────
-// [paperCost, inkCost, packagingCost] per size per paper type.
-// Labour (€15) is added once per order at checkout, not per item.
+// ── Production costs (€ cents, excl. shipping) ───────────────────────────────
+// Internal reference only — not used in price computation.
+// Retail prices are stored directly in BASE_PRICE_CENTS below.
 
-type CostEntry = { paper: number; ink: number; packaging: number };
+// ── Base retail prices (€ cents, excl. VAT & shipping) ───────────────────────
+// Validated against NL fine art market rates, April 2026, at MARKUP = 3.5.
+// Changing MARKUP scales all prices proportionally (rounded to nearest €5).
 
-const PRODUCTION_COSTS_CENTS: Record<Exclude<PrintSize, "Panoramic">, Record<PaperType, CostEntry>> = {
-  "A4": {
-    matte:  { paper:  90, ink: 100, packaging: 200 },
-    cotton: { paper: 180, ink: 100, packaging: 200 },
-    baryta: { paper: 200, ink: 100, packaging: 200 },
-  },
-  "20×30 cm": {
-    matte:  { paper:  85, ink: 110, packaging: 200 },
-    cotton: { paper: 170, ink: 110, packaging: 200 },
-    baryta: { paper: 190, ink: 110, packaging: 200 },
-  },
-  "A3": {
-    matte:  { paper: 160, ink: 180, packaging: 250 },
-    cotton: { paper: 320, ink: 180, packaging: 250 },
-    baryta: { paper: 360, ink: 180, packaging: 250 },
-  },
-  "30×40 cm": {
-    matte:  { paper: 150, ink: 190, packaging: 250 },
-    cotton: { paper: 300, ink: 190, packaging: 250 },
-    baryta: { paper: 340, ink: 190, packaging: 250 },
-  },
-  "A3+": {
-    matte:  { paper: 200, ink: 220, packaging: 300 },
-    cotton: { paper: 400, ink: 220, packaging: 300 },
-    baryta: { paper: 450, ink: 220, packaging: 300 },
-  },
-  "40×60 cm": {
-    matte:  { paper: 300, ink: 330, packaging: 350 },
-    cotton: { paper: 580, ink: 330, packaging: 350 },
-    baryta: { paper: 650, ink: 330, packaging: 350 },
-  },
-  "50×70 cm": {
-    matte:  { paper: 350, ink: 380, packaging: 380 },
-    cotton: { paper: 650, ink: 380, packaging: 380 },
-    baryta: { paper: 700, ink: 380, packaging: 380 },
-  },
-  "A2": {
-    matte:  { paper: 320, ink: 350, packaging: 350 },
-    cotton: { paper: 600, ink: 350, packaging: 350 },
-    baryta: { paper: 680, ink: 350, packaging: 350 },
-  },
-  "60×80 cm": {
-    matte:  { paper:  600, ink: 650, packaging: 500 },
-    cotton: { paper: 1150, ink: 650, packaging: 500 },
-    baryta: { paper: 1300, ink: 650, packaging: 500 },
-  },
-  "A2+": {
-    matte:  { paper: 340, ink: 380, packaging: 380 },
-    cotton: { paper: 650, ink: 380, packaging: 380 },
-    baryta: { paper: 720, ink: 380, packaging: 380 },
-  },
+const BASE_PRICE_CENTS: Record<Exclude<PrintSize, "Panoramic">, Record<PaperType, number>> = {
+  "A4":       { matte:  3500, cotton:  5000, baryta:  5500 },
+  "20×30 cm": { matte:  4000, cotton:  5500, baryta:  6000 },
+  "A3":       { matte:  5500, cotton:  8000, baryta:  8500 },
+  "30×40 cm": { matte:  5500, cotton:  8000, baryta:  8500 },
+  "A3+":      { matte:  6500, cotton:  9500, baryta: 10000 },
+  "40×60 cm": { matte:  8500, cotton: 12000, baryta: 13000 },
+  "50×70 cm": { matte: 10000, cotton: 14500, baryta: 15500 },
+  "A2":       { matte:  9000, cotton: 13500, baryta: 14500 },
+  "60×80 cm": { matte: 14000, cotton: 20000, baryta: 21500 },
+  "A2+":      { matte:  9500, cotton: 14000, baryta: 15000 },
 };
-
-// ── Price computation ─────────────────────────────────────────────────────────
-// Retail price = (paper + ink + packaging) × MARKUP, rounded to nearest €5.
-// Changing MARKUP reprices all prints.
 
 function roundToNearest5Euros(cents: number): number {
   return Math.round(cents / 500) * 500;
 }
 
 function computeRetailCents(size: Exclude<PrintSize, "Panoramic">, paper: PaperType): number {
-  const { paper: p, ink, packaging } = PRODUCTION_COSTS_CENTS[size][paper];
-  return roundToNearest5Euros((p + ink + packaging) * MARKUP);
+  return roundToNearest5Euros(BASE_PRICE_CENTS[size][paper] * (MARKUP / 3.5));
 }
 
 // Panoramic: proportional to A2 price, based on print length vs A2 long edge (594mm)
