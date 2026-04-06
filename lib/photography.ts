@@ -100,7 +100,7 @@ async function fetchFromNextcloud<T>(filename: string): Promise<T | null> {
   try {
     const res = await fetch(url, {
       headers: nextcloudHeaders(),
-      next: { revalidate: 3600 },
+      next: { revalidate: 300, tags: ["photos"] },
     });
     if (!res.ok) {
       console.error(`Nextcloud fetch failed for ${filename}: ${res.status}`);

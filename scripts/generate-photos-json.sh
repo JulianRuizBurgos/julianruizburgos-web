@@ -43,7 +43,9 @@ if [[ -f "$JSON_FILE" ]]; then
 fi
 
 # Read all JPEG metadata in one exiftool pass
-RAW_META=$(exiftool -json \
+# -charset exif=Latin tells exiftool to treat EXIF string fields as Latin-1
+# and convert them to UTF-8 output, fixing "Â·" → "·" in camera/lens names
+RAW_META=$(exiftool -json -charset exif=Latin \
   -FileName -Title -Description -Location -Subject \
   -DateTimeOriginal -Make -Model -LensModel \
   -ImageWidth -ImageHeight \
