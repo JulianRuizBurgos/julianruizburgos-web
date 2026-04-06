@@ -203,6 +203,49 @@ bash scripts/warm-cache.sh http://localhost:3000 # local dev
 - The generate-collections script merges with existing collections (preserves descriptions, badges, coverPhoto).
 - After any tag cleanup, run `sync-tags-to-exif.mjs` to write changes back to EXIF — keeps digiKam and generate script in sync.
 
+### Publishing checklist — adding or updating photos
+
+Full details in `docs/photography-workflow.md`. Quick reference:
+
+**Before export (digiKam):** set XMP Title, Description, IPTC Location, and Subject tags on every photo.
+
+**After Darktable export to `~/Nextcloud/Photography/Workspace/03_Exports/Shop/`:**
+
+```bash
+# 1. Scan EXIF → update photos.json + copy to Nextcloud
+bash scripts/generate-photos-json.sh \
+  ~/Nextcloud/Photography/Workspace/03_Exports/Shop \
+  content/photography/photos.json --sync
+
+# 2. AI enrichment — titles, descriptions, rename (skips existing titles)
+ANTHROPIC_API_KEY=sk-ant-... node scripts/enrich-photo-metadata.mjs \
+  ~/Nextcloud/Photography/Workspace/03_Exports/Shop \
+  content/photography/photos.json \
+  content/photography/collections.json --sync
+
+# 3. Update collections
+node scripts/generate-collections.mjs \
+  content/photography/photos.json \
+  content/photography/collections.json \
+  --sync ~/Nextcloud/Photography/Workspace/03_Exports/Shop
+
+# 4. (If you edited tags manually in photos.json) sync back to EXIF
+node scripts/sync-tags-to-exif.mjs \
+  ~/Nextcloud/Photography/Workspace/03_Exports/Shop \
+  content/photography/photos.json
+
+# 5. Commit and deploy
+git add content/photography/photos.json content/photography/collections.json
+git commit -m "photos: add <description>"
+git push origin main
+
+# 6. Bust cache immediately
+curl -X POST "https://julianruizburgos.net/api/revalidate?secret=YOUR_ADMIN_SECRET"
+
+# 7. Warm image cache
+bash scripts/warm-cache.sh
+```
+
 **Tag conventions (2026-04-07):**
 - Always singular (`mountain` not `mountains`, `cloud` not `clouds`, `flower` not `flowers`)
 - Always lowercase
