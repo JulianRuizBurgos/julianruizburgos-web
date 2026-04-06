@@ -8,9 +8,9 @@
       "astrophotography",
       "night sky",
       "long exposure",
-      "mountains",
-      "clouds",
-      "stars",
+      "mountain",
+      "cloud",
+      "star",
       "landscape",
       "silhouette"
     ],
@@ -27,14 +27,14 @@
     "description": "Dramatic storm clouds gather above a rugged alpine range dusted with snow, while golden meadows and dark conifers frame the foreground in warm contrast. The moody interplay of light and shadow lends the scene an epic, almost cinematic tension.",
     "location": null,
     "tags": [
-      "mountains",
+      "mountain",
       "alpine",
-      "clouds",
+      "cloud",
       "snow",
       "landscape",
       "dramatic",
       "conifer",
-      "golden meadow"
+      "golden light"
     ],
     "date": "2022-09-17",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -53,10 +53,8 @@
       "moonrise",
       "night sky",
       "silhouette",
-      "clouds",
-      "golden light",
-      "treeline",
-      "nocturnal"
+      "cloud",
+      "golden light"
     ],
     "date": "2021-06-26",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -72,10 +70,9 @@
     "location": null,
     "tags": [
       "moonrise",
-      "full moon",
+      "moon",
       "night sky",
       "silhouette",
-      "treeline",
       "golden light",
       "atmospheric"
     ],
@@ -95,10 +92,9 @@
       "abandoned",
       "brutalism",
       "graffiti",
-      "urban decay",
-      "concrete",
+      "urban",
       "overgrown",
-      "ruins",
+      "historic",
       "black and white"
     ],
     "date": "2021-06-12",
@@ -115,11 +111,9 @@
     "location": null,
     "tags": [
       "bridge",
-      "gatehouse",
-      "estate",
-      "black and white",
-      "park",
       "historic",
+      "garden",
+      "black and white",
       "netherlands",
       "symmetry"
     ],
@@ -136,14 +130,11 @@
     "description": "Vibrant orange-red impatiens blooms cluster at the center of deep burgundy foliage, each petal adorned with glistening water droplets after a recent rain. The rich contrast between the jewel-toned flowers and dark leaves creates a lush, intimate garden scene.",
     "location": null,
     "tags": [
-      "impatiens",
-      "flowers",
+      "flower",
       "garden",
-      "raindrops",
-      "red",
+      "raindrop",
       "macro",
-      "botanical",
-      "foliage"
+      "botanical"
     ],
     "date": "2021-06-04",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -158,14 +149,10 @@
     "description": "A delicate crane fly clings to a wet window pane, its long spindly legs splayed wide against a vivid green background. The scattered raindrops on the glass create a textured veil that adds depth and atmosphere to this intimate close-up.",
     "location": null,
     "tags": [
-      "crane fly",
       "insect",
       "macro",
       "rain",
-      "window",
-      "green",
-      "nature",
-      "close-up"
+      "nature"
     ],
     "date": "2021-06-04",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -182,12 +169,9 @@
     "tags": [
       "black and white",
       "forest",
-      "path",
-      "misty",
-      "bench",
+      "atmospheric",
       "rain",
-      "trees",
-      "atmospheric"
+      "tree"
     ],
     "date": "2021-06-04",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -204,12 +188,8 @@
     "tags": [
       "mushroom",
       "macro",
-      "dew",
-      "grass",
       "nature",
-      "fungi",
-      "rain",
-      "close-up"
+      "rain"
     ],
     "date": "2021-06-04",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -226,11 +206,10 @@
     "tags": [
       "macro",
       "water drop",
-      "red leaf",
+      "leaf",
       "nature",
       "bokeh",
       "rain",
-      "close-up",
       "garden"
     ],
     "date": "2021-06-04",
@@ -249,10 +228,6 @@
       "bridge",
       "garden",
       "reflection",
-      "stone",
-      "rhododendron",
-      "formal garden",
-      "green",
       "water"
     ],
     "date": "2021-06-04",
@@ -268,13 +243,9 @@
     "description": "A close-up black-and-white macro photograph captures a mosquito perched on human skin covered in fine body hair, its slender legs and proboscis sharply contrasted against the soft texture. The intimate scale and monochromatic tone give the image an eerie, clinical quality.",
     "location": null,
     "tags": [
-      "mosquito",
-      "macro",
       "insect",
-      "skin",
+      "macro",
       "black and white",
-      "close-up",
-      "parasite",
       "nature"
     ],
     "date": "2021-06-04",
@@ -290,11 +261,9 @@
     "description": "A cluster of soft lavender rhododendron blossoms glistens with fresh raindrops, their delicate stamens reaching outward against a backdrop of dark green foliage. The shallow depth of field and muted, moody light evoke the quiet stillness of a garden after a spring shower.",
     "location": null,
     "tags": [
-      "rhododendron",
-      "flowers",
+      "flower",
       "macro",
-      "raindrops",
-      "purple",
+      "raindrop",
       "spring",
       "botanical",
       "garden"
@@ -318,8 +287,7 @@
       "rain",
       "nature",
       "bokeh",
-      "reflection",
-      "close-up"
+      "reflection"
     ],
     "date": "2021-06-04",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -337,7 +305,6 @@
       "macro",
       "leaf",
       "insect",
-      "mosquito",
       "black and white",
       "nature",
       "backlit",
@@ -356,14 +323,11 @@
     "description": "A massive rhododendron shrub bursts into abundant lavender-purple bloom against a backdrop of towering evergreens on an overcast day. Fallen petals scatter across the lush green lawn below, adding a quiet, melancholic beauty to this lush garden scene.",
     "location": null,
     "tags": [
-      "rhododendron",
-      "purple flowers",
+      "flower",
       "garden",
       "spring",
-      "blooming",
-      "shrub",
-      "overcast",
-      "botanical"
+      "botanical",
+      "overcast"
     ],
     "date": "2021-06-04",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -380,12 +344,10 @@
     "tags": [
       "water drop",
       "macro",
-      "twig",
       "reflection",
       "nature",
       "bokeh",
-      "rain",
-      "close-up"
+      "rain"
     ],
     "date": "2021-06-04",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -400,14 +362,12 @@
     "description": "Delicate pink impatiens blooms glisten with fresh raindrops, their white-centered petals surrounded by lush, serrated green leaves. The soft, muted light gives the scene a tranquil, post-rain garden atmosphere.",
     "location": null,
     "tags": [
-      "impatiens",
-      "flowers",
-      "raindrops",
-      "pink",
+      "flower",
+      "raindrop",
       "garden",
       "macro",
       "nature",
-      "botanicals"
+      "botanical"
     ],
     "date": "2021-06-04",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -422,14 +382,11 @@
     "description": "Vibrant lavender impatiens flowers glisten with fresh raindrops against a backdrop of dark green serrated leaves. The soft, rounded petals and white centers create a delicate contrast in this intimate garden scene.",
     "location": null,
     "tags": [
-      "impatiens",
-      "flowers",
-      "raindrops",
-      "purple",
+      "flower",
+      "raindrop",
       "garden",
       "macro",
-      "botanical",
-      "wet"
+      "botanical"
     ],
     "date": "2021-06-04",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -444,13 +401,11 @@
     "description": "A cluster of purple rhododendron blossoms glistens with fresh raindrops, their delicate stamens visible among overlapping petals. The shallow depth of field and soft green bokeh background evoke a quiet, contemplative mood after a spring shower.",
     "location": null,
     "tags": [
-      "rhododendron",
       "macro",
       "rain",
-      "purple",
-      "flowers",
+      "flower",
       "bokeh",
-      "water droplets",
+      "water drop",
       "spring"
     ],
     "date": "2021-06-04",
@@ -470,7 +425,6 @@
       "leaf",
       "raindrop",
       "water",
-      "green",
       "nature",
       "bokeh",
       "forest"
@@ -489,7 +443,6 @@
     "location": null,
     "tags": [
       "silhouette",
-      "shoes",
       "urban",
       "black and white",
       "sunset",
@@ -555,13 +508,12 @@
     "location": null,
     "tags": [
       "netherlands",
-      "dutch architecture",
+      "dutch",
       "golden hour",
       "cycling",
-      "brick buildings",
-      "street scene",
-      "urban life",
-      "europe"
+      "brick",
+      "street photography",
+      "urban"
     ],
     "date": "2021-05-05",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -576,14 +528,9 @@
     "description": "The exterior of LAB-1, a venue dedicated to film, music, and events, is seen from a low street angle with repeated signage banners catching warm afternoon light. The urban storefront has a gritty creative atmosphere, with stage lighting rigs mounted above and a neighboring burrito restaurant sign peeking into frame.",
     "location": null,
     "tags": [
-      "signage",
-      "venue",
-      "urban",
-      "street",
-      "film",
       "music",
-      "storefront",
-      "events"
+      "urban",
+      "street"
     ],
     "date": "2021-05-05",
     "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
@@ -600,10 +547,10 @@
     "tags": [
       "eindhoven",
       "netherlands",
-      "gothic church",
+      "gothic",
       "street photography",
-      "pedestrian street",
-      "twin spires",
+      "street",
+      "spire",
       "urban"
     ],
     "date": "2021-05-05",
@@ -620,12 +567,9 @@
     "location": null,
     "tags": [
       "silhouette",
-      "clouds",
-      "blue sky",
+      "cloud",
       "urban",
       "cityscape",
-      "cumulus",
-      "street lamp",
       "rooftop"
     ],
     "date": "2021-05-05",
@@ -647,7 +591,6 @@
       "architecture",
       "street",
       "cafe",
-      "contrast",
       "cityscape"
     ],
     "date": "2021-05-05",
@@ -666,9 +609,6 @@
       "urban",
       "plants",
       "cafe",
-      "bohemian",
-      "barber pole",
-      "string lights",
       "industrial",
       "overgrown"
     ],
@@ -686,13 +626,11 @@
     "location": null,
     "tags": [
       "bridge",
-      "woodland",
+      "forest",
       "reflection",
       "winter",
       "water",
-      "nature",
-      "footbridge",
-      "tranquil"
+      "nature"
     ],
     "date": "2021-02-24",
     "camera": "E-M5MarkII · OLYMPUS M.14-42mm F3.5-5.6 II R",
@@ -707,12 +645,9 @@
     "description": "Close-up of a worn white painted metal railing with rain droplet ripples on its surface, set against the blurred facade of a residential building with dark windows. The moody, desaturated tones evoke urban solitude on a rainy day.",
     "location": null,
     "tags": [
-      "railing",
       "rain",
       "urban",
-      "metal",
       "bokeh",
-      "wet",
       "weathered",
       "abstract"
     ],
@@ -730,12 +665,9 @@
     "location": null,
     "tags": [
       "rain",
-      "railing",
       "urban",
-      "wet",
       "bokeh",
       "moody",
-      "close-up",
       "weathered"
     ],
     "date": "2021-02-03",
@@ -751,14 +683,9 @@
     "description": "A vintage acoustic guitar with a beautifully aged mahogany finish rests on a black guitar stand, its worn body and cream pickguard telling stories of years of play. The warm, low-key lighting accentuates the rich patina and craftsmanship of the instrument.",
     "location": null,
     "tags": [
-      "guitar",
-      "acoustic",
-      "vintage",
       "music",
-      "still life",
-      "warm tones",
-      "instrument",
-      "aged wood"
+      "vintage",
+      "still life"
     ],
     "date": "2021-02-02",
     "camera": "E-M5MarkII · OLYMPUS M.14-42mm F3.5-5.6 II R",
@@ -777,7 +704,7 @@
       "valley",
       "storm",
       "sunset",
-      "mountains",
+      "mountain",
       "dramatic sky",
       "landscape",
       "switzerland"
@@ -795,14 +722,12 @@
     "description": "A cluster of delicate white mushrooms grows from a moss-covered tree trunk, their gills exposed in an upward-angle shot that frames them against a softly bokeh'd forest canopy. The muted, cool light and intimate perspective evoke a quiet, enchanted woodland atmosphere.",
     "location": null,
     "tags": [
-      "mushrooms",
-      "fungi",
+      "mushroom",
       "macro",
       "forest",
       "moss",
       "bokeh",
-      "nature",
-      "woodland"
+      "nature"
     ],
     "date": null,
     "camera": null,
@@ -819,11 +744,10 @@
     "tags": [
       "lake",
       "storm",
-      "mountains",
-      "crepuscular rays",
+      "mountain",
+      "dramatic sky",
       "reflection",
       "alps",
-      "dramatic sky",
       "golden light"
     ],
     "date": null,
@@ -842,11 +766,11 @@
       "alpine",
       "storm",
       "sunset",
-      "mountains",
+      "mountain",
       "valley",
       "moody",
       "landscape",
-      "clouds"
+      "cloud"
     ],
     "date": null,
     "camera": null,
@@ -862,10 +786,10 @@
     "location": null,
     "tags": [
       "norway",
-      "fjord valley",
+      "valley",
       "autumn",
       "hiking",
-      "glacial river",
+      "glacier",
       "snow",
       "nordic",
       "wilderness"
@@ -883,14 +807,14 @@
     "description": "Two towering Gothic Revival church spires of dark red brick pierce a grey, overcast sky, their ornate pinnacles and golden crosses lending an air of solemn grandeur. The moody, rain-soaked atmosphere amplifies the cathedral's imposing verticality and intricate stonework.",
     "location": null,
     "tags": [
-      "gothic revival",
+      "gothic",
       "church",
-      "spires",
+      "spire",
       "cathedral",
       "brick",
       "overcast",
-      "religious architecture",
-      "medieval"
+      "architecture",
+      "historic"
     ],
     "date": null,
     "camera": null,
@@ -908,7 +832,7 @@
       "alps",
       "valley",
       "sunset",
-      "mountains",
+      "mountain",
       "switzerland",
       "landscape",
       "aerial",
@@ -930,7 +854,7 @@
       "glacier",
       "norway",
       "autumn",
-      "mountains",
+      "mountain",
       "valley",
       "nordic",
       "wilderness",
@@ -951,12 +875,10 @@
     "tags": [
       "milky way",
       "night sky",
-      "stars",
+      "star",
       "long exposure",
       "meteor",
-      "galaxy",
-      "silhouette",
-      "dark sky"
+      "silhouette"
     ],
     "date": null,
     "camera": null,
@@ -973,7 +895,7 @@
     "tags": [
       "lake",
       "storm",
-      "mountains",
+      "mountain",
       "golden light",
       "reflection",
       "dramatic sky",
@@ -995,7 +917,7 @@
     "tags": [
       "alps",
       "twilight",
-      "mountains",
+      "mountain",
       "snow",
       "landscape",
       "forest",
@@ -1016,12 +938,12 @@
     "location": null,
     "tags": [
       "snow",
-      "bicycles",
+      "bicycle",
       "winter",
       "netherlands",
       "urban",
-      "cycling culture",
-      "brutalist architecture"
+      "cycling",
+      "brutalism"
     ],
     "date": null,
     "camera": null,
@@ -1040,7 +962,7 @@
       "storm",
       "sunset",
       "valley",
-      "mountains",
+      "mountain",
       "dramatic sky",
       "landscape",
       "switzerland"
@@ -1060,11 +982,10 @@
     "tags": [
       "night sky",
       "meteor",
-      "stars",
+      "star",
       "milky way",
       "long exposure",
-      "astrophotography",
-      "shooting star"
+      "astrophotography"
     ],
     "date": null,
     "camera": null,
@@ -1084,8 +1005,7 @@
       "reflection",
       "norway",
       "autumn",
-      "mountains",
-      "turquoise",
+      "mountain",
       "nordic"
     ],
     "date": null,
@@ -1101,14 +1021,14 @@
     "description": "A dramatic alpine valley stretches toward a thin band of golden light at the horizon, caught between dark storm clouds above and shadowed mountain ranges below. The moody contrast between the warm glow and the threatening sky evokes a sense of awe and foreboding.",
     "location": null,
     "tags": [
-      "mountains",
+      "mountain",
       "storm",
       "valley",
       "dramatic sky",
       "golden hour",
       "alpine",
-      "dark moody",
-      "clouds"
+      "moody",
+      "cloud"
     ],
     "date": null,
     "camera": null,
@@ -1124,13 +1044,8 @@
     "location": null,
     "tags": [
       "buddha",
-      "persian rug",
-      "gold",
-      "floral pattern",
       "still life",
-      "spirituality",
-      "texture",
-      "decor"
+      "spirituality"
     ],
     "date": null,
     "camera": null,
@@ -1148,7 +1063,7 @@
       "alpine",
       "valley",
       "black and white",
-      "mountains",
+      "mountain",
       "storm",
       "panorama",
       "landscape",
@@ -1171,10 +1086,10 @@
       "valley",
       "storm",
       "sunset",
-      "mountains",
+      "mountain",
       "dramatic",
       "landscape",
-      "clouds"
+      "cloud"
     ],
     "date": null,
     "camera": null,
@@ -1194,9 +1109,9 @@
       "winter",
       "snow",
       "architecture",
-      "spires",
+      "spire",
       "church",
-      "historical"
+      "historic"
     ],
     "date": null,
     "camera": null,
@@ -1211,14 +1126,10 @@
     "description": "A cluster of Xylaria polymorpha, commonly known as dead man's fingers, pushes through moist forest floor soil surrounded by decomposing leaves and organic debris. The jet-black, finger-like fruiting bodies create an eerie, otherworldly presence against the dark earth.",
     "location": null,
     "tags": [
-      "fungi",
-      "xylaria polymorpha",
-      "dead mans fingers",
-      "forest floor",
+      "mushroom",
+      "forest",
       "macro",
-      "nature",
-      "decomposition",
-      "mushroom"
+      "nature"
     ],
     "date": null,
     "camera": null,
@@ -1234,13 +1145,12 @@
     "location": null,
     "tags": [
       "alpine",
-      "mountains",
+      "mountain",
       "snow",
-      "conifer forest",
+      "conifer",
       "landscape",
       "overcast",
-      "switzerland",
-      "peaks"
+      "switzerland"
     ],
     "date": null,
     "camera": null,
@@ -1260,7 +1170,7 @@
       "silhouette",
       "reflection",
       "dramatic sky",
-      "clouds",
+      "cloud",
       "nature",
       "dusk"
     ],
@@ -1277,14 +1187,13 @@
     "description": "A cluster of delicate white mushrooms grows from the moss-covered surface of a weathered tree trunk, photographed from below against a softly blurred forest canopy. The low-angle perspective and shallow depth of field lend the scene an intimate, otherworldly quality.",
     "location": null,
     "tags": [
-      "mushrooms",
-      "fungi",
+      "mushroom",
       "macro",
       "forest",
       "moss",
       "nature",
       "bokeh",
-      "tree bark"
+      "tree"
     ],
     "date": null,
     "camera": null,
@@ -1302,9 +1211,8 @@
       "alps",
       "valley",
       "sunset",
-      "mountains",
-      "green",
-      "clouds",
+      "mountain",
+      "cloud",
       "panorama",
       "switzerland"
     ],
@@ -1323,10 +1231,8 @@
     "tags": [
       "rain",
       "urban",
-      "guardrail",
       "street",
-      "blur",
-      "wet",
+      "bokeh",
       "overcast",
       "city"
     ],
@@ -1343,7 +1249,7 @@
     "description": "Lena's booty during camping",
     "location": null,
     "tags": [
-      "People"
+      "people"
     ],
     "date": null,
     "camera": "E-M5MarkII · LUMIX G 25/F1.7",
@@ -1361,10 +1267,9 @@
       "twilight",
       "sunset",
       "silhouette",
-      "clouds",
-      "wetlands",
-      "moody",
+      "cloud",
       "nature",
+      "moody",
       "dusk"
     ],
     "date": null,
@@ -1382,12 +1287,10 @@
     "tags": [
       "winter",
       "snow",
-      "bicycles",
+      "bicycle",
       "reflection",
-      "glass",
       "urban",
-      "netherlands",
-      "cold"
+      "netherlands"
     ],
     "date": null,
     "camera": null,
@@ -1402,11 +1305,11 @@
     "description": "Two rugged snow-dusted mountain peaks frame a sweeping alpine valley blanketed in evergreen forests and golden meadows, bathed in crisp winter light. The scene evokes a profound sense of solitude and grandeur typical of the European Alps.",
     "location": null,
     "tags": [
-      "mountains",
+      "mountain",
       "alps",
       "snow",
       "valley",
-      "evergreen",
+      "conifer",
       "alpine",
       "landscape",
       "winter"
@@ -1428,10 +1331,10 @@
       "storm",
       "valley",
       "sunset",
-      "mountains",
+      "mountain",
       "dramatic",
       "moody",
-      "clouds"
+      "cloud"
     ],
     "date": null,
     "camera": null,
@@ -1448,7 +1351,7 @@
     "tags": [
       "sunset",
       "dusk",
-      "clouds",
+      "cloud",
       "silhouette",
       "twilight",
       "dramatic sky",
@@ -1470,10 +1373,10 @@
     "tags": [
       "milky way",
       "night sky",
-      "stars",
+      "star",
       "meteor",
       "long exposure",
-      "stargazing",
+      "astrophotography",
       "silhouette"
     ],
     "date": null,
@@ -1492,9 +1395,9 @@
       "lake",
       "storm",
       "alpine",
-      "reflections",
+      "reflection",
       "golden light",
-      "mountains",
+      "mountain",
       "moody",
       "landscape"
     ],
@@ -1514,10 +1417,9 @@
       "astrophotography",
       "meteor",
       "night sky",
-      "stars",
+      "star",
       "milky way",
-      "long exposure",
-      "shooting star"
+      "long exposure"
     ],
     "date": null,
     "camera": null,
@@ -1534,12 +1436,10 @@
     "tags": [
       "snow",
       "winter",
-      "train station",
       "netherlands",
       "eindhoven",
       "urban",
-      "overcast",
-      "public transport"
+      "overcast"
     ],
     "date": null,
     "camera": null,
@@ -1555,12 +1455,12 @@
     "location": null,
     "tags": [
       "rain",
-      "splash",
+      "water drop",
       "macro",
       "urban",
       "winter",
       "water",
-      "droplet",
+      "raindrop",
       "city"
     ],
     "date": null,
@@ -1577,13 +1477,8 @@
     "location": null,
     "tags": [
       "buddha",
-      "statue",
-      "gold",
-      "spirituality",
-      "buddhism",
-      "meditation",
       "sculpture",
-      "prayer"
+      "spirituality"
     ],
     "date": null,
     "camera": null,
@@ -1602,10 +1497,10 @@
       "valley",
       "storm",
       "sunset",
-      "mountains",
-      "dramatic light",
+      "mountain",
+      "dramatic",
       "landscape",
-      "clouds"
+      "cloud"
     ],
     "date": null,
     "camera": null,
