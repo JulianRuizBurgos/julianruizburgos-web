@@ -185,12 +185,25 @@ node scripts/generate-collections.mjs \
   content/photography/photos.json \
   content/photography/collections.json \
   --sync ~/Nextcloud/Photography/Workspace/03_Exports/Shop
+
+# 4. After any manual tag edits in photos.json, sync tags back to EXIF
+#    (prevents generate-photos-json.sh from overwriting cleaned tags on re-run)
+node scripts/sync-tags-to-exif.mjs \
+  ~/Nextcloud/Photography/Workspace/03_Exports/Shop \
+  content/photography/photos.json
 ```
 
 - `--sync` copies the JSON(s) into the Nextcloud Shop folder so the live site picks them up without redeploying.
 - The enrich script skips photos that already have a title — safe to re-run.
 - Filename convention after enrichment: `<category>_<location>_<title>.jpg` (e.g. `landscape_norway_glacier_descending_through_autumn_valley.jpg`)
 - The generate-collections script merges with existing collections (preserves descriptions, badges, coverPhoto).
+- After any tag cleanup, run `sync-tags-to-exif.mjs` to write changes back to EXIF — keeps digiKam and generate script in sync.
+
+**Tag conventions (2026-04-07):**
+- Always singular (`mountain` not `mountains`, `cloud` not `clouds`, `flower` not `flowers`)
+- Always lowercase
+- High-level contextual categories only — no species names (use `insect` not `crane fly`), no colours, no props, no material details
+- Target: ~100 unique tags across the full gallery; 1-count tags should be rare exceptions
 
 ### Nextcloud env vars (set in Coolify)
 - `NEXTCLOUD_WEBDAV_URL`: `https://221015zlatrl2k5kune.nextcloud.hosting.zone/remote.php/dav/files/JulianRuizBurgos`
@@ -278,6 +291,7 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 - [x] **Photography metadata pipeline** (2026-04-06) — three scripts in `scripts/` handle the full workflow from raw export to published gallery (see Photography content pipeline below).
 - [x] **6 collections live**: Urban Photography, Landscapes, Macro & Nature, Architecture, Still Life, Astrophotography.
 - [x] **On-demand cache revalidation** (2026-04-07) — `POST /api/revalidate?secret=...` busts `photos` cache tag immediately after Nextcloud sync. Photos cache window: 5 min. See Photography content pipeline section for usage.
+- [x] **Tag cleanup** (2026-04-07) — reduced from 213 → 96 unique tags. All singular, lowercase, high-level only. `scripts/sync-tags-to-exif.mjs` writes cleaned tags back to EXIF so re-running the generate script doesn't overwrite them.
 
 ## Roadmap
 
