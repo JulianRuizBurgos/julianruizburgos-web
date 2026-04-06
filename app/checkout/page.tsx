@@ -3,7 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
-import { formatPrice, shippingCents } from "@/lib/shop";
+import {
+  formatPrice,
+  getShippingCents,
+  getOrderPackageCategory,
+  getSizePackageCategory,
+  PAPER_TYPE_LABELS,
+  type PaperType,
+} from "@/lib/shop";
 
 // ── Shipping form ─────────────────────────────────────────────────────────────
 
@@ -37,7 +44,11 @@ export default function CheckoutPage() {
   const [apiError, setApiError] = useState<string | null>(null);
 
   const hasPrints = items.some((i) => i.type === "print");
-  const shipping_cents = hasPrints ? shippingCents(shipping.country) : 0;
+  const printSizes = items
+    .filter((i) => i.type === "print")
+    .map((i) => (i as Extract<typeof items[number], { type: "print" }>).size);
+  const packageCategory = printSizes.length > 0 ? getOrderPackageCategory(printSizes) : "small";
+  const shipping_cents = hasPrints ? getShippingCents(shipping.country || "NL", packageCategory) : 0;
   const grandTotalCents = totalCents + shipping_cents;
 
   function set(key: keyof ShippingFields, value: string) {
@@ -65,7 +76,6 @@ export default function CheckoutPage() {
       body: JSON.stringify({
         items,
         shipping: hasPrints ? shipping : null,
-        shippingCents: shipping_cents,
         customerName: shipping.name,
         customerEmail: shipping.email,
       }),
@@ -123,7 +133,9 @@ export default function CheckoutPage() {
               <div key={item.id} className="flex justify-between text-sm">
                 <span className="text-earth-700">
                   {item.photoTitle}
-                  {item.type === "print" ? ` — ${item.size}, ${item.paper}` : " — Postcard"}
+                  {item.type === "print"
+                    ? ` — ${item.size}, ${PAPER_TYPE_LABELS[item.paper as PaperType] ?? item.paper}`
+                    : " — Postcard"}
                 </span>
                 <span className="text-earth-900 font-medium">
                   {formatPrice(item.priceCents)}

@@ -54,16 +54,18 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 CREATE TABLE IF NOT EXISTS order_items (
-  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  order_id            UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
-  photo_filename      TEXT NOT NULL,
-  photo_title         TEXT NOT NULL,
-  product_type        TEXT NOT NULL CHECK (product_type IN ('print', 'postcard')),
-  size                TEXT,
-  paper_type          TEXT,
-  price_cents         INTEGER NOT NULL,
-  quantity            INTEGER NOT NULL DEFAULT 1,
-  created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
+  id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  order_id              UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  photo_filename        TEXT NOT NULL,
+  photo_title           TEXT NOT NULL,
+  product_type          TEXT NOT NULL CHECK (product_type IN ('print', 'postcard')),
+  size                  TEXT,
+  paper_type            TEXT,
+  presentation_style    TEXT CHECK (presentation_style IN ('bordered', 'borderless')),
+  panoramic_length_mm   INTEGER,
+  price_cents           INTEGER NOT NULL,
+  quantity              INTEGER NOT NULL DEFAULT 1,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS postcard_details (
@@ -122,6 +124,8 @@ export interface OrderItem {
   product_type: "print" | "postcard";
   size: string | null;
   paper_type: string | null;
+  presentation_style: "bordered" | "borderless" | null;
+  panoramic_length_mm: number | null;
   price_cents: number;
   quantity: number;
 }

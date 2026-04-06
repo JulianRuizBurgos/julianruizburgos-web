@@ -3,11 +3,11 @@ import path from "path";
 
 export type PrintSize =
   // ISO A series
-  | "A4" | "A3" | "A2" | "A1" | "A0"
-  // Square formats
-  | "30×30 cm" | "40×40 cm" | "50×50 cm"
-  // Traditional photo sizes
-  | "20×25 cm" | "20×30 cm" | "30×40 cm" | "30×45 cm" | "40×60 cm" | "50×75 cm";
+  | "A4" | "A3" | "A3+" | "A2" | "A2+"
+  // Traditional photographic sizes
+  | "20×30 cm" | "30×40 cm" | "40×60 cm" | "50×70 cm" | "60×80 cm"
+  // Roll paper (variable-length panoramic)
+  | "Panoramic";
 
 export interface Photo {
   filename: string;

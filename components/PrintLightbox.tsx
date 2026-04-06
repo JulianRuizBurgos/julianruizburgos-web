@@ -1,18 +1,23 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import * as Dialog from "@radix-ui/react-dialog";
-import { ShoppingBag, Check } from "lucide-react";
+import { ShoppingBag, Check, Info } from "lucide-react";
 import type { Photo } from "@/lib/photography";
 import {
   PAPER_TYPES,
+  PAPER_TYPE_LABELS,
   PAPER_TYPE_DESCRIPTIONS,
   POSTCARD_PRICE_CENTS,
   formatPrice,
   getPriceCents,
-  getAvailablePrintSizes,
+  getPanoramicLengthMm,
+  getAvailableSizes,
+  getImageAreaMm,
+  PRINT_SIZE_DIMS_MM,
   type PaperType,
+  type PresentationStyle,
   type PrintCartItem,
   type PostcardCartItem,
   type TextStyle,
@@ -203,30 +208,114 @@ function PostcardForm({
   );
 }
 
+// ── Size label helper ─────────────────────────────────────────────────────────
+
+function SizeLabel({
+  size,
+  style,
+  aspectRatio,
+}: {
+  size: PrintSize;
+  style: PresentationStyle;
+  aspectRatio: number;
+}) {
+  if (size === "Panoramic") {
+    const len = getPanoramicLengthMm(aspectRatio);
+    return <span>Panoramic (432 × {len} mm)</span>;
+  }
+  if (style === "bordered") {
+    const { shortMm, longMm } = getImageAreaMm(size);
+    const [paperShort, paperLong] = PRINT_SIZE_DIMS_MM[size];
+    return (
+      <span>
+        {size}
+        <span className="ml-1 text-stone-500">· image {shortMm}×{longMm} mm</span>
+        <span className="sr-only"> (paper {paperShort}×{paperLong} mm)</span>
+      </span>
+    );
+  }
+  return <span>{size}</span>;
+}
+
 // ── Print selector ─────────────────────────────────────────────────────────────
 
 function PrintSelector({
   photo,
-  availableSizes,
   onAdd,
   onPostcard,
 }: {
   photo: Photo;
-  availableSizes: PrintSize[];
-  onAdd: (size: PrintSize, paper: PaperType) => void;
+  onAdd: (size: PrintSize, paper: PaperType, style: PresentationStyle) => void;
   onPostcard: () => void;
 }) {
-  const [size, setSize] = useState<PrintSize | null>(
-    availableSizes[0] ?? null
-  );
-  const [paper, setPaper] = useState<PaperType>("Matte");
+  const [style, setStyle] = useState<PresentationStyle>("bordered");
+  const [paper, setPaper] = useState<PaperType>("cotton");
 
-  const price = size ? getPriceCents(size, paper) : null;
+  const availableSizes =
+    photo.widthPx > 0 && photo.heightPx > 0
+      ? getAvailableSizes(photo.widthPx, photo.heightPx, photo.aspectRatio, style)
+      : [];
+
+  const [size, setSize] = useState<PrintSize | null>(availableSizes[0] ?? null);
+
+  // When style changes, reset size to first available in new list
+  useEffect(() => {
+    setSize(availableSizes[0] ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [style]);
+
+  const price =
+    size !== null
+      ? getPriceCents(size, paper, photo.aspectRatio)
+      : null;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
+      {/* Guide link */}
+      <a
+        href="/about-printing"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-white transition-colors"
+      >
+        <Info size={13} />
+        About print sizes, paper types &amp; presentation styles →
+      </a>
+
       {availableSizes.length > 0 ? (
         <>
+          {/* Presentation style — above sizes, affects available list */}
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-semibold uppercase tracking-widest text-stone-400">
+              Presentation
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              {(["bordered", "borderless"] as PresentationStyle[]).map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setStyle(s)}
+                  className={`rounded border px-3 py-2 text-xs text-left transition-colors ${
+                    style === s
+                      ? "border-stone-400 bg-white/15 text-white"
+                      : "border-white/20 text-stone-400 hover:border-stone-500 hover:text-stone-300"
+                  }`}
+                >
+                  <span className="block font-medium">
+                    {s === "bordered" ? "With white border" : "Borderless"}
+                  </span>
+                  <span className="block text-[10px] text-stone-500 mt-0.5">
+                    {s === "bordered" ? "Recommended for framing" : "Full-bleed / edge to edge"}
+                  </span>
+                </button>
+              ))}
+            </div>
+            {style === "bordered" && (
+              <p className="text-[11px] text-stone-500 leading-relaxed">
+                More sizes available — the border absorbs any ratio difference.
+              </p>
+            )}
+          </div>
+
           {/* Size */}
           <div className="flex flex-col gap-2">
             <p className="text-xs font-semibold uppercase tracking-widest text-stone-400">
@@ -237,16 +326,21 @@ function PrintSelector({
                 <button
                   key={s}
                   onClick={() => setSize(s)}
-                  className={`rounded border px-3 py-1.5 text-xs transition-colors ${
+                  className={`rounded border px-3 py-1.5 text-xs transition-colors text-left ${
                     size === s
                       ? "border-stone-400 bg-white/15 text-white"
                       : "border-white/20 text-stone-400 hover:border-stone-500 hover:text-stone-300"
                   }`}
                 >
-                  {s}
+                  <SizeLabel size={s} style={style} aspectRatio={photo.aspectRatio} />
                 </button>
               ))}
             </div>
+            {size === "Panoramic" && (
+              <p className="text-[11px] text-stone-500 leading-relaxed">
+                Roll paper print, 432 mm wide × {getPanoramicLengthMm(photo.aspectRatio)} mm long. Bordered presentation only.
+              </p>
+            )}
           </div>
 
           {/* Paper */}
@@ -267,18 +361,14 @@ function PrintSelector({
                 >
                   <span
                     className={`mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border ${
-                      paper === p
-                        ? "border-stone-400 bg-stone-400"
-                        : "border-stone-600"
+                      paper === p ? "border-stone-400 bg-stone-400" : "border-stone-600"
                     }`}
                   >
                     {paper === p && <span className="h-1.5 w-1.5 rounded-full bg-stone-900" />}
                   </span>
                   <div>
-                    <span className="text-xs font-medium text-white">{p}</span>
-                    <span className="ml-2 text-xs text-stone-500">
-                      {PAPER_TYPE_DESCRIPTIONS[p]}
-                    </span>
+                    <span className="text-xs font-medium text-white">{PAPER_TYPE_LABELS[p]}</span>
+                    <span className="ml-2 text-xs text-stone-500">{PAPER_TYPE_DESCRIPTIONS[p]}</span>
                   </div>
                 </button>
               ))}
@@ -288,12 +378,13 @@ function PrintSelector({
           {/* Price + CTA */}
           <div className="flex items-center justify-between gap-3">
             {price !== null && (
-              <p className="font-serif text-2xl text-white">
-                {formatPrice(price)}
-              </p>
+              <div>
+                <p className="font-serif text-2xl text-white">{formatPrice(price)}</p>
+                <p className="text-[11px] text-stone-500">excl. VAT &amp; shipping</p>
+              </div>
             )}
             <button
-              onClick={() => size && onAdd(size, paper)}
+              onClick={() => size && onAdd(size, paper, style)}
               disabled={!size}
               className="flex items-center gap-2 rounded bg-[#1068b6] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0d56a0] disabled:opacity-40"
             >
@@ -336,12 +427,8 @@ export default function PrintLightbox({
   const { addItem } = useCart();
   const [view, setView] = useState<View>("info");
 
-  const availableSizes = photo.widthPx > 0 && photo.heightPx > 0
-    ? getAvailablePrintSizes(photo.widthPx, photo.heightPx)
-    : [];
-
   const handleAddPrint = useCallback(
-    (size: PrintSize, paper: PaperType) => {
+    (size: PrintSize, paper: PaperType, style: PresentationStyle) => {
       const item: PrintCartItem = {
         type: "print",
         id: crypto.randomUUID(),
@@ -350,7 +437,9 @@ export default function PrintLightbox({
         photoImageUrl: photo.imageUrl,
         size,
         paper,
-        priceCents: getPriceCents(size, paper),
+        presentationStyle: style,
+        ...(size === "Panoramic" ? { panoramicLengthMm: getPanoramicLengthMm(photo.aspectRatio) } : {}),
+        priceCents: getPriceCents(size, paper, photo.aspectRatio),
       };
       addItem(item);
       setView("added");
@@ -360,17 +449,7 @@ export default function PrintLightbox({
   );
 
   const handleAddPostcard = useCallback(
-    (fields: {
-      recipientName: string;
-      addressLine1: string;
-      addressLine2: string;
-      city: string;
-      postcode: string;
-      country: string;
-      messageText: string;
-      textStyle: TextStyle;
-      senderName: string;
-    }) => {
+    (fields: PostcardFields) => {
       const item: PostcardCartItem = {
         type: "postcard",
         id: crypto.randomUUID(),
@@ -421,7 +500,7 @@ export default function PrintLightbox({
           </div>
 
           {/* ── Info + shop panel ───────────────────────────────────────── */}
-          <div className="w-full md:w-80 md:shrink-0 flex flex-col bg-stone-900/80 backdrop-blur-sm text-white overflow-y-auto">
+          <div className="w-full md:w-96 md:shrink-0 flex flex-col bg-stone-900/80 backdrop-blur-sm text-white overflow-y-auto">
             {/* Close button */}
             <div className="flex justify-end p-4 md:p-5">
               <Dialog.Close
@@ -483,7 +562,6 @@ export default function PrintLightbox({
                   </button>
                   <PrintSelector
                     photo={photo}
-                    availableSizes={availableSizes}
                     onAdd={handleAddPrint}
                     onPostcard={() => setView("postcard")}
                   />

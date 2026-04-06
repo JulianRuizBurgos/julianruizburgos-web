@@ -30,7 +30,6 @@ export async function POST(req: NextRequest) {
       postcode: string;
       country: string;
     } | null;
-    shippingCents: number;
     customerName: string;
     customerEmail: string;
   };
@@ -41,38 +40,60 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { items, shipping, shippingCents, customerName, customerEmail } = body;
+  const { items, shipping, customerName, customerEmail } = body;
 
   if (!items || items.length === 0) {
     return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
   }
 
-  // Recompute totals server-side (never trust client-provided prices)
-  const { PRICE_MATRIX_CENTS, POSTCARD_PRICE_CENTS } = await import("@/lib/shop");
+  const {
+    getPriceCents,
+    POSTCARD_PRICE_CENTS,
+    getShippingCents,
+    getOrderPackageCategory,
+    getSizePackageCategory,
+  } = await import("@/lib/shop");
+
+  // Recompute subtotal server-side — never trust client prices
   let subtotal = 0;
   for (const item of items) {
     if (item.type === "print") {
-      subtotal += PRICE_MATRIX_CENTS[item.size][item.paper];
+      const aspectRatio = item.panoramicLengthMm
+        ? item.panoramicLengthMm / 432
+        : undefined;
+      subtotal += getPriceCents(item.size, item.paper, aspectRatio);
     } else {
       subtotal += POSTCARD_PRICE_CENTS;
     }
   }
-  const total = subtotal + (shippingCents ?? 0);
 
-  // Mollie requires amount as a string with 2 decimal places
+  // Compute shipping server-side from country — never trust client
+  const country = shipping?.country ?? "NL";
+  const printSizes = items
+    .filter((i) => i.type === "print")
+    .map((i) => (i as Extract<CartItem, { type: "print" }>).size);
+  const packageCategory =
+    printSizes.length > 0 ? getOrderPackageCategory(printSizes) : "small";
+  const shippingCents = getShippingCents(country, packageCategory);
+
+  const total = subtotal + shippingCents;
   const amountValue = (total / 100).toFixed(2);
 
   const itemCount = items.length;
   const description = `julianruizburgos.net — ${itemCount} item${itemCount !== 1 ? "s" : ""}`;
 
-  // Serialise cart into metadata (Mollie metadata is a plain object, no size limits per key)
   const cartJson = JSON.stringify(
     items.map((i) => ({
       t: i.type,
       f: i.photoFilename,
       n: i.photoTitle,
       ...(i.type === "print"
-        ? { s: i.size, p: i.paper }
+        ? {
+            s: i.size,
+            p: i.paper,
+            ps: i.presentationStyle,
+            ...(i.panoramicLengthMm ? { pl: i.panoramicLengthMm } : {}),
+          }
         : {
             rn: i.recipientName,
             a1: i.addressLine1,
@@ -98,7 +119,8 @@ export async function POST(req: NextRequest) {
       customerName,
       customerEmail,
       cart: cartJson,
-      shippingCents: String(shippingCents ?? 0),
+      shippingCents: String(shippingCents),
+      packageCategory,
       ...(shipping
         ? {
             shippingName: shipping.name,

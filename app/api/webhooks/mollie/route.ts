@@ -106,23 +106,27 @@ async function handlePaymentSucceeded(payment: Payment) {
 
   const orderId = orderRows[0].id;
 
-  const { POSTCARD_PRICE_CENTS, PRICE_MATRIX_CENTS } = await import("@/lib/shop");
+  const { POSTCARD_PRICE_CENTS, getPriceCents } = await import("@/lib/shop");
 
   const emailItems = [];
   const emailPostcardDetails = [];
 
   for (const item of cartItems) {
     const isPostcard = item.t === "postcard";
-    const priceCents = isPostcard
-      ? POSTCARD_PRICE_CENTS
-      : (PRICE_MATRIX_CENTS[item.s as keyof typeof PRICE_MATRIX_CENTS]?.[
-          item.p as keyof (typeof PRICE_MATRIX_CENTS)[keyof typeof PRICE_MATRIX_CENTS]
-        ] ?? 0);
+    let priceCents: number;
+    if (isPostcard) {
+      priceCents = POSTCARD_PRICE_CENTS;
+    } else {
+      const aspectRatio = item.pl ? parseInt(item.pl, 10) / 432 : undefined;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      priceCents = getPriceCents(item.s as any, item.p as any, aspectRatio);
+    }
 
     const itemRows = await query<{ id: string }>(
       `INSERT INTO order_items
-        (order_id, photo_filename, photo_title, product_type, size, paper_type, price_cents, quantity)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,1)
+        (order_id, photo_filename, photo_title, product_type, size, paper_type,
+         presentation_style, panoramic_length_mm, price_cents, quantity)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,1)
        RETURNING id`,
       [
         orderId,
@@ -131,6 +135,8 @@ async function handlePaymentSucceeded(payment: Payment) {
         isPostcard ? "postcard" : "print",
         isPostcard ? null : item.s,
         isPostcard ? null : item.p,
+        isPostcard ? null : (item.ps ?? "bordered"),
+        isPostcard ? null : (item.pl ? parseInt(item.pl, 10) : null),
         priceCents,
       ]
     );
@@ -144,6 +150,8 @@ async function handlePaymentSucceeded(payment: Payment) {
       product_type: isPostcard ? "postcard" : "print",
       size: item.s ?? null,
       paper_type: item.p ?? null,
+      presentation_style: isPostcard ? null : (item.ps ?? "bordered"),
+      panoramic_length_mm: item.pl ? parseInt(item.pl, 10) : null,
       price_cents: priceCents,
       quantity: 1,
     });
