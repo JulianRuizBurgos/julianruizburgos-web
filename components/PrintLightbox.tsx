@@ -411,6 +411,7 @@ export default function PrintLightbox({
               width={1200}
               height={Math.round(1200 / photo.aspectRatio)}
               className="max-h-full md:max-h-[calc(100vh-4rem)] max-w-full object-contain"
+              sizes="(max-width: 768px) 100vw, 1200px"
               quality={85}
               priority
             />

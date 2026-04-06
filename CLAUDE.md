@@ -191,6 +191,10 @@ node scripts/generate-collections.mjs \
 node scripts/sync-tags-to-exif.mjs \
   ~/Nextcloud/Photography/Workspace/03_Exports/Shop \
   content/photography/photos.json
+
+# 5. Pre-warm the Next.js image cache after syncing (avoids slow first loads for visitors)
+bash scripts/warm-cache.sh                       # production
+bash scripts/warm-cache.sh http://localhost:3000 # local dev
 ```
 
 - `--sync` copies the JSON(s) into the Nextcloud Shop folder so the live site picks them up without redeploying.
