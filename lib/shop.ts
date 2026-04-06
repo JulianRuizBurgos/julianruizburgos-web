@@ -96,24 +96,18 @@ export function shippingCents(countryCode: string): number {
 /**
  * Compute which print sizes are available for a photo.
  * Requires widthPx/heightPx from EXIF (stored in photos.json).
+ * Only checks resolution — aspect ratio cropping/borders are handled at print time.
  */
 export function getAvailablePrintSizes(widthPx: number, heightPx: number): PrintSize[] {
-  const longPx  = Math.max(widthPx, heightPx);
-  const shortPx = Math.min(widthPx, heightPx);
-  const photoAR = longPx / shortPx;
+  const longPx = Math.max(widthPx, heightPx);
 
   return (Object.keys(PRINT_SIZE_DIMS_MM) as PrintSize[]).filter((size) => {
     const [a, b] = PRINT_SIZE_DIMS_MM[size];
-    const longMm  = Math.max(a, b);
-    const shortMm = Math.min(a, b);
-    const sizeAR  = longMm / shortMm;
+    const longMm = Math.max(a, b);
 
     // Resolution check: photo long edge must cover print long edge at MIN_PRINT_DPI
     const requiredPx = (longMm / 25.4) * MIN_PRINT_DPI;
-    if (longPx < requiredPx) return false;
-
-    // Aspect ratio check (normalised long/short both sides)
-    return Math.abs(photoAR - sizeAR) / sizeAR <= ASPECT_RATIO_TOLERANCE;
+    return longPx >= requiredPx;
   });
 }
 
