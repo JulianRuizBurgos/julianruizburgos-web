@@ -1,25 +1,39 @@
 [
   {
-    "slug": "european_animals",
-    "title": "Animals of Europe",
-    "description": "Shots of different animal species found throughout Europe",
-    "coverPhoto": "burgundy_snail.jpg",
-    "photos": ["bluetailed_damselfly.jpg", "bumblebee.jpg", "burgundy_snail.jpg", "crane_flies.jpg", "dung_beetle.jpg", "ginger_cat.jpg", "highland_cow.jpg", "hornet.jpg", "lesser_spotted_woodpecker.jpg", "sparrow.jpg", "swan.jpg", "yellow_damselfly.jpg"]
-  },
-  {
-    "slug": "night_landscapes",
-    "title": "Landscapes at dusk",
-    "description": "Beautiful landscape photography just before complete darkness.",
-    "coverPhoto": "leenderbos-dusk-1.jpg",
+    "slug": "urban_photography",
+    "title": "Urban Photography",
+    "description": "Urban scenes and architecture captured across European cities.",
+    "coverPhoto": "urban_photography_eindhoven_1.jpg",
     "badges": ["New"],
-    "photos": ["leenderbos-dusk-1.jpg", "leenderbos-dusk-2.jpg", "leenderbos-dusk-3.jpg", "leenderbos-dusk-4.jpg", "leenderbos-dusk-5.jpg", "leenderbos-dusk-6.jpg"]
+    "photos": [
+      "urban_photography_abandoned_building_eindhoven.jpg",
+      "urban_photography_eindhoven_9.jpg",
+      "urban_photography_eindhoven_8.jpg",
+      "urban_photography_eindhoven_5.jpg",
+      "urban_photography_eindhoven_4.jpg",
+      "urban_photography_eindhoven_2.jpg",
+      "urban_photography_eindhoven_1.jpg",
+      "urban_photography_eindhoven_3.jpg",
+      "urban_photography_eindhoven_6.jpg",
+      "urban_photography_eindhoven_7.jpg",
+      "urban_photography_bridge.jpg",
+      "urban_photography_handrail_2.jpg",
+      "urban_photography_handrail_1.jpg",
+      "urban_photography_handrail_4.jpg",
+      "urban_photography_snowy_eindhoven_catherdral_2.jpg",
+      "urban_photography_snowy_reflection.jpg",
+      "urban_photography_handrail_3.jpg",
+      "urban_photography_snowy_station.jpg",
+      "urban_photography_snowy_eindhoven_catherdral_1.jpg",
+      "urban_photography_snowy_tunnel.jpg"
+    ]
   },
   {
     "slug": "astrophotography",
     "title": "Astrophotography",
     "description": "A glimpse of what light pollution prevents us from seeing every night.",
-    "coverPhoto": "astrophotography-switzerland-1.jpg",
+    "coverPhoto": "astrophotography_2.jpg",
     "badges": ["Coming soon"],
-    "photos": ["astrophotography-switzerland-1.jpg"]
+    "photos": ["astrophotography_2.jpg"]
   }
 ]
