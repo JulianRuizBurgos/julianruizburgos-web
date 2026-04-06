@@ -260,7 +260,7 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 - `aspectRatio`, `widthPx`, and `heightPx` all come from EXIF — do not enter manually. Use `scripts/generate-photos-json.sh` to populate them. Values are cached in `photos.json` so the site never needs to read EXIF at request time (important for Nextcloud images in production).
 - `widthPx`/`heightPx` are used by `lib/shop.ts` to compute which print sizes are available at sufficient quality.
 - `sortOrder` null = sort by date descending. Set integers to force order within a collection.
-- `PrintSize` valid values: `"A4"` `"A3"` `"A3+"` `"20×30 cm"` `"30×40 cm"` `"40×60 cm"` `"50×70 cm"` `"A2"` `"60×80 cm"` `"A2+"` — postcards are always `"A6"` (10×15 cm), not in this list. **A2+ is the maximum size** (printer limit). A0/A1 and the old square/custom sizes are retired. See the pricing section for aspect ratio guidance — `30×40 cm` and `60×80 cm` are the recommended primary sizes for Julian's 4:3 Olympus images.
+- `PrintSize` valid values: `"A4"` `"A3"` `"A3+"` `"20×30 cm"` `"30×40 cm"` `"40×60 cm"` `"50×70 cm"` `"A2"` `"60×80 cm"` `"A2+"` `"Panoramic"` — postcards are always `"A6"` (10×15 cm), not in this list. **A2+ is the maximum fixed size** (printer cut sheet max). `"Panoramic"` is a variable-length roll print — see pricing section. A0/A1 and the old square/custom sizes are retired. See the pricing section for aspect ratio guidance — `30×40 cm` and `60×80 cm` are the recommended primary sizes for Julian's 4:3 Olympus images.
 - `PresentationStyle` type: `'bordered' | 'borderless'` — stored on each cart line item and order record. See the pricing section for the full design decision and implementation guidance.
 - Local dev images live in `public/photography/dev/` — served via the proxy route at `/photography/images/[filename]`, not directly from `public/`.
 - **Never import `lib/photography.ts` from a client component** — it uses `fs/promises`. Only `import type` is safe across the boundary.
@@ -627,6 +627,41 @@ These are the values to set in `lib/shop.ts`. Rounded to nearest €5, based on 
 | A2        | √2:1  | 90    | 135    | 145    |
 | **60×80 cm** ✓ | **4:3** | **140** | **200** | **215** |
 | A2+       | √2:1  | 95    | 140    | 150    |
+
+### Panoramic roll prints — variable-length format
+
+**Printer**: Epson SC-P900, roll unit. Fixed width: **432 mm** (17"). Length: computed per photo from its aspect ratio.
+
+**When to offer it**: only when the photo's natural print length at 432mm wide would exceed the A2 long edge (594mm). Threshold:
+
+```
+longEdgeMm = 432 × aspectRatio
+offer panoramic if longEdgeMm > 594   →   aspectRatio > 1.375
+```
+
+A standard 4:3 Olympus image (ratio 1.333) gives 576mm — does **not** trigger panoramic (fits within A2). Only genuinely wide images (16:9 = 1.778, 2:1, 3:1, etc.) get this option.
+
+**Alongside A2**: panoramic is offered **in addition to** A2 for photos that qualify, not instead of it.
+
+**Display name in shop UI**: `Panoramic (432 × <N> mm)` — where N = `Math.round(432 × aspectRatio)`. Shown per-photo; no fixed label.
+
+**Pricing**: proportional to A2 price, based on print length:
+
+```
+panoramicPrice(paper) = A2_price(paper) × (432 × aspectRatio / 594)
+```
+
+Round to the nearest €5. e.g. a 16:9 photo (ratio 1.778): length = 768mm, factor = 768/594 = 1.29 → price = A2 price × 1.29.
+
+**Shipping category**: always `large` (postal tube).
+
+**Presentation style**: bordered only — borderless on a variable-length panoramic is complex and not offered. Do not show the bordered/borderless toggle for panoramic prints.
+
+**Implementation notes for `lib/shop.ts`**:
+- `"Panoramic"` is a special case in the `PrintSize` union — its dimensions are not in `PRINT_SIZE_DIMS_MM` (they vary per photo)
+- `getAvailablePrintSizes()` should return `"Panoramic"` when `aspectRatio > 1.375` and the photo has sufficient resolution: `longEdgePx >= (432 × aspectRatio / 25.4) × 200`
+- `getPriceCents(size, paper, photo?)` needs an overload for `"Panoramic"` that computes the proportional price from A2
+- The cart item must store the computed dimensions (`panoramicLengthMm`) alongside the size label
 
 ### Edition multipliers
 
