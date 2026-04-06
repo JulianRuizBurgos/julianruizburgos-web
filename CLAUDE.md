@@ -310,7 +310,7 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
    - [ ] Mollie onboarding complete (business activity, ID doc, bank account — in progress)
    - [ ] Swap `MOLLIE_API_KEY` to live key
    - [ ] `RESEND_API_KEY` set (Resend domain verification needed)
-   - [ ] Validate and set real prices + paper types in `lib/shop.ts`
+   - [x] Validate and set real prices + paper types in `lib/shop.ts` — **see pricing section below**
 
 ### Planned
 4. **Automated translation** — serve the site in multiple languages. Decision needed: static (build-time, e.g. next-intl with translated markdown files) vs. dynamic (runtime machine translation API). Content-heavy so quality matters; ecology and IT writing should not sound like raw MT output.
@@ -370,11 +370,10 @@ Each postcard in the cart is a unique item (different recipient/message), so qua
 - DB change needed: `print_edition_number` column on `order_items`; `edition_count` counter per photo (separate table or on a future `photos` table)
 
 ### Decisions made (implemented in `lib/shop.ts`)
-- **Paper types**: Glossy (€25–€130), Matte (€28–€155), Fine Art Cotton (€45–€220)
+- **Paper types**: see pricing section below for validated values — replace the placeholder ranges
 - **Postcard price**: €5 flat rate
 - **Minimum print DPI**: 200 DPI
-- **Shipping**: NL €4.50 / EU €7.50 / Worldwide €12.00
-- **Database**: PostgreSQL on Hetzner VPS (schema auto-initialises on first use)
+- **Shipping**: see pricing section below for real PostNL 2026 zone-based rates — replace the placeholder flat rates
 
 ### Architecture overview
 
@@ -423,6 +422,127 @@ Order management
 Julian handles everything himself:
 - **Prints**: prints on own photo printer, packages, ships with tracking
 - **Postcards**: prints A6 postcard, handwrites or prints the message side, stamps, mails directly to recipient address
+
+---
+
+## Print shop — pricing data (validated 2026-04-06)
+
+This section documents the researched and validated pricing system. Use it to update the placeholder values in `lib/shop.ts`. All prices are in euros, excluding VAT.
+
+### Pricing methodology
+
+Retail price (print only, excl. shipping) is calculated as:
+
+```
+retail = (paper_cost + ink_cost + packaging_cost + labour_cost) × markup × edition_multiplier
+```
+
+- **Default markup**: 3.5× production cost
+- **Labour per order**: €15.00 (printing + QC + packaging + admin, ~20 min at €35–40/hr — often under-counted, do not remove)
+- **Minimum viable price**: production cost (excl. shipping) × 1.20, rounded up to nearest €5
+- All retail prices are rounded to the nearest €5
+- Shipping is always shown and charged separately at checkout
+
+### Paper types (three tiers)
+
+Replace the placeholder paper types in `lib/shop.ts` with these:
+
+| ID | Display name | Description | Example product |
+|----|-------------|-------------|-----------------|
+| `matte` | Premium Matte | Matte photo paper, accessible entry tier. Good DMax for B&W, versatile. | Epson Enhanced Matte, Canson BFK Rives |
+| `cotton` | Fine Art Cotton | Matte cotton rag, archival quality. Best for landscape and nature — flagship option. | Hahnemühle Photo Rag 308g |
+| `baryta` | Baryta | Semi-glossy, deep blacks, darkroom feel. Ideal for wildlife and B&W. | Hahnemühle FineArt Baryta 325g |
+
+### Production costs per print (€)
+
+These are the internal cost components — not shown to customers, used to verify margin.
+
+| Size | Dimensions | Paper: Matte | Paper: Cotton | Paper: Baryta | Ink | Packaging |
+|------|------------|-------------|--------------|--------------|-----|-----------|
+| A4   | 21 × 29.7 cm | 0.90 | 1.80 | 2.00 | 1.00 | 2.00 |
+| A3   | 29.7 × 42 cm | 1.60 | 3.20 | 3.60 | 1.80 | 2.50 |
+| A3+  | 32 × 45 cm   | 2.00 | 4.00 | 4.50 | 2.20 | 3.00 |
+| 50×70 | 50 × 70 cm  | 3.50 | 6.50 | 7.00 | 3.80 | 3.80 |
+| A2   | 42 × 59.4 cm | 3.20 | 6.00 | 6.80 | 3.50 | 3.50 |
+| A1   | 59.4 × 84 cm | 5.80 | 11.00 | 12.00 | 6.20 | 4.50 |
+
+Labour (€15.00) is added once per order, not per print.
+
+### Validated retail prices (€, open edition, excl. shipping)
+
+These are the values to set in `lib/shop.ts`. Rounded to nearest €5, based on 3.5× markup.
+
+| Size | Matte | Cotton | Baryta |
+|------|-------|--------|--------|
+| A4   | 35    | 50     | 55     |
+| A3   | 55    | 80     | 85     |
+| A3+  | 65    | 95     | 100    |
+| 50×70 | 100  | 145    | 155    |
+| A2   | 90    | 135    | 145    |
+| A1   | 145   | 215    | 230    |
+
+### Edition multipliers
+
+Applied on top of the base retail price when edition type is set per-photo (not yet implemented in shop, planned):
+
+| Edition type | Multiplier | Notes |
+|-------------|-----------|-------|
+| Open edition | ×1.0 | No limit, prints on demand |
+| Limited ×25 | ×1.25 | Number + sign each print, include certificate of authenticity |
+| Limited ×10 | ×1.50 | Strictly enforced limit; certificate required |
+
+### Market range reference (European direct-to-consumer fine art photography, April 2026)
+
+Used to sanity-check pricing is competitive. Sources: Dutch market (Fotografie voor Goed, WhiteWall EU, independent photographer storefronts).
+
+| Size | Matte | Cotton | Baryta |
+|------|-------|--------|--------|
+| A4   | €30–€50 | €40–€65 | €45–€70 |
+| A3   | €45–€70 | €65–€95 | €70–€100 |
+| A3+  | €55–€85 | €80–€115 | €90–€120 |
+| 50×70 | €90–€130 | €130–€180 | €140–€195 |
+| A2   | €80–€120 | €115–€160 | €125–€170 |
+| A1   | €130–€190 | €185–€260 | €200–€280 |
+
+### Shipping zones and rates (PostNL January 2026 tariffs)
+
+Replace the three flat rates (`NL €4.50 / EU €7.50 / Worldwide €12.00`) in `lib/shop.ts` with this zone-based system.
+
+**Package category by print size** (determines which PostNL rate applies):
+
+| Print size | Package category | Approx. weight | Packaging method |
+|------------|----------------|----------------|-----------------|
+| A4, A3 | `small` | ~400–600 g | Flat rigid mailer |
+| A3+, 50×70, A2 | `medium` | ~700–1200 g | Postal tube or flat box |
+| A1 | `large` | ~1500 g | Large postal tube |
+
+**Shipping cost per zone and package category (€, online franking, track & trace included):**
+
+| Zone ID | Countries | Small | Medium | Large |
+|---------|-----------|-------|--------|-------|
+| `NL` | Netherlands | 6.35 | 7.45 | 7.45 |
+| `BE` | Belgium | 9.50 | 10.00 | 13.75 |
+| `EUR1` | Germany, France, Austria, Spain, Italy, Sweden, Denmark, Luxembourg | 10.00 | 11.00 | 14.50 |
+| `EUR2` | Other EU (Poland, Czech Republic, Hungary, etc.) | 12.00 | 14.00 | 18.00 |
+| `UK` | United Kingdom | 12.00 | 14.00 | 22.00 |
+| `US` | USA, Canada | 21.00 | 26.00 | 36.00 |
+| `ROW` | Rest of World | 25.00 | 32.00 | 45.00 |
+
+Source: PostNL tarievenfolder January 2026 (official PDF, verified April 2026).
+
+**Implementation notes for `lib/shop.ts`:**
+- Map the customer's shipping country (ISO code) to a zone at checkout
+- The checkout form should collect country; zone lookup happens server-side in `app/api/checkout/route.ts`
+- Consider restricting to EU + UK initially — US shipping is expensive and subject to new import regulations (10-digit HS codes required from August 2025, increased duties from August 2025)
+- NL domestic: consider absorbing the €6.35–7.45 into print price as "free shipping" for NL buyers — it is small enough relative to print price that it simplifies the purchase decision
+
+### VAT
+
+- Photography prints sold by their creator qualify for **9% BTW** (reduced artwork rate) in the Netherlands — not 21%.
+- All prices in `lib/shop.ts` should be stored **excl. VAT**. Add 9% at the checkout display layer.
+- For B2C EU cross-border sales: OSS (One Stop Shop) scheme applies once combined EU sales exceed €10,000/year. Below that threshold, Dutch 9% BTW applies to all EU sales.
+- **Do not apply 21% BTW to print sales** — this is the standard goods rate and does not apply here.
+- Confirm with a Dutch accountant before going live. This note is not legal advice.
 
 ---
 
