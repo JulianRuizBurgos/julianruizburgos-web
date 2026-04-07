@@ -238,10 +238,11 @@ export function getOrderPackageCategory(sizes: PrintSize[]): PackageCategory {
 export const POSTCARD_PRICE_CENTS = 500; // €5.00
 
 // ── VAT ───────────────────────────────────────────────────────────────────────
-// Photography prints qualify for 9% BTW (reduced Dutch artwork rate), not 21%.
-// All prices above are excl. VAT. Apply at checkout display layer.
+// KOR (Kleine Ondernemersregeling) — no VAT charged while annual turnover < €20k.
+// Prices are VAT-exempt. VAT_RATE is 0; addVat() is a no-op kept for when KOR
+// status changes (swap to 0.09 for the reduced artwork rate, or 0.21 for standard).
 
-export const VAT_RATE = 0.09;
+export const VAT_RATE = 0;
 
 export function addVat(cents: number): number {
   return Math.round(cents * (1 + VAT_RATE));
