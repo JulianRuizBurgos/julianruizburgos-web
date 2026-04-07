@@ -21,7 +21,7 @@ export default function PrivacyPage() {
           5612 DV Eindhoven, Netherlands (KvK 98713698). References to &ldquo;we&rdquo;,
           &ldquo;us&rdquo;, or &ldquo;our&rdquo; in this policy refer to that entity.
           You can contact us at{" "}
-          <a href="mailto:printshop@julianruizburgos.net">printshop@julianruizburgos.net</a>.
+          <a href="mailto:contact@julianruizburgos.net">contact@julianruizburgos.net</a>.
         </p>
 
         <h2>What data we collect and why</h2>
@@ -110,7 +110,7 @@ export default function PrivacyPage() {
         </ul>
         <p>
           To exercise any of these rights, email us at{" "}
-          <a href="mailto:printshop@julianruizburgos.net">printshop@julianruizburgos.net</a>.
+          <a href="mailto:contact@julianruizburgos.net">contact@julianruizburgos.net</a>.
           We will respond within one month.
         </p>
 

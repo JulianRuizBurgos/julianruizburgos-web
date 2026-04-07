@@ -1,5 +1,6 @@
+import Image from "next/image";
 import type { Metadata } from "next";
-
+import CompanyLogo from "@/public/ruiz_burgos_ecology_and_software_logo_rgb.svg"
 export const metadata: Metadata = {
   title: "Contact — Julian Ruiz Burgos",
   description: "Get in touch about print orders, IT consulting, or ecology work.",
@@ -29,23 +30,34 @@ export default function ContactPage() {
         <section>
           <h2>IT consulting</h2>
           <p>
-            For freelance software development and IT consulting enquiries, use the same address:{" "}
-            <a href="mailto:printshop@julianruizburgos.net">printshop@julianruizburgos.net</a>.
+            For freelance software development and IT consulting enquiries, use address:{" "}
+            <a href="mailto:contact@julianruizburgos.net">contact@julianruizburgos.net</a>.
           </p>
         </section>
 
         <section>
           <h2>Business details</h2>
-          <p>
-            Ruiz Burgos Ecology and Software<br />
-            Steversemolen 48<br />
-            5612 DV Eindhoven<br />
-            Netherlands
-          </p>
-          <p>
-            KvK (Chamber of Commerce): 98713698<br />
-            BTW (VAT) number: NL005348430B65
-          </p>
+          <div className="flex items-start gap-6">
+            <Image
+              src={CompanyLogo}
+              alt="Ruiz Burgos Ecology and Software"
+              width={200}
+              height={200}
+              className="shrink-0 self-stretch object-contain"
+            />
+            <div>
+              <p>
+                Ruiz Burgos Ecology and Software<br />
+                Steversemolen 48<br />
+                5612 DV Eindhoven<br />
+                Netherlands
+              </p>
+              <p>
+                KvK (Chamber of Commerce): 98713698<br />
+                BTW (VAT) number: NL005348430B65
+              </p>
+            </div>
+          </div>
         </section>
 
       </div>

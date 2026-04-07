@@ -25,7 +25,7 @@ export default function NowListening() {
   const { artist, track, album, url } = nowListening;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pointer-events-none">
+    <div className="fixed bottom-11 left-0 right-0 z-40 flex justify-center pointer-events-none">
       <div className="pointer-events-auto mb-4 flex items-center gap-3 rounded-full bg-earth-900/90 backdrop-blur-sm px-4 py-2.5 shadow-lg border border-white/5">
         {/* Animated bars */}
         <Bars />
