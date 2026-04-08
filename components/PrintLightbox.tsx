@@ -451,7 +451,7 @@ function PrintSelector({
           </div>
 
           {/* Price + CTA */}
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col gap-3">
             {price !== null && (
               <div>
                 <p className="font-serif text-2xl text-white">{formatPrice(price)}</p>
@@ -471,7 +471,7 @@ function PrintSelector({
             <button
               onClick={() => size && onAdd(size, paper, style)}
               disabled={!size}
-              className="flex items-center gap-2 rounded bg-[#1068b6] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0d56a0] disabled:opacity-40"
+              className="flex items-center justify-center gap-2 rounded bg-[#1068b6] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0d56a0] disabled:opacity-40"
             >
               <ShoppingBag size={15} />
               Add to cart
