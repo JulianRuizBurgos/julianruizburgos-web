@@ -243,7 +243,14 @@ export default function CheckoutPage() {
     .filter((i) => i.type === "print")
     .map((i) => (i as Extract<typeof items[number], { type: "print" }>).size);
   const packageCategory = printSizes.length > 0 ? getOrderPackageCategory(printSizes) : "small";
-  const shipping_cents = hasPrints ? getShippingCents(shipping.country || "NL", packageCategory) : 0;
+  const printShippingCents = hasPrints ? getShippingCents(shipping.country || "NL", packageCategory) : 0;
+  const postcardMailingCents = items
+    .filter((i) => i.type === "postcard")
+    .reduce((sum, i) => {
+      const pc = i as Extract<typeof items[number], { type: "postcard" }>;
+      return sum + (pc.country.toUpperCase() === "NL" ? 0 : 200);
+    }, 0);
+  const shipping_cents = printShippingCents + postcardMailingCents;
   const grandTotalCents = totalCents + shipping_cents;
 
   function set(key: keyof ShippingFields, value: string) {

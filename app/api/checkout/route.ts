@@ -67,14 +67,23 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Compute shipping server-side from country — never trust client
-  const country = shipping?.country ?? "NL";
+  // Compute shipping server-side — never trust client
+  // Prints: zone-based PostNL rate by customer delivery country
+  // Postcards: free for NL recipients, €2.00 per international recipient (stamp cost)
   const printSizes = items
     .filter((i) => i.type === "print")
     .map((i) => (i as Extract<CartItem, { type: "print" }>).size);
-  const packageCategory =
-    printSizes.length > 0 ? getOrderPackageCategory(printSizes) : "small";
-  const shippingCents = getShippingCents(country, packageCategory);
+  const hasPrints = printSizes.length > 0;
+  const country = shipping?.country ?? "NL";
+  const packageCategory = hasPrints ? getOrderPackageCategory(printSizes) : "small";
+  const printShippingCents = hasPrints ? getShippingCents(country, packageCategory) : 0;
+  const postcardMailingCents = items
+    .filter((i) => i.type === "postcard")
+    .reduce((sum, i) => {
+      const pc = i as Extract<CartItem, { type: "postcard" }>;
+      return sum + (pc.country.toUpperCase() === "NL" ? 0 : 200);
+    }, 0);
+  const shippingCents = printShippingCents + postcardMailingCents;
 
   const total = subtotal + shippingCents;
   const amountValue = (total / 100).toFixed(2);
