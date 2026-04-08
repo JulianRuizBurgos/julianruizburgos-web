@@ -70,15 +70,21 @@ export async function POST(req: NextRequest) {
   }
 
   // Compute shipping server-side — never trust client
-  // Prints + blank postcards: zone-based PostNL rate by customer delivery country
+  // Prints: always free for NL, zone-based PostNL rate elsewhere
+  // Blank postcards: free for NL when total quantity >= 6, otherwise zone-based
   // Mailed postcards: free for NL recipients, €2.00 per international recipient (stamp cost)
   const printSizes = items
     .filter((i) => i.type === "print")
     .map((i) => (i as Extract<CartItem, { type: "print" }>).size);
-  const hasPhysicalItems = printSizes.length > 0 || items.some((i) => i.type === "blank-postcard");
+  const blankPostcardQty = items
+    .filter((i) => i.type === "blank-postcard")
+    .reduce((sum, i) => sum + (i as Extract<CartItem, { type: "blank-postcard" }>).quantity, 0);
+  const hasPhysicalItems = printSizes.length > 0 || blankPostcardQty > 0;
   const country = shipping?.country ?? "NL";
+  const isNL = country.toUpperCase() === "NL";
   const packageCategory = printSizes.length > 0 ? getOrderPackageCategory(printSizes) : "small";
-  const physicalShippingCents = hasPhysicalItems ? getShippingCents(country, packageCategory) : 0;
+  const nlFreeShipping = isNL && (printSizes.length > 0 || blankPostcardQty >= 6);
+  const physicalShippingCents = (!hasPhysicalItems || nlFreeShipping) ? 0 : getShippingCents(country, packageCategory);
   const postcardMailingCents = items
     .filter((i) => i.type === "postcard")
     .reduce((sum, i) => {

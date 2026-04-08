@@ -85,7 +85,11 @@ export default function CartPage() {
     );
   }
 
-  const hasPrints = items.some((i) => i.type === "print" || i.type === "blank-postcard");
+  const hasPrintItems = items.some((i) => i.type === "print");
+  const blankPostcardQty = items
+    .filter((i) => i.type === "blank-postcard")
+    .reduce((sum, i) => sum + (i as Extract<typeof items[number], { type: "blank-postcard" }>).quantity, 0);
+  const hasPrints = hasPrintItems || blankPostcardQty > 0;
 
   return (
     <div className="bg-earth-50 min-h-screen pt-28">
@@ -119,9 +123,19 @@ export default function CartPage() {
           </p>
         </div>
 
-        {hasPrints && (
+        {hasPrintItems && (
           <p className="mt-2 text-xs text-earth-600">
-            Shipping calculated at checkout based on delivery country.
+            Free shipping in the Netherlands · International rates at checkout.
+          </p>
+        )}
+        {!hasPrintItems && blankPostcardQty > 0 && blankPostcardQty >= 6 && (
+          <p className="mt-2 text-xs text-earth-600">
+            Free shipping in the Netherlands · International rates at checkout.
+          </p>
+        )}
+        {!hasPrintItems && blankPostcardQty > 0 && blankPostcardQty < 6 && (
+          <p className="mt-2 text-xs text-earth-600">
+            Shipping calculated at checkout · Free in the Netherlands for 6+ cards.
           </p>
         )}
         {!hasPrints && (
