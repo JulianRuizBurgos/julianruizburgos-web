@@ -386,6 +386,7 @@ export default function CheckoutPage() {
           </div>
           {shippingBreakdown.length > 0 && (
             <div className="mt-2 border-t border-earth-100 pt-2 flex flex-col gap-1">
+              <p className="text-xs font-semibold uppercase tracking-widest text-earth-600 mb-1">Shipping costs</p>
               {shippingBreakdown.map((line, i) => (
                 <div key={i} className="flex justify-between text-sm gap-3">
                   <span className="text-earth-600 min-w-0">
