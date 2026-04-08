@@ -238,12 +238,18 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const hasPrints = items.some((i) => i.type === "print" || i.type === "blank-postcard");
   const printSizes = items
     .filter((i) => i.type === "print")
     .map((i) => (i as Extract<typeof items[number], { type: "print" }>).size);
+  const blankPostcardQty = items
+    .filter((i) => i.type === "blank-postcard")
+    .reduce((sum, i) => sum + (i as Extract<typeof items[number], { type: "blank-postcard" }>).quantity, 0);
+  const hasPrints = printSizes.length > 0 || blankPostcardQty > 0;
+  const country = shipping.country || "NL";
+  const isNL = country.toUpperCase() === "NL";
   const packageCategory = printSizes.length > 0 ? getOrderPackageCategory(printSizes) : "small";
-  const printShippingCents = hasPrints ? getShippingCents(shipping.country || "NL", packageCategory) : 0;
+  const nlFreeShipping = isNL && (printSizes.length > 0 || blankPostcardQty >= 6);
+  const printShippingCents = !hasPrints || nlFreeShipping ? 0 : getShippingCents(country, packageCategory);
   const postcardMailingCents = items
     .filter((i) => i.type === "postcard")
     .reduce((sum, i) => {
@@ -337,6 +343,8 @@ export default function CheckoutPage() {
                   {item.photoTitle}
                   {item.type === "print"
                     ? ` — ${item.size}, ${PAPER_TYPE_LABELS[item.paper as PaperType] ?? item.paper}`
+                    : item.type === "blank-postcard"
+                    ? ` — Blank postcard ×${item.quantity}`
                     : " — Postcard"}
                 </span>
                 <span className="text-earth-900 font-medium">
@@ -348,7 +356,9 @@ export default function CheckoutPage() {
           {hasPrints && (
             <div className="mt-2 flex justify-between text-sm border-t border-earth-100 pt-2">
               <span className="text-earth-600">Shipping</span>
-              <span className="text-earth-900">{formatPrice(shipping_cents)}</span>
+              <span className="text-earth-900">
+                {nlFreeShipping ? "Free" : formatPrice(shipping_cents)}
+              </span>
             </div>
           )}
           <div className="mt-2 flex justify-between border-t border-earth-200 pt-3">
