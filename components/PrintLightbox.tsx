@@ -10,6 +10,7 @@ import {
   PAPER_TYPE_LABELS,
   PAPER_TYPE_DESCRIPTIONS,
   POSTCARD_PRICE_CENTS,
+  BLANK_POSTCARD_PRICE_CENTS,
   formatPrice,
   getPriceCents,
   getPanoramicLengthMm,
@@ -20,6 +21,7 @@ import {
   type PresentationStyle,
   type PrintCartItem,
   type PostcardCartItem,
+  type BlankPostcardCartItem,
   type TextStyle,
 } from "@/lib/shop";
 import type { PrintSize } from "@/lib/photography";
@@ -208,6 +210,77 @@ function PostcardForm({
   );
 }
 
+// ── Blank postcard selector ───────────────────────────────────────────────────
+
+function BlankPostcardSelector({
+  onAdd,
+  onCancel,
+}: {
+  onAdd: (quantity: number) => void;
+  onCancel: () => void;
+}) {
+  const [quantity, setQuantity] = useState(1);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold uppercase tracking-widest text-stone-400">
+          Blank postcard
+        </p>
+        <button
+          onClick={onCancel}
+          className="text-xs text-stone-500 hover:text-white transition-colors"
+        >
+          ← Back
+        </button>
+      </div>
+
+      <p className="text-xs text-stone-400 leading-relaxed">
+        Printed at A6 (10×15 cm) and shipped to you. Write your own message — blank on the back.
+      </p>
+
+      <div className="flex flex-col gap-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-stone-400">
+          Quantity
+        </p>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            className="flex h-8 w-8 items-center justify-center rounded border border-white/20 text-stone-400 hover:border-stone-400 hover:text-white transition-colors text-lg leading-none"
+          >
+            −
+          </button>
+          <span className="w-8 text-center font-semibold text-white">{quantity}</span>
+          <button
+            onClick={() => setQuantity((q) => Math.min(20, q + 1))}
+            className="flex h-8 w-8 items-center justify-center rounded border border-white/20 text-stone-400 hover:border-stone-400 hover:text-white transition-colors text-lg leading-none"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-3 mt-1">
+        <div>
+          <p className="font-serif text-2xl text-white">
+            {formatPrice(BLANK_POSTCARD_PRICE_CENTS * quantity)}
+          </p>
+          <p className="text-[11px] text-stone-500">
+            {formatPrice(BLANK_POSTCARD_PRICE_CENTS)} each · excl. shipping
+          </p>
+        </div>
+        <button
+          onClick={() => onAdd(quantity)}
+          className="flex items-center gap-2 rounded bg-[#1068b6] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0d56a0]"
+        >
+          <ShoppingBag size={15} />
+          Add to cart
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── Size label helper ─────────────────────────────────────────────────────────
 
 function SizeLabel({
@@ -243,10 +316,12 @@ function PrintSelector({
   photo,
   onAdd,
   onPostcard,
+  onMailedPostcard,
 }: {
   photo: Photo;
   onAdd: (size: PrintSize, paper: PaperType, style: PresentationStyle) => void;
   onPostcard: () => void;
+  onMailedPostcard: () => void;
 }) {
   const [style, setStyle] = useState<PresentationStyle>("bordered");
   const [paper, setPaper] = useState<PaperType>("cotton");
@@ -400,13 +475,19 @@ function PrintSelector({
         </p>
       )}
 
-      {/* Postcard CTA — always shown */}
-      <div className="border-t border-white/10 pt-3">
+      {/* Postcard CTAs — always shown */}
+      <div className="border-t border-white/10 pt-3 flex flex-col gap-2">
         <button
           onClick={onPostcard}
-          className="text-sm text-stone-400 underline underline-offset-2 hover:text-white transition-colors"
+          className="text-sm text-stone-400 underline underline-offset-2 hover:text-white transition-colors text-left"
         >
-          Order as postcard (A6 · 10×15 cm) — {formatPrice(POSTCARD_PRICE_CENTS)}
+          Blank postcard (A6 · to keep) — {formatPrice(BLANK_POSTCARD_PRICE_CENTS)} each
+        </button>
+        <button
+          onClick={onMailedPostcard}
+          className="text-sm text-stone-400 underline underline-offset-2 hover:text-white transition-colors text-left"
+        >
+          Mail a postcard (A6 · to someone) — {formatPrice(POSTCARD_PRICE_CENTS)}
         </button>
       </div>
     </div>
@@ -415,7 +496,7 @@ function PrintSelector({
 
 // ── Main lightbox ─────────────────────────────────────────────────────────────
 
-type View = "info" | "shop" | "postcard" | "added";
+type View = "info" | "shop" | "postcard" | "blank-postcard" | "added";
 
 export default function PrintLightbox({
   photo,
@@ -458,6 +539,24 @@ export default function PrintLightbox({
         photoImageUrl: photo.imageUrl,
         ...fields,
         priceCents: POSTCARD_PRICE_CENTS,
+      };
+      addItem(item);
+      setView("added");
+      setTimeout(() => setView("info"), 2500);
+    },
+    [photo, addItem]
+  );
+
+  const handleAddBlankPostcard = useCallback(
+    (quantity: number) => {
+      const item: BlankPostcardCartItem = {
+        type: "blank-postcard",
+        id: crypto.randomUUID(),
+        photoFilename: photo.filename,
+        photoTitle: photo.title,
+        photoImageUrl: photo.imageUrl,
+        quantity,
+        priceCents: BLANK_POSTCARD_PRICE_CENTS * quantity,
       };
       addItem(item);
       setView("added");
@@ -552,6 +651,11 @@ export default function PrintLightbox({
                   onAdd={handleAddPostcard}
                   onCancel={() => setView("info")}
                 />
+              ) : view === "blank-postcard" ? (
+                <BlankPostcardSelector
+                  onAdd={handleAddBlankPostcard}
+                  onCancel={() => setView("info")}
+                />
               ) : view === "shop" ? (
                 <div className="flex flex-col gap-4">
                   <button
@@ -563,7 +667,8 @@ export default function PrintLightbox({
                   <PrintSelector
                     photo={photo}
                     onAdd={handleAddPrint}
-                    onPostcard={() => setView("postcard")}
+                    onPostcard={() => setView("blank-postcard")}
+                    onMailedPostcard={() => setView("postcard")}
                   />
                 </div>
               ) : (
@@ -576,10 +681,16 @@ export default function PrintLightbox({
                     Order as print
                   </button>
                   <button
+                    onClick={() => setView("blank-postcard")}
+                    className="text-sm text-stone-400 underline underline-offset-2 hover:text-white transition-colors"
+                  >
+                    Blank postcard (A6 · to keep) — {formatPrice(BLANK_POSTCARD_PRICE_CENTS)} each
+                  </button>
+                  <button
                     onClick={() => setView("postcard")}
                     className="text-sm text-stone-400 underline underline-offset-2 hover:text-white transition-colors"
                   >
-                    Order as postcard (A6 · 10×15 cm) — {formatPrice(POSTCARD_PRICE_CENTS)}
+                    Mail a postcard (A6 · to someone) — {formatPrice(POSTCARD_PRICE_CENTS)}
                   </button>
                 </div>
               )}

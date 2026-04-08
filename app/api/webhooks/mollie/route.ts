@@ -106,38 +106,45 @@ async function handlePaymentSucceeded(payment: Payment) {
 
   const orderId = orderRows[0].id;
 
-  const { POSTCARD_PRICE_CENTS, getPriceCents } = await import("@/lib/shop");
+  const { POSTCARD_PRICE_CENTS, BLANK_POSTCARD_PRICE_CENTS, getPriceCents } = await import("@/lib/shop");
 
   const emailItems = [];
   const emailPostcardDetails = [];
 
   for (const item of cartItems) {
     const isPostcard = item.t === "postcard";
+    const isBlankPostcard = item.t === "blank-postcard";
+    const quantity = isBlankPostcard ? parseInt(item.q ?? "1", 10) : 1;
     let priceCents: number;
     if (isPostcard) {
       priceCents = POSTCARD_PRICE_CENTS;
+    } else if (isBlankPostcard) {
+      priceCents = BLANK_POSTCARD_PRICE_CENTS;
     } else {
       const aspectRatio = item.pl ? parseInt(item.pl, 10) / 432 : undefined;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       priceCents = getPriceCents(item.s as any, item.p as any, aspectRatio);
     }
 
+    const productType = isPostcard ? "postcard" : isBlankPostcard ? "blank-postcard" : "print";
+
     const itemRows = await query<{ id: string }>(
       `INSERT INTO order_items
         (order_id, photo_filename, photo_title, product_type, size, paper_type,
          presentation_style, panoramic_length_mm, price_cents, quantity)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,1)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
        RETURNING id`,
       [
         orderId,
         item.f,
         item.n,
-        isPostcard ? "postcard" : "print",
-        isPostcard ? null : item.s,
-        isPostcard ? null : item.p,
-        isPostcard ? null : (item.ps ?? "bordered"),
-        isPostcard ? null : (item.pl ? parseInt(item.pl, 10) : null),
+        productType,
+        isPostcard || isBlankPostcard ? null : item.s,
+        isPostcard || isBlankPostcard ? null : item.p,
+        isPostcard || isBlankPostcard ? null : (item.ps ?? "bordered"),
+        isPostcard || isBlankPostcard ? null : (item.pl ? parseInt(item.pl, 10) : null),
         priceCents,
+        quantity,
       ]
     );
 
@@ -147,13 +154,13 @@ async function handlePaymentSucceeded(payment: Payment) {
       order_id: orderId,
       photo_filename: item.f,
       photo_title: item.n,
-      product_type: isPostcard ? "postcard" : "print",
+      product_type: productType,
       size: item.s ?? null,
       paper_type: item.p ?? null,
-      presentation_style: isPostcard ? null : (item.ps ?? "bordered"),
+      presentation_style: isPostcard || isBlankPostcard ? null : (item.ps ?? "bordered"),
       panoramic_length_mm: item.pl ? parseInt(item.pl, 10) : null,
       price_cents: priceCents,
-      quantity: 1,
+      quantity,
     });
 
     if (isPostcard) {

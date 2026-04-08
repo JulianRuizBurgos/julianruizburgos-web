@@ -8,8 +8,6 @@ import { formatPrice } from "@/lib/shop";
 import type { CartItem } from "@/lib/shop";
 
 function LineItem({ item, onRemove }: { item: CartItem; onRemove: () => void }) {
-  const isPostcard = item.type === "postcard";
-
   return (
     <div className="flex items-start gap-4 py-5 border-t border-earth-200">
       {/* Thumbnail */}
@@ -28,7 +26,7 @@ function LineItem({ item, onRemove }: { item: CartItem; onRemove: () => void }) 
         <p className="font-serif text-base font-semibold text-earth-900 leading-snug">
           {item.photoTitle}
         </p>
-        {isPostcard ? (
+        {item.type === "postcard" ? (
           <>
             <p className="mt-0.5 text-sm text-earth-600">
               Postcard · to {item.recipientName}
@@ -37,6 +35,10 @@ function LineItem({ item, onRemove }: { item: CartItem; onRemove: () => void }) 
               {item.textStyle === "handwritten" ? "Handwritten by Julian" : "Printed text"}
             </p>
           </>
+        ) : item.type === "blank-postcard" ? (
+          <p className="mt-0.5 text-sm text-earth-600">
+            Blank postcard · A6 · ×{item.quantity}
+          </p>
         ) : (
           <p className="mt-0.5 text-sm text-earth-600">
             {item.size} · {item.paper}
@@ -83,7 +85,7 @@ export default function CartPage() {
     );
   }
 
-  const hasPrints = items.some((i) => i.type === "print");
+  const hasPrints = items.some((i) => i.type === "print" || i.type === "blank-postcard");
 
   return (
     <div className="bg-earth-50 min-h-screen pt-28">
@@ -124,7 +126,7 @@ export default function CartPage() {
         )}
         {!hasPrints && (
           <p className="mt-2 text-xs text-earth-600">
-            Postcards ship worldwide at no extra charge.
+            Mailed postcards: free within NL, €2 international.
           </p>
         )}
 

@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS order_items (
   order_id              UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
   photo_filename        TEXT NOT NULL,
   photo_title           TEXT NOT NULL,
-  product_type          TEXT NOT NULL CHECK (product_type IN ('print', 'postcard')),
+  product_type          TEXT NOT NULL CHECK (product_type IN ('print', 'postcard', 'blank-postcard')),
   size                  TEXT,
   paper_type            TEXT,
   presentation_style    TEXT CHECK (presentation_style IN ('bordered', 'borderless')),
@@ -84,6 +84,16 @@ CREATE TABLE IF NOT EXISTS postcard_details (
 
 CREATE INDEX IF NOT EXISTS orders_created_at_idx ON orders (created_at DESC);
 CREATE INDEX IF NOT EXISTS order_items_order_id_idx ON order_items (order_id);
+
+-- Migration: extend product_type check to include blank-postcard
+DO $$
+BEGIN
+  ALTER TABLE order_items DROP CONSTRAINT IF EXISTS order_items_product_type_check;
+  ALTER TABLE order_items ADD CONSTRAINT order_items_product_type_check
+    CHECK (product_type IN ('print', 'postcard', 'blank-postcard'));
+EXCEPTION WHEN OTHERS THEN NULL;
+END;
+$$;
 `;
 
 let schemaInitialised = false;
@@ -121,7 +131,7 @@ export interface OrderItem {
   order_id: string;
   photo_filename: string;
   photo_title: string;
-  product_type: "print" | "postcard";
+  product_type: "print" | "postcard" | "blank-postcard";
   size: string | null;
   paper_type: string | null;
   presentation_style: "bordered" | "borderless" | null;

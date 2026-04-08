@@ -238,7 +238,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const hasPrints = items.some((i) => i.type === "print");
+  const hasPrints = items.some((i) => i.type === "print" || i.type === "blank-postcard");
   const printSizes = items
     .filter((i) => i.type === "print")
     .map((i) => (i as Extract<typeof items[number], { type: "print" }>).size);

@@ -94,6 +94,8 @@ function OrderRow({ order }: { order: OrderWithItems }) {
                     {item.photo_title}
                     {item.product_type === "print"
                       ? ` — ${item.size}, ${item.paper_type}`
+                      : item.product_type === "blank-postcard"
+                      ? ` — Blank postcard ×${item.quantity}`
                       : " — Postcard"}
                   </span>
                   <span className="text-earth-900 font-medium ml-4">

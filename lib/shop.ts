@@ -235,7 +235,9 @@ export function getOrderPackageCategory(sizes: PrintSize[]): PackageCategory {
 
 // ── Postcard ──────────────────────────────────────────────────────────────────
 
-export const POSTCARD_PRICE_CENTS = 500; // €5.00
+export const POSTCARD_PRICE_CENTS = 500; // €5.00 — mailed to recipient by Julian
+
+export const BLANK_POSTCARD_PRICE_CENTS = 350; // €3.50 per card — A6 print shipped to customer
 
 // ── VAT ───────────────────────────────────────────────────────────────────────
 // KOR (Kleine Ondernemersregeling) — no VAT charged while annual turnover < €20k.
@@ -293,4 +295,14 @@ export interface PostcardCartItem {
   priceCents: number;
 }
 
-export type CartItem = PrintCartItem | PostcardCartItem;
+export interface BlankPostcardCartItem {
+  type: "blank-postcard";
+  id: string;
+  photoFilename: string;
+  photoTitle: string;
+  photoImageUrl: string;
+  quantity: number;
+  priceCents: number; // = BLANK_POSTCARD_PRICE_CENTS × quantity
+}
+
+export type CartItem = PrintCartItem | PostcardCartItem | BlankPostcardCartItem;

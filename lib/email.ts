@@ -14,6 +14,9 @@ function itemDescription(item: OrderItem, postcard?: PostcardDetail): string {
     const style = postcard.text_style === "handwritten" ? "handwritten" : "printed";
     return `${item.photo_title} — Postcard to ${postcard.recipient_name} (${style})`;
   }
+  if (item.product_type === "blank-postcard") {
+    return `${item.photo_title} — Blank postcard ×${item.quantity}`;
+  }
   return `${item.photo_title} — ${item.size}, ${item.paper_type}`;
 }
 

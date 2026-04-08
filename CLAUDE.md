@@ -316,7 +316,7 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 - SSL via Let's Encrypt
 - GreenNet managing DNS and email (@julianruizburgos.net)
 
-## Current status (2026-04-06)
+## Current status (2026-04-07)
 - [x] Next.js 16.1.6 + TypeScript + Tailwind v4 + App Router
 - [x] shadcn/ui components installed
 - [x] Design system: 3-colour palette consolidated (terracotta / stone+navy / olive). plum and sage removed. forest-900 merged into earth-900.
@@ -339,6 +339,10 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 - [x] **6 collections live**: Urban Photography, Landscapes, Macro & Nature, Architecture, Still Life, Astrophotography.
 - [x] **On-demand cache revalidation** (2026-04-07) — `POST /api/revalidate?secret=...` busts `photos` cache tag immediately after Nextcloud sync. Photos cache window: 5 min. See Photography content pipeline section for usage.
 - [x] **Tag cleanup** (2026-04-07) — reduced from 213 → 96 unique tags. All singular, lowercase, high-level only. `scripts/sync-tags-to-exif.mjs` writes cleaned tags back to EXIF so re-running the generate script doesn't overwrite them.
+- [x] **Footer** (2026-04-07) — fixed at bottom of viewport (always visible), shows legal links only within photography/shop/legal routes.
+- [x] **Contact page** (2026-04-07) — company logo displayed alongside business details. Country field in checkout replaced with full-name dropdown (ISO2 stored internally).
+- [x] **`middleware.ts` → `proxy.ts`** (2026-04-07) — renamed per Next.js 16 convention to silence deprecation warning.
+- [x] **Resend email integration** (2026-04-07) — account created, API key set in Coolify, domain `mail.julianruizburgos.net` added. Awaiting GreenNet DNS records + verification.
 
 ## Roadmap
 
@@ -350,13 +354,18 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
    - [x] `NEXT_PUBLIC_BASE_URL` set
    - [x] `ADMIN_SECRET` set
    - [x] End-to-end test with Mollie test mode — passed
-   - [ ] Mollie onboarding complete (business activity, ID doc, bank account — in progress)
-   - [ ] Swap `MOLLIE_API_KEY` to live key
-   - [ ] `RESEND_API_KEY` set (Resend domain verification needed)
+   - [x] Mollie onboarding complete — cards, iDEAL, and payouts all activated (2026-04-07)
+   - [x] Swap `MOLLIE_API_KEY` to live key (2026-04-07)
+   - [x] `RESEND_API_KEY` set — `mail.julianruizburgos.net` verified in Resend (2026-04-08). FROM: `orders@mail.julianruizburgos.net`, Reply-To: `printshop@julianruizburgos.net`
    - [x] Validate and set real prices + paper types in `lib/shop.ts` — **see pricing section below**
 
+### Next (post go-live)
+2. **Edition numbering** — sequential print numbers + certificate of authenticity. DB changes needed: `print_edition_number` column on `order_items`, `edition_count` counter per photo. Assign number in Mollie webhook handler, include in customer + Julian emails.
+
+3. **NL free shipping** — absorb €6.35–7.45 PostNL domestic cost for Netherlands orders. Show "Free shipping" at checkout for NL; server-side route adds €0 shipping. No change to international rates.
+
 ### Planned
-4. **Automated translation** — serve the site in multiple languages. Decision needed: static (build-time, e.g. next-intl with translated markdown files) vs. dynamic (runtime machine translation API). Content-heavy so quality matters; ecology and IT writing should not sound like raw MT output.
+4. **Internationalisation (i18n)** — English + Spanish initially, designed to extend to further languages. Architecture is decided (see section below). **Defer until after shop go-live** — touches every route, best done in one focused pass.
 
 5. **Accessibility (high priority — treat this seriously throughout)**
    The goal is a site that works genuinely well for people with a wide range of disabilities — visual, motor, cognitive, neurological, and situational. Not checkbox compliance; real usability. This is a first-class design constraint, not an afterthought.
@@ -381,6 +390,47 @@ Endpoint: `app/api/revalidate/route.ts` — protected by `ADMIN_SECRET` env var.
 - Configure health check in Coolify
 - Video hero background (clean, watermark-free source needed)
 - **Analytics dashboard** — deploy Umami (open source, self-hosted, GDPR-compliant) as a Docker container via Coolify on the same VPS. Add tracking script to `app/layout.tsx`. Access at a subdomain (e.g. `analytics.julianruizburgos.net`). Needs a second PostgreSQL DB and a GreenNet DNS subdomain.
+
+---
+
+## Internationalisation (i18n) — architecture decided, not yet implemented
+
+English + Spanish initially; designed to extend to further languages. Defer until after shop go-live — this is a full-day refactor that touches every route in `app/`.
+
+### UI strings
+- Library: `next-intl` (App Router compatible)
+- Locale files: `/locales/en/common.json`, `/locales/es/common.json`
+- No database — locale files are version-controlled and deploy with the code
+
+### Long-form content (blog, ecology, IT, etc.)
+- One markdown file per locale **within the existing slug folder** — keeps co-located assets (images, PDFs, audio narration) intact:
+  ```
+  content/blog/[slug]/
+    en.md          ← was index.md
+    es.md          ← Spanish translation (optional — falls back to en)
+    image.png      ← assets stay co-located
+  ```
+- The slug is the stable cross-language identifier; locale is the filename, not a parent folder
+- `lib/blog.ts` (and equivalent content fetchers) accept a `locale` parameter and read `[locale].md`, falling back to `en.md`
+
+### Routing
+- `[locale]` dynamic segment at the top of `app/`: `app/[locale]/page.tsx`, `app/[locale]/blog/[slug]/page.tsx`, etc.
+- Default locale: `en`; root `/` redirects to `/en` or detects browser preference via middleware
+- Missing translations fall back to English (next-intl supports this natively)
+
+### What goes under `[locale]` and what doesn't
+**Under `[locale]`** — anything a visitor reads or interacts with in their language:
+- All page routes: `/`, `/blog`, `/blog/[slug]`, `/photography`, `/collections`, `/it`, `/ecology`, `/about`, `/cart`, `/checkout`, `/checkout/success`, legal pages
+
+**Outside `[locale]`** — server infrastructure, not user-facing content:
+- `app/api/` — all API routes (checkout, webhooks, revalidate, orders, image proxy). No locale needed; these are called programmatically, not navigated to.
+- `app/admin/` — internal order management; English only is fine.
+- `app/photography/images/` — image proxy route; locale-independent.
+
+### Translation approach for content
+- Human translation (Julian writes ES himself, or commissions it) — do not use machine translation for ecology or IT writing; quality matters for professional credibility
+- Photography UI strings (tags, size names, paper types) — machine translation is acceptable
+- Blog: translate only posts worth translating; untranslated posts simply don't appear in the ES locale (or fall back to EN — decide at implementation time)
 
 ---
 

@@ -49,9 +49,9 @@ export async function POST(req: NextRequest) {
   const {
     getPriceCents,
     POSTCARD_PRICE_CENTS,
+    BLANK_POSTCARD_PRICE_CENTS,
     getShippingCents,
     getOrderPackageCategory,
-    getSizePackageCategory,
   } = await import("@/lib/shop");
 
   // Recompute subtotal server-side — never trust client prices
@@ -62,28 +62,30 @@ export async function POST(req: NextRequest) {
         ? item.panoramicLengthMm / 432
         : undefined;
       subtotal += getPriceCents(item.size, item.paper, aspectRatio);
+    } else if (item.type === "blank-postcard") {
+      subtotal += BLANK_POSTCARD_PRICE_CENTS * item.quantity;
     } else {
       subtotal += POSTCARD_PRICE_CENTS;
     }
   }
 
   // Compute shipping server-side — never trust client
-  // Prints: zone-based PostNL rate by customer delivery country
-  // Postcards: free for NL recipients, €2.00 per international recipient (stamp cost)
+  // Prints + blank postcards: zone-based PostNL rate by customer delivery country
+  // Mailed postcards: free for NL recipients, €2.00 per international recipient (stamp cost)
   const printSizes = items
     .filter((i) => i.type === "print")
     .map((i) => (i as Extract<CartItem, { type: "print" }>).size);
-  const hasPrints = printSizes.length > 0;
+  const hasPhysicalItems = printSizes.length > 0 || items.some((i) => i.type === "blank-postcard");
   const country = shipping?.country ?? "NL";
-  const packageCategory = hasPrints ? getOrderPackageCategory(printSizes) : "small";
-  const printShippingCents = hasPrints ? getShippingCents(country, packageCategory) : 0;
+  const packageCategory = printSizes.length > 0 ? getOrderPackageCategory(printSizes) : "small";
+  const physicalShippingCents = hasPhysicalItems ? getShippingCents(country, packageCategory) : 0;
   const postcardMailingCents = items
     .filter((i) => i.type === "postcard")
     .reduce((sum, i) => {
       const pc = i as Extract<CartItem, { type: "postcard" }>;
       return sum + (pc.country.toUpperCase() === "NL" ? 0 : 200);
     }, 0);
-  const shippingCents = printShippingCents + postcardMailingCents;
+  const shippingCents = physicalShippingCents + postcardMailingCents;
 
   const total = subtotal + shippingCents;
   const amountValue = (total / 100).toFixed(2);
@@ -103,6 +105,8 @@ export async function POST(req: NextRequest) {
             ps: i.presentationStyle,
             ...(i.panoramicLengthMm ? { pl: i.panoramicLengthMm } : {}),
           }
+        : i.type === "blank-postcard"
+        ? { q: i.quantity }
         : {
             rn: i.recipientName,
             a1: i.addressLine1,
@@ -129,7 +133,7 @@ export async function POST(req: NextRequest) {
       customerEmail,
       cart: cartJson,
       shippingCents: String(shippingCents),
-      packageCategory,
+      packageCategory: hasPhysicalItems ? packageCategory : "",
       ...(shipping
         ? {
             shippingName: shipping.name,
