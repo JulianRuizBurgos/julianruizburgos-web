@@ -195,6 +195,7 @@ async function handlePaymentSucceeded(payment: Payment) {
   const { sendOrderEmails } = await import("@/lib/email");
   await sendOrderEmails({
     orderId,
+    paymentRef: payment.id.slice(-8).toUpperCase(),
     customerName,
     customerEmail,
     items: emailItems as Parameters<typeof sendOrderEmails>[0]["items"],

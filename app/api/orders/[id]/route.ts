@@ -73,8 +73,9 @@ export async function PATCH(
         customer_email: string;
         customer_name: string;
         tracking_number: string | null;
+        stripe_payment_id: string;
       }>(
-        "SELECT customer_email, customer_name, tracking_number FROM orders WHERE id = $1",
+        "SELECT customer_email, customer_name, tracking_number, stripe_payment_id FROM orders WHERE id = $1",
         [id]
       );
       if (order[0]) {
@@ -82,7 +83,7 @@ export async function PATCH(
         await sendDispatchEmail(
           order[0].customer_email,
           order[0].customer_name,
-          id,
+          order[0].stripe_payment_id.slice(-8).toUpperCase(),
           body.trackingNumber ?? order[0].tracking_number ?? undefined
         );
       }

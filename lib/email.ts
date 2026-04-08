@@ -19,6 +19,7 @@ function itemDescription(item: OrderItem, postcard?: PostcardDetail): string {
 
 interface SendEmailsParams {
   orderId: string;
+  paymentRef: string;
   customerName: string;
   customerEmail: string;
   items: OrderItem[];
@@ -36,11 +37,11 @@ export async function sendOrderEmails(params: SendEmailsParams): Promise<void> {
 
   const {
     orderId,
+    paymentRef,
     customerName,
     customerEmail,
     items,
     postcardDetails,
-    subtotalCents,
     shippingCents,
     totalCents,
   } = params;
@@ -60,7 +61,7 @@ Hi ${customerName},
 
 Thank you for your order! Here's your confirmation.
 
-Order reference: ${orderId.slice(0, 8).toUpperCase()}
+Order reference: ${paymentRef}
 
 ${itemLines}
 ${shippingCents > 0 ? `  Shipping: ${formatPrice(shippingCents)}\n` : ""}
@@ -116,7 +117,7 @@ Manage orders: https://julianruizburgos.net/admin/orders
       from: FROM_ADDRESS,
       replyTo: PRINTSHOP_EMAIL,
       to: customerEmail,
-      subject: `Order confirmed — ref. ${orderId.slice(0, 8).toUpperCase()}`,
+      subject: `Order confirmed — ref. ${paymentRef}`,
       text: customerBody,
     }),
     resend.emails.send({
@@ -131,7 +132,7 @@ Manage orders: https://julianruizburgos.net/admin/orders
 export async function sendDispatchEmail(
   customerEmail: string,
   customerName: string,
-  orderId: string,
+  paymentRef: string,
   trackingNumber?: string
 ): Promise<void> {
   if (!resend) return;
@@ -139,7 +140,7 @@ export async function sendDispatchEmail(
   const body = `
 Hi ${customerName},
 
-Your order (ref. ${orderId.slice(0, 8).toUpperCase()}) has been dispatched!
+Your order (ref. ${paymentRef}) has been dispatched!
 ${trackingNumber ? `\nTracking number: ${trackingNumber}\n` : ""}
 It should arrive within a few days. Thank you for supporting my work.
 
@@ -149,7 +150,7 @@ Julian
   await resend.emails.send({
     from: FROM_ADDRESS,
     to: customerEmail,
-    subject: `Your order is on its way — ref. ${orderId.slice(0, 8).toUpperCase()}`,
+    subject: `Your order is on its way — ref. ${paymentRef}`,
     text: body,
   });
 }
