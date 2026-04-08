@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Order } from "@/lib/db";
 import type { OrderItemWithPostcard } from "./page";
 import { formatPrice } from "@/lib/shop";
+import { updateOrderStatus } from "./actions";
 
 type OrderWithItems = Order & { items: OrderItemWithPostcard[] };
 
@@ -30,11 +31,7 @@ function OrderRow({ order }: { order: OrderWithItems }) {
   async function save(newStatus: string) {
     setSaving(true);
     try {
-      await fetch(`/api/orders/${order.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus, trackingNumber: tracking }),
-      });
+      await updateOrderStatus(order.id, newStatus, tracking);
       setStatus(newStatus);
     } finally {
       setSaving(false);
