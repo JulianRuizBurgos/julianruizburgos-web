@@ -13,6 +13,7 @@ const STATUS_LABELS: Record<string, string> = {
   dispatched: "Dispatched",
   mailed:     "Mailed",
   cancelled:  "Cancelled",
+  refunded:   "Refunded",
 };
 
 const STATUS_COLOURS: Record<string, string> = {
@@ -20,6 +21,7 @@ const STATUS_COLOURS: Record<string, string> = {
   dispatched: "bg-stone-100 text-stone-700",
   mailed:     "bg-olive-100 text-olive-700",
   cancelled:  "bg-earth-100 text-earth-500",
+  refunded:   "bg-earth-100 text-earth-400",
 };
 
 function OrderRow({ order }: { order: OrderWithItems }) {
@@ -194,7 +196,7 @@ export default function AdminOrdersClient({
     <div>
       {/* Status filter */}
       <div className="mb-6 flex flex-wrap gap-2">
-        {["all", "paid", "dispatched", "mailed", "cancelled"].map((s) => {
+        {["all", "paid", "dispatched", "mailed", "cancelled", "refunded"].map((s) => {
           const count =
             s === "all" ? orders.length : orders.filter((o) => o.status === s).length;
           return (

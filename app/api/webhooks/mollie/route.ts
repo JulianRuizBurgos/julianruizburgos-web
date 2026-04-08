@@ -38,15 +38,54 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
+  // Check if a refund has been issued on this payment
+  const refundedValue = parseFloat((payment.amountRefunded as { value: string } | undefined)?.value ?? "0");
+
   try {
-    await handlePaymentSucceeded(payment);
+    if (refundedValue > 0) {
+      await handleRefund(payment, refundedValue);
+    } else {
+      await handlePaymentSucceeded(payment);
+    }
   } catch (err) {
-    console.error("Error handling Mollie payment:", err);
+    console.error("Error handling Mollie webhook:", err);
     // Return 200 so Mollie doesn't retry — log for manual recovery
     return NextResponse.json({ received: true, error: "Internal processing error" });
   }
 
   return NextResponse.json({ received: true });
+}
+
+async function handleRefund(payment: Payment, refundedValue: number) {
+  const { initSchema, query } = await import("@/lib/db");
+  await initSchema();
+
+  const refundedCents = Math.round(refundedValue * 100);
+
+  // Look up the order
+  const rows = await query<{ id: string; status: string; customer_name: string; customer_email: string }>(
+    "SELECT id, status, customer_name, customer_email FROM orders WHERE stripe_payment_id = $1",
+    [payment.id]
+  );
+  if (rows.length === 0) {
+    console.warn(`Refund webhook for unknown payment ${payment.id} — no order found`);
+    return;
+  }
+
+  const order = rows[0];
+  if (order.status === "refunded") {
+    console.log(`Order ${order.id} already marked refunded — skipping`);
+    return;
+  }
+
+  await query(
+    "UPDATE orders SET status = 'refunded', updated_at = now() WHERE id = $1",
+    [order.id]
+  );
+
+  const paymentRef = payment.id.slice(-8).toUpperCase();
+  const { sendRefundEmail } = await import("@/lib/email");
+  await sendRefundEmail(order.customer_email, order.customer_name, paymentRef, refundedCents);
 }
 
 async function handlePaymentSucceeded(payment: Payment) {

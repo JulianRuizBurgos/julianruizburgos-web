@@ -132,6 +132,46 @@ Manage orders: https://julianruizburgos.net/admin/orders
   ]);
 }
 
+export async function sendRefundEmail(
+  customerEmail: string,
+  customerName: string,
+  paymentRef: string,
+  refundedCents: number
+): Promise<void> {
+  if (!resend) return;
+
+  const body = `
+Hi ${customerName},
+
+Your order (ref. ${paymentRef}) has been refunded.
+
+Refund amount: ${formatPrice(refundedCents)}
+
+The refund will appear in your account within a few business days, depending on your payment method.
+
+If you have any questions, reply to this email or write to ${PRINTSHOP_EMAIL}.
+
+Thank you,
+Julian
+`.trim();
+
+  await Promise.allSettled([
+    resend.emails.send({
+      from: FROM_ADDRESS,
+      replyTo: PRINTSHOP_EMAIL,
+      to: customerEmail,
+      subject: `Refund processed — ref. ${paymentRef}`,
+      text: body,
+    }),
+    resend.emails.send({
+      from: FROM_ADDRESS,
+      to: PRINTSHOP_EMAIL,
+      subject: `Refund issued — ${customerName} — ${formatPrice(refundedCents)}`,
+      text: `Refund of ${formatPrice(refundedCents)} processed for order ref. ${paymentRef} (${customerName} <${customerEmail}>).`,
+    }),
+  ]);
+}
+
 export async function sendDispatchEmail(
   customerEmail: string,
   customerName: string,

@@ -94,6 +94,9 @@ BEGIN
 EXCEPTION WHEN OTHERS THEN NULL;
 END;
 $$;
+
+-- Migration: add refunded as a valid order status (orders has no check constraint — status is free text)
+-- No DDL change needed; this comment documents the accepted values: 'paid', 'dispatched', 'refunded'
 `;
 
 let schemaInitialised = false;
