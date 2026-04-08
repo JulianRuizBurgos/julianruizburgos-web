@@ -456,6 +456,16 @@ function PrintSelector({
               <div>
                 <p className="font-serif text-2xl text-white">{formatPrice(price)}</p>
                 <p className="text-[11px] text-stone-500">excl. VAT &amp; shipping</p>
+                <p className="mt-2 text-[11px] text-stone-500 leading-relaxed">
+                  Outside your budget?{" "}
+                  <a
+                    href="mailto:printshop@julianruizburgos.net"
+                    className="underline underline-offset-2 hover:text-stone-300 transition-colors"
+                  >
+                    Get in touch
+                  </a>
+                  {" "}and let&apos;s see if we can arrange something.
+                </p>
               </div>
             )}
             <button
