@@ -10,6 +10,9 @@ import {
   getSizePackageCategory,
   PAPER_TYPE_LABELS,
   type PaperType,
+  type PrintCartItem,
+  type PostcardCartItem,
+  type BlankPostcardCartItem,
 } from "@/lib/shop";
 
 // ── Country list (display name → ISO 3166-1 alpha-2) ─────────────────────────
@@ -240,10 +243,10 @@ export default function CheckoutPage() {
 
   const printSizes = items
     .filter((i) => i.type === "print")
-    .map((i) => (i as Extract<typeof items[number], { type: "print" }>).size);
+    .map((i) => (i as PrintCartItem).size);
   const blankPostcardQty = items
     .filter((i) => i.type === "blank-postcard")
-    .reduce((sum, i) => sum + (i as Extract<typeof items[number], { type: "blank-postcard" }>).quantity, 0);
+    .reduce((sum, i) => sum + (i as BlankPostcardCartItem).quantity, 0);
   const hasPrints = printSizes.length > 0 || blankPostcardQty > 0;
   const country = shipping.country || "NL";
   const isNL = country.toUpperCase() === "NL";
@@ -253,11 +256,39 @@ export default function CheckoutPage() {
   const postcardMailingCents = items
     .filter((i) => i.type === "postcard")
     .reduce((sum, i) => {
-      const pc = i as Extract<typeof items[number], { type: "postcard" }>;
+      const pc = i as PostcardCartItem;
       return sum + (pc.country.toUpperCase() === "NL" ? 0 : 200);
     }, 0);
   const shipping_cents = printShippingCents + postcardMailingCents;
   const grandTotalCents = totalCents + shipping_cents;
+
+  // Per-item shipping breakdown for display
+  const deliveryCountryName = COUNTRIES.find((c) => c.code === country)?.name ?? country;
+  const shippingBreakdown: { label: string; note: string; cents: number }[] = [];
+  const physicalItems = items.filter((i) => i.type === "print" || i.type === "blank-postcard");
+  physicalItems.forEach((item, idx) => {
+    const itemLabel =
+      item.type === "print"
+        ? `${item.photoTitle} (${(item as PrintCartItem).size})`
+        : `${item.photoTitle} — blank postcard ×${(item as BlankPostcardCartItem).quantity}`;
+    if (nlFreeShipping) {
+      shippingBreakdown.push({ label: itemLabel, note: "Free · Netherlands", cents: 0 });
+    } else if (idx === 0) {
+      shippingBreakdown.push({ label: itemLabel, note: deliveryCountryName, cents: printShippingCents });
+    } else {
+      shippingBreakdown.push({ label: itemLabel, note: "Same shipment", cents: 0 });
+    }
+  });
+  items.filter((i) => i.type === "postcard").forEach((item) => {
+    const pc = item as PostcardCartItem;
+    const recipientCountry = COUNTRIES.find((c) => c.code === pc.country.toUpperCase())?.name ?? pc.country;
+    const mailCost = pc.country.toUpperCase() === "NL" ? 0 : 200;
+    shippingBreakdown.push({
+      label: `${item.photoTitle} — postcard to ${pc.recipientName}`,
+      note: mailCost === 0 ? "Free · Netherlands" : recipientCountry,
+      cents: mailCost,
+    });
+  });
 
   function set(key: keyof ShippingFields, value: string) {
     setShipping((prev) => ({ ...prev, [key]: value }));
@@ -353,12 +384,19 @@ export default function CheckoutPage() {
               </div>
             ))}
           </div>
-          {hasPrints && (
-            <div className="mt-2 flex justify-between text-sm border-t border-earth-100 pt-2">
-              <span className="text-earth-600">Shipping</span>
-              <span className="text-earth-900">
-                {nlFreeShipping ? "Free" : formatPrice(shipping_cents)}
-              </span>
+          {shippingBreakdown.length > 0 && (
+            <div className="mt-2 border-t border-earth-100 pt-2 flex flex-col gap-1">
+              {shippingBreakdown.map((line, i) => (
+                <div key={i} className="flex justify-between text-sm gap-3">
+                  <span className="text-earth-600 min-w-0">
+                    {line.label}
+                    <span className="ml-1 text-xs text-earth-400">· {line.note}</span>
+                  </span>
+                  <span className="text-earth-900 shrink-0">
+                    {line.cents === 0 ? "Free" : formatPrice(line.cents)}
+                  </span>
+                </div>
+              ))}
             </div>
           )}
           <div className="mt-2 flex justify-between border-t border-earth-200 pt-3">
