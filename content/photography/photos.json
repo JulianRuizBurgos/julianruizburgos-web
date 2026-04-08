@@ -238,24 +238,6 @@
     "sortOrder": null
   },
   {
-    "filename": "macro_mosquito_landing_on_hairy_skin.jpg",
-    "title": "Mosquito Landing on Hairy Skin",
-    "description": "A close-up black-and-white macro photograph captures a mosquito perched on human skin covered in fine body hair, its slender legs and proboscis sharply contrasted against the soft texture. The intimate scale and monochromatic tone give the image an eerie, clinical quality.",
-    "location": null,
-    "tags": [
-      "insect",
-      "macro",
-      "black and white",
-      "nature"
-    ],
-    "date": "2021-06-04",
-    "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
-    "widthPx": 3617,
-    "heightPx": 2338,
-    "aspectRatio": 1.547,
-    "sortOrder": null
-  },
-  {
     "filename": "macro_rainkissed_rhododendron_in_bloom.jpg",
     "title": "Rain-Kissed Rhododendron in Bloom",
     "description": "A cluster of soft lavender rhododendron blossoms glistens with fresh raindrops, their delicate stamens reaching outward against a backdrop of dark green foliage. The shallow depth of field and muted, moody light evoke the quiet stillness of a garden after a spring shower.",
@@ -413,6 +395,24 @@
     "widthPx": 4608,
     "heightPx": 3072,
     "aspectRatio": 1.5,
+    "sortOrder": null
+  },
+  {
+    "filename": "macro_mosquito_landing_on_hairy_skin.jpg",
+    "title": "Mosquito Landing on Hairy Skin",
+    "description": "A close-up black-and-white macro photograph captures a mosquito perched on human skin covered in fine body hair, its slender legs and proboscis sharply contrasted against the soft texture. The intimate scale and monochromatic tone give the image an eerie, clinical quality.",
+    "location": null,
+    "tags": [
+      "insect",
+      "macro",
+      "black and white",
+      "nature"
+    ],
+    "date": "2021-06-04",
+    "camera": "E-M5MarkII · OLYMPUS M.12-40mm F2.8",
+    "widthPx": 3617,
+    "heightPx": 2338,
+    "aspectRatio": 1.547,
     "sortOrder": null
   },
   {
@@ -695,15 +695,15 @@
     "sortOrder": null
   },
   {
-    "filename": "landscape_swiss_alps_switzerland_storm_light_over_an_alpine_valley.jpg",
-    "title": "Storm Light Over an Alpine Valley",
-    "description": "A dramatic aerial view of a lush Alpine valley nestled between dark, forested mountain ridges, bathed in a golden sunset glow breaking beneath brooding storm clouds. The moody contrast between the warm horizon and the deep teal-green sky creates an atmosphere of tension and awe.",
-    "location": "Swiss Alps, Switzerland",
+    "filename": "landscape_storm_light_over_alpine_valley.jpg",
+    "title": "Storm Light Over Alpine Valley",
+    "description": "Dramatic storm clouds part just enough to reveal a fiery golden sunset horizon above a lush Alpine valley, where a small village nestles between dark, forested mountain flanks. The moody interplay of shadow and warm light creates an atmosphere of both menace and sublime beauty.",
+    "location": null,
     "tags": [
       "alpine",
-      "valley",
       "storm",
       "sunset",
+      "valley",
       "mountain",
       "dramatic sky",
       "landscape",
@@ -737,27 +737,6 @@
     "sortOrder": null
   },
   {
-    "filename": "landscape_lake_thun_switzerland_storm_light_over_alpine_lake.jpg",
-    "title": "Storm Light Over Alpine Lake",
-    "description": "Dramatic crepuscular rays pierce a brooding storm front above a calm alpine lake, casting golden reflections across the rippling turquoise water. The contrast between dark threatening clouds and brilliant light breaking through the mountains creates an atmosphere of raw, sublime power.",
-    "location": null,
-    "tags": [
-      "lake",
-      "storm",
-      "mountain",
-      "dramatic sky",
-      "reflection",
-      "alps",
-      "golden light"
-    ],
-    "date": null,
-    "camera": null,
-    "widthPx": 4252,
-    "heightPx": 3037,
-    "aspectRatio": 1.4001,
-    "sortOrder": null
-  },
-  {
     "filename": "landscape_storm_light_over_an_alpine_valley.jpg",
     "title": "Storm Light Over an Alpine Valley",
     "description": "Dramatic storm clouds part just enough at the horizon to reveal a fiery golden sunset, casting moody light over a lush Alpine valley dotted with a small village below. The layered mountains receding into the distance create a powerful sense of depth and solitude.",
@@ -777,6 +756,69 @@
     "widthPx": 8932,
     "heightPx": 4995,
     "aspectRatio": 1.7882,
+    "sortOrder": null
+  },
+  {
+    "filename": "landscape_storm_light_over_an_alpine_valley_2.jpg",
+    "title": "Storm Light Over an Alpine Valley",
+    "description": "A sweeping black-and-white panorama of a glacially carved Alpine valley, where a small town nestles between forested slopes beneath brooding storm clouds. The dramatic interplay of light and shadow lends the scene a timeless, melancholic grandeur.",
+    "location": null,
+    "tags": [
+      "alpine",
+      "valley",
+      "black and white",
+      "mountain",
+      "storm",
+      "panorama",
+      "landscape",
+      "switzerland"
+    ],
+    "date": null,
+    "camera": null,
+    "widthPx": 9216,
+    "heightPx": 5307,
+    "aspectRatio": 1.7366,
+    "sortOrder": null
+  },
+  {
+    "filename": "astrophotography_meteor_streak_across_a_starlit_sky.jpg",
+    "title": "Meteor Streak Across a Starlit Sky",
+    "description": "A long-exposure night photograph captures thousands of stars and a bright meteor trail cutting diagonally across the upper left of the frame, with the faint glow of the Milky Way visible in the center. Dark silhouettes of trees and structures frame the bottom of the image, enhancing the vast, immersive feel of the night sky.",
+    "location": null,
+    "tags": [
+      "night sky",
+      "meteor",
+      "star",
+      "milky way",
+      "long exposure",
+      "astrophotography"
+    ],
+    "date": null,
+    "camera": null,
+    "widthPx": 7016,
+    "heightPx": 5262,
+    "aspectRatio": 1.3333,
+    "sortOrder": null
+  },
+  {
+    "filename": "landscape_lake_thun_switzerland_storm_light_over_alpine_lake.jpg",
+    "title": "Storm Light Over Alpine Lake",
+    "description": "Dramatic crepuscular rays pierce a brooding storm front above a calm alpine lake, casting golden reflections across the rippling turquoise water. The contrast between dark threatening clouds and brilliant light breaking through the mountains creates an atmosphere of raw, sublime power.",
+    "location": null,
+    "tags": [
+      "lake",
+      "storm",
+      "mountain",
+      "dramatic sky",
+      "reflection",
+      "alps",
+      "golden light"
+    ],
+    "date": null,
+    "camera": null,
+    "widthPx": 4252,
+    "heightPx": 3037,
+    "aspectRatio": 1.4001,
     "sortOrder": null
   },
   {
@@ -824,28 +866,6 @@
     "sortOrder": null
   },
   {
-    "filename": "landscape_gstaad_valley_bernese_oberland_switzerland_golden_hour_over_an_alpine_valley.jpg",
-    "title": "Golden Hour Over an Alpine Valley",
-    "description": "A sweeping aerial view of a lush green Alpine valley dotted with small villages, bathed in the warm golden light of a dramatic sunset breaking beneath heavy storm clouds. The layered mountain ridges recede into a hazy horizon, evoking a sense of vastness and serene isolation.",
-    "location": "Gstaad Valley, Bernese Oberland, Switzerland",
-    "tags": [
-      "alps",
-      "valley",
-      "sunset",
-      "mountain",
-      "switzerland",
-      "landscape",
-      "aerial",
-      "golden hour"
-    ],
-    "date": null,
-    "camera": null,
-    "widthPx": 7606,
-    "heightPx": 5394,
-    "aspectRatio": 1.4101,
-    "sortOrder": null
-  },
-  {
     "filename": "landscape_nigardsbreen_jostedalen_norway_glacier_descending_through_autumn_valley.jpg",
     "title": "Glacier Descending Through Autumn Valley",
     "description": "A glacier flows down between steep rocky mountain walls toward a valley floor blanketed in golden autumn birch trees, creating a dramatic contrast between ice and seasonal color. The overcast sky lends a moody, subdued atmosphere to this remote Nordic wilderness scene.",
@@ -865,48 +885,6 @@
     "widthPx": 3268,
     "heightPx": 4608,
     "aspectRatio": 0.7092,
-    "sortOrder": null
-  },
-  {
-    "filename": "astrophotography_milky_way_arching_over_silent_trees.jpg",
-    "title": "Milky Way Arching Over Silent Trees",
-    "description": "A breathtaking long-exposure night sky reveals the dense star field and luminous band of the Milky Way stretching across the frame, while the silhouettes of trees ground the composition in quiet darkness. A streak of light — likely a meteor or satellite — cuts diagonally through the upper left, adding a fleeting sense of motion to the cosmic stillness.",
-    "location": null,
-    "tags": [
-      "milky way",
-      "night sky",
-      "star",
-      "long exposure",
-      "meteor",
-      "silhouette"
-    ],
-    "date": null,
-    "camera": null,
-    "widthPx": 2304,
-    "heightPx": 3456,
-    "aspectRatio": 0.6667,
-    "sortOrder": null
-  },
-  {
-    "filename": "landscape_lake_thun_switzerland_storm_light_over_alpine_lake_2.jpg",
-    "title": "Storm Light Over Alpine Lake",
-    "description": "Dramatic storm clouds part to reveal golden light cascading over a calm alpine lake, with silhouetted trees and distant snow-capped peaks reflected in the still water. The scene captures a fleeting moment of tension and beauty between dark weather and radiant sunlight.",
-    "location": "Lake Thun, Switzerland",
-    "tags": [
-      "lake",
-      "storm",
-      "mountain",
-      "golden light",
-      "reflection",
-      "dramatic sky",
-      "alps",
-      "nature"
-    ],
-    "date": null,
-    "camera": null,
-    "widthPx": 4238,
-    "heightPx": 2884,
-    "aspectRatio": 1.4695,
     "sortOrder": null
   },
   {
@@ -953,15 +931,37 @@
     "sortOrder": null
   },
   {
-    "filename": "landscape_storm_light_over_alpine_valley.jpg",
-    "title": "Storm Light Over Alpine Valley",
-    "description": "Dramatic storm clouds part just enough to reveal a fiery golden sunset horizon above a lush Alpine valley, where a small village nestles between dark, forested mountain flanks. The moody interplay of shadow and warm light creates an atmosphere of both menace and sublime beauty.",
+    "filename": "landscape_golden_hour_beneath_the_storm.jpg",
+    "title": "Golden Hour Beneath the Storm",
+    "description": "A dramatic alpine valley stretches toward a thin band of golden light at the horizon, caught between dark storm clouds above and shadowed mountain ranges below. The moody contrast between the warm glow and the threatening sky evokes a sense of awe and foreboding.",
+    "location": null,
+    "tags": [
+      "mountain",
+      "storm",
+      "valley",
+      "dramatic sky",
+      "golden hour",
+      "alpine",
+      "moody",
+      "cloud"
+    ],
+    "date": null,
+    "camera": null,
+    "widthPx": 9933,
+    "heightPx": 7450,
+    "aspectRatio": 1.3333,
+    "sortOrder": null
+  },
+  {
+    "filename": "landscape_swiss_alps_switzerland_storm_light_over_an_alpine_valley.jpg",
+    "title": "Storm Light Over an Alpine Valley",
+    "description": "A dramatic aerial view of a lush Alpine valley nestled between dark, forested mountain ridges, bathed in a golden sunset glow breaking beneath brooding storm clouds. The moody contrast between the warm horizon and the deep teal-green sky creates an atmosphere of tension and awe.",
     "location": null,
     "tags": [
       "alpine",
+      "valley",
       "storm",
       "sunset",
-      "valley",
       "mountain",
       "dramatic sky",
       "landscape",
@@ -972,26 +972,6 @@
     "widthPx": 8932,
     "heightPx": 4995,
     "aspectRatio": 1.7882,
-    "sortOrder": null
-  },
-  {
-    "filename": "astrophotography_meteor_streak_across_a_starlit_sky.jpg",
-    "title": "Meteor Streak Across a Starlit Sky",
-    "description": "A long-exposure night photograph captures thousands of stars and a bright meteor trail cutting diagonally across the upper left of the frame, with the faint glow of the Milky Way visible in the center. Dark silhouettes of trees and structures frame the bottom of the image, enhancing the vast, immersive feel of the night sky.",
-    "location": null,
-    "tags": [
-      "night sky",
-      "meteor",
-      "star",
-      "milky way",
-      "long exposure",
-      "astrophotography"
-    ],
-    "date": null,
-    "camera": null,
-    "widthPx": 7016,
-    "heightPx": 5262,
-    "aspectRatio": 1.3333,
     "sortOrder": null
   },
   {
@@ -1016,25 +996,25 @@
     "sortOrder": null
   },
   {
-    "filename": "landscape_golden_hour_beneath_the_storm.jpg",
-    "title": "Golden Hour Beneath the Storm",
-    "description": "A dramatic alpine valley stretches toward a thin band of golden light at the horizon, caught between dark storm clouds above and shadowed mountain ranges below. The moody contrast between the warm glow and the threatening sky evokes a sense of awe and foreboding.",
+    "filename": "landscape_gstaad_valley_bernese_oberland_switzerland_golden_hour_over_an_alpine_valley.jpg",
+    "title": "Golden Hour Over an Alpine Valley",
+    "description": "A sweeping aerial view of a lush green Alpine valley dotted with small villages, bathed in the warm golden light of a dramatic sunset breaking beneath heavy storm clouds. The layered mountain ridges recede into a hazy horizon, evoking a sense of vastness and serene isolation.",
     "location": null,
     "tags": [
-      "mountain",
-      "storm",
+      "alps",
       "valley",
-      "dramatic sky",
-      "golden hour",
-      "alpine",
-      "moody",
-      "cloud"
+      "sunset",
+      "mountain",
+      "switzerland",
+      "landscape",
+      "aerial",
+      "golden hour"
     ],
     "date": null,
     "camera": null,
-    "widthPx": 9933,
-    "heightPx": 7450,
-    "aspectRatio": 1.3333,
+    "widthPx": 7606,
+    "heightPx": 5394,
+    "aspectRatio": 1.4101,
     "sortOrder": null
   },
   {
@@ -1055,47 +1035,45 @@
     "sortOrder": null
   },
   {
-    "filename": "landscape_storm_light_over_an_alpine_valley_2.jpg",
-    "title": "Storm Light Over an Alpine Valley",
-    "description": "A sweeping black-and-white panorama of a glacially carved Alpine valley, where a small town nestles between forested slopes beneath brooding storm clouds. The dramatic interplay of light and shadow lends the scene a timeless, melancholic grandeur.",
+    "filename": "landscape_lake_thun_switzerland_storm_light_over_alpine_lake_2.jpg",
+    "title": "Storm Light Over Alpine Lake",
+    "description": "Dramatic storm clouds part to reveal golden light cascading over a calm alpine lake, with silhouetted trees and distant snow-capped peaks reflected in the still water. The scene captures a fleeting moment of tension and beauty between dark weather and radiant sunlight.",
     "location": null,
     "tags": [
-      "alpine",
-      "valley",
-      "black and white",
-      "mountain",
+      "lake",
       "storm",
-      "panorama",
-      "landscape",
-      "switzerland"
+      "mountain",
+      "golden light",
+      "reflection",
+      "dramatic sky",
+      "alps",
+      "nature"
     ],
     "date": null,
     "camera": null,
-    "widthPx": 9216,
-    "heightPx": 5307,
-    "aspectRatio": 1.7366,
+    "widthPx": 4238,
+    "heightPx": 2884,
+    "aspectRatio": 1.4695,
     "sortOrder": null
   },
   {
-    "filename": "landscape_storm_light_over_an_alpine_valley_3.jpg",
-    "title": "Storm Light Over an Alpine Valley",
-    "description": "A dramatic mountain valley stretches into the distance beneath a brooding storm sky, as a narrow band of warm sunset light breaks through along the horizon, illuminating distant peaks and a small village nestled below. The contrast between the dark, moody foreground and the golden glow creates an atmosphere of raw, sublime power.",
+    "filename": "astrophotography_meteor_streak_across_the_night_sky.jpg",
+    "title": "Meteor Streak Across the Night Sky",
+    "description": "A single meteor blazes a bright trail through a star-filled sky, capturing a fleeting moment of celestial motion above a dark silhouetted landscape. The dense starfield and faint Milky Way glow evoke a profound sense of solitude and cosmic wonder.",
     "location": null,
     "tags": [
-      "alpine",
-      "valley",
-      "storm",
-      "sunset",
-      "mountain",
-      "dramatic",
-      "landscape",
-      "cloud"
+      "astrophotography",
+      "meteor",
+      "night sky",
+      "star",
+      "milky way",
+      "long exposure"
     ],
     "date": null,
     "camera": null,
-    "widthPx": 8932,
-    "heightPx": 4995,
-    "aspectRatio": 1.7882,
+    "widthPx": 4608,
+    "heightPx": 3456,
+    "aspectRatio": 1.3333,
     "sortOrder": null
   },
   {
@@ -1136,6 +1114,27 @@
     "widthPx": 1931,
     "heightPx": 2703,
     "aspectRatio": 0.7144,
+    "sortOrder": null
+  },
+  {
+    "filename": "landscape_swiss_alps_switzerland_golden_hour_over_alpine_valley.jpg",
+    "title": "Golden Hour Over Alpine Valley",
+    "description": "A sweeping aerial view of a lush green Alpine valley dotted with small villages, framed by layered mountain ridges under a dramatic stormy sky with a warm golden band of sunset light at the horizon. The moody contrast between the heavy clouds and the glowing light creates a sense of grandeur and tranquility.",
+    "location": null,
+    "tags": [
+      "alps",
+      "valley",
+      "sunset",
+      "mountain",
+      "cloud",
+      "panorama",
+      "switzerland"
+    ],
+    "date": null,
+    "camera": null,
+    "widthPx": 9216,
+    "heightPx": 5931,
+    "aspectRatio": 1.5539,
     "sortOrder": null
   },
   {
@@ -1203,24 +1202,44 @@
     "sortOrder": null
   },
   {
-    "filename": "landscape_swiss_alps_switzerland_golden_hour_over_alpine_valley.jpg",
-    "title": "Golden Hour Over Alpine Valley",
-    "description": "A sweeping aerial view of a lush green Alpine valley dotted with small villages, framed by layered mountain ridges under a dramatic stormy sky with a warm golden band of sunset light at the horizon. The moody contrast between the heavy clouds and the glowing light creates a sense of grandeur and tranquility.",
-    "location": "Swiss Alps, Switzerland",
+    "filename": "astrophotography_milky_way_arching_over_silent_trees.jpg",
+    "title": "Milky Way Arching Over Silent Trees",
+    "description": "A breathtaking long-exposure night sky reveals the dense star field and luminous band of the Milky Way stretching across the frame, while the silhouettes of trees ground the composition in quiet darkness. A streak of light — likely a meteor or satellite — cuts diagonally through the upper left, adding a fleeting sense of motion to the cosmic stillness.",
+    "location": null,
     "tags": [
-      "alps",
-      "valley",
-      "sunset",
-      "mountain",
-      "cloud",
-      "panorama",
-      "switzerland"
+      "milky way",
+      "night sky",
+      "star",
+      "long exposure",
+      "meteor",
+      "silhouette"
     ],
     "date": null,
     "camera": null,
-    "widthPx": 9216,
-    "heightPx": 5931,
-    "aspectRatio": 1.5539,
+    "widthPx": 2304,
+    "heightPx": 3456,
+    "aspectRatio": 0.6667,
+    "sortOrder": null
+  },
+  {
+    "filename": "astrophotography_milky_way_stretching_over_silent_trees.jpg",
+    "title": "Milky Way Stretching Over Silent Trees",
+    "description": "A long-exposure night sky photograph captures the dense star field and faint band of the Milky Way arching above a dark tree line silhouette. A bright meteor streak cuts across the upper left corner, adding a fleeting moment of drama to the cosmic scene.",
+    "location": null,
+    "tags": [
+      "milky way",
+      "night sky",
+      "star",
+      "meteor",
+      "long exposure",
+      "astrophotography",
+      "silhouette"
+    ],
+    "date": null,
+    "camera": null,
+    "widthPx": 1009,
+    "heightPx": 3435,
+    "aspectRatio": 0.2937,
     "sortOrder": null
   },
   {
@@ -1241,21 +1260,6 @@
     "widthPx": 2890,
     "heightPx": 1500,
     "aspectRatio": 1.9267,
-    "sortOrder": null
-  },
-  {
-    "filename": "JRB01282.jpg",
-    "title": "Lena's booty",
-    "description": "Lena's booty during camping",
-    "location": null,
-    "tags": [
-      "people"
-    ],
-    "date": null,
-    "camera": "E-M5MarkII · LUMIX G 25/F1.7",
-    "widthPx": 4640,
-    "heightPx": 3472,
-    "aspectRatio": 1.3364,
     "sortOrder": null
   },
   {
@@ -1322,28 +1326,6 @@
     "sortOrder": null
   },
   {
-    "filename": "landscape_golden_horizon_between_storm_and_stone.jpg",
-    "title": "Golden Horizon Between Storm and Stone",
-    "description": "A dramatic alpine valley stretches beneath a heavy, brooding sky, with a thin strip of golden sunset light breaking through the cloud layer to illuminate distant mountain peaks. The contrast between the dark, threatening clouds and the warm luminous horizon creates an atmosphere of tension and sublime beauty.",
-    "location": null,
-    "tags": [
-      "alpine",
-      "storm",
-      "valley",
-      "sunset",
-      "mountain",
-      "dramatic",
-      "moody",
-      "cloud"
-    ],
-    "date": null,
-    "camera": null,
-    "widthPx": 9216,
-    "heightPx": 6912,
-    "aspectRatio": 1.3333,
-    "sortOrder": null
-  },
-  {
     "filename": "landscape_dusk_breaks_through_turbulent_skies.jpg",
     "title": "Dusk Breaks Through Turbulent Skies",
     "description": "A dramatic twilight scene captures swirling dark clouds parting to reveal a warm amber glow just above the silhouetted treeline. The long-exposure motion blur lends the sky an ethereal, almost cinematic tension between storm and calm.",
@@ -1363,27 +1345,6 @@
     "widthPx": 4608,
     "heightPx": 3456,
     "aspectRatio": 1.3333,
-    "sortOrder": null
-  },
-  {
-    "filename": "astrophotography_milky_way_stretching_over_silent_trees.jpg",
-    "title": "Milky Way Stretching Over Silent Trees",
-    "description": "A long-exposure night sky photograph captures the dense star field and faint band of the Milky Way arching above a dark tree line silhouette. A bright meteor streak cuts across the upper left corner, adding a fleeting moment of drama to the cosmic scene.",
-    "location": null,
-    "tags": [
-      "milky way",
-      "night sky",
-      "star",
-      "meteor",
-      "long exposure",
-      "astrophotography",
-      "silhouette"
-    ],
-    "date": null,
-    "camera": null,
-    "widthPx": 1009,
-    "heightPx": 3435,
-    "aspectRatio": 0.2937,
     "sortOrder": null
   },
   {
@@ -1409,26 +1370,6 @@
     "sortOrder": null
   },
   {
-    "filename": "astrophotography_meteor_streak_across_the_night_sky.jpg",
-    "title": "Meteor Streak Across the Night Sky",
-    "description": "A single meteor blazes a bright trail through a star-filled sky, capturing a fleeting moment of celestial motion above a dark silhouetted landscape. The dense starfield and faint Milky Way glow evoke a profound sense of solitude and cosmic wonder.",
-    "location": null,
-    "tags": [
-      "astrophotography",
-      "meteor",
-      "night sky",
-      "star",
-      "milky way",
-      "long exposure"
-    ],
-    "date": null,
-    "camera": null,
-    "widthPx": 4608,
-    "heightPx": 3456,
-    "aspectRatio": 1.3333,
-    "sortOrder": null
-  },
-  {
     "filename": "urban_eindhoven_centraal_eindhoven_netherlands_eindhoven_centraal_under_winter_snow.jpg",
     "title": "Eindhoven Centraal Under Winter Snow",
     "description": "A quiet, snow-covered plaza stretches before Eindhoven Centraal station in the Netherlands during a grey winter day. The deserted bus terminal and falling snow create a still, muted atmosphere.",
@@ -1446,6 +1387,28 @@
     "widthPx": 3200,
     "heightPx": 2119,
     "aspectRatio": 1.5101,
+    "sortOrder": null
+  },
+  {
+    "filename": "landscape_golden_horizon_between_storm_and_stone.jpg",
+    "title": "Golden Horizon Between Storm and Stone",
+    "description": "A dramatic alpine valley stretches beneath a heavy, brooding sky, with a thin strip of golden sunset light breaking through the cloud layer to illuminate distant mountain peaks. The contrast between the dark, threatening clouds and the warm luminous horizon creates an atmosphere of tension and sublime beauty.",
+    "location": null,
+    "tags": [
+      "alpine",
+      "storm",
+      "valley",
+      "sunset",
+      "mountain",
+      "dramatic",
+      "moody",
+      "cloud"
+    ],
+    "date": null,
+    "camera": null,
+    "widthPx": 9216,
+    "heightPx": 6912,
+    "aspectRatio": 1.3333,
     "sortOrder": null
   },
   {
@@ -1471,23 +1434,6 @@
     "sortOrder": null
   },
   {
-    "filename": "still_life_golden_buddha_in_quiet_contemplation.jpg",
-    "title": "Golden Buddha in Quiet Contemplation",
-    "description": "A richly detailed golden Buddha statue performs the Anjali Mudra gesture, its aged patina conveying centuries of devotion and spiritual serenity. The soft bokeh background reveals a floral patterned rug and warm neutral tones, creating an intimate, meditative atmosphere.",
-    "location": null,
-    "tags": [
-      "buddha",
-      "sculpture",
-      "spirituality"
-    ],
-    "date": null,
-    "camera": null,
-    "widthPx": 4608,
-    "heightPx": 3456,
-    "aspectRatio": 1.3333,
-    "sortOrder": null
-  },
-  {
     "filename": "landscape_storm_light_over_the_alpine_valley.jpg",
     "title": "Storm Light Over the Alpine Valley",
     "description": "A dramatic alpine valley stretches into the distance beneath a brooding canopy of dark storm clouds, while a narrow band of golden sunset light glows along the horizon between layered mountain ridges. The moody interplay of shadow and warm light lends the scene a powerful, almost cinematic tension.",
@@ -1507,6 +1453,45 @@
     "widthPx": 8932,
     "heightPx": 4995,
     "aspectRatio": 1.7882,
+    "sortOrder": null
+  },
+  {
+    "filename": "landscape_storm_light_over_an_alpine_valley_3.jpg",
+    "title": "Storm Light Over an Alpine Valley",
+    "description": "A dramatic mountain valley stretches into the distance beneath a brooding storm sky, as a narrow band of warm sunset light breaks through along the horizon, illuminating distant peaks and a small village nestled below. The contrast between the dark, moody foreground and the golden glow creates an atmosphere of raw, sublime power.",
+    "location": null,
+    "tags": [
+      "alpine",
+      "valley",
+      "storm",
+      "sunset",
+      "mountain",
+      "dramatic",
+      "landscape",
+      "cloud"
+    ],
+    "date": null,
+    "camera": null,
+    "widthPx": 8932,
+    "heightPx": 4995,
+    "aspectRatio": 1.7882,
+    "sortOrder": null
+  },
+  {
+    "filename": "still_life_golden_buddha_in_quiet_contemplation.jpg",
+    "title": "Golden Buddha in Quiet Contemplation",
+    "description": "A richly detailed golden Buddha statue performs the Anjali Mudra gesture, its aged patina conveying centuries of devotion and spiritual serenity. The soft bokeh background reveals a floral patterned rug and warm neutral tones, creating an intimate, meditative atmosphere.",
+    "location": null,
+    "tags": [
+      "buddha",
+      "sculpture",
+      "spirituality"
+    ],
+    "date": null,
+    "camera": null,
+    "widthPx": 4608,
+    "heightPx": 3456,
+    "aspectRatio": 1.3333,
     "sortOrder": null
   }
 ]

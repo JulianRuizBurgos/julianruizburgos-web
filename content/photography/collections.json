@@ -1,77 +1,27 @@
 [
   {
-    "slug": "urban_photography",
-    "title": "Urban Photography",
-    "description": "Streets, facades, and everyday moments captured across Dutch and European cities.",
-    "coverPhoto": "urban_eindhoven_netherlands_golden_hour_on_a_dutch_street.jpg",
-    "badges": [
-      "New"
-    ],
-    "photos": [
-      "urban_eindhoven_netherlands_golden_hour_on_a_dutch_street.jpg",
-      "urban_eindhoven_netherlands_golden_hour_on_a_quiet_dutch_street.jpg",
-      "urban_eindhoven_centraal_eindhoven_netherlands_eindhoven_centraal_under_winter_snow.jpg",
-      "urban_eindhoven_netherlands_snowcovered_bicycles_outside_beursgebouw.jpg",
-      "urban_eindhoven_netherlands_twin_spires_over_eindhoven_streets.jpg",
-      "urban_tilburg_netherlands_old_town_meets_modern_tower.jpg",
-      "urban_netherlands_shadow_tree_on_sunlit_brick_wall.jpg",
-      "urban_netherlands_snowburied_bicycles_behind_glass.jpg",
-      "urban_silhouette_and_sky_above_the_city.jpg",
-      "urban_shoes_on_a_wire_at_dusk.jpg",
-      "urban_rain_drops_on_a_weathered_railing.jpg",
-      "urban_rain_ripples_on_weathered_white_rail.jpg",
-      "urban_rain_splash_on_urban_railing.jpg",
-      "urban_exploration_concrete_colonnade_reclaimed_by_silence.jpg",
-      "urban_overgrown_facade_with_barber_pole.jpg",
-      "urban_lab1_film_music_events_facade.jpg"
-    ]
-  },
-  {
-    "slug": "landscapes",
-    "title": "Landscapes",
-    "description": "Wide open spaces from the Norwegian fjords to the Swiss Alps — light, weather, and wilderness.",
-    "coverPhoto": "landscape_jotunheimen_norway_autumn_valley_between_snowcapped_peaks.jpg",
-    "photos": [
-      "landscape_jotunheimen_norway_autumn_valley_between_snowcapped_peaks.jpg",
-      "landscape_nigardsbreen_jostedalen_norway_glacier_descending_through_autumn_valley.jpg",
-      "landscape_nigardsbreen_jostedalen_norway_glacial_mirror_in_autumn_stone.jpg",
-      "landscape_swiss_alps_switzerland_snow_capped_peaks_above_alpine_valley.jpg",
-      "landscape_swiss_alps_switzerland_snow_crowned_peaks_above_alpine_forest.jpg",
-      "landscape_alpine_twilight_over_snow_dusted_peaks.jpg",
-      "landscape_storm_light_over_snow_capped_peaks.jpg",
-      "landscape_lake_thun_switzerland_storm_light_over_alpine_lake.jpg",
-      "landscape_storm_light_over_an_alpine_lake.jpg",
-      "landscape_twilight_clouds_over_silent_wetlands.jpg",
-      "landscape_dusk_breaks_through_turbulent_skies.jpg",
-      "landscape_golden_moon_rising_over_dark_treeline.jpg",
-      "landscape_last_light_behind_silhouetted_trees.jpg",
-      "landscape_silent_path_through_the_misty_grove.jpg",
-      "landscape_weathered_wooden_bridge_over_still_waters.jpg"
-    ]
-  },
-  {
     "slug": "macro",
     "title": "Macro & Nature",
     "description": "The small world up close — raindrops, fungi, petals, and insects in intimate detail.",
     "coverPhoto": "macro_a_world_held_in_one_drop.jpg",
     "photos": [
-      "macro_a_world_held_in_one_drop.jpg",
-      "macro_a_single_drop_after_rain.jpg",
-      "macro_the_last_drop_before_falling.jpg",
-      "macro_raindrop_crown_on_grey_ledge.jpg",
-      "macro_crimson_leaf_releasing_a_single_drop.jpg",
-      "macro_shadow_resting_on_translucent_leaf.jpg",
-      "macro_rainkissed_rhododendron_in_bloom.jpg",
-      "macro_rainkissed_purple_blooms_after_shower.jpg",
-      "macro_rainkissed_impatiens_after_the_storm.jpg",
       "macro_red_impatiens_after_the_rain.jpg",
-      "macro_lavender_petals_after_the_rain.jpg",
-      "nature_lavender_rhododendron_in_misty_garden.jpg",
+      "macro_crane_fly_on_rain_speckled_glass.jpg",
       "macro_after_the_rain_a_lone_mushroom.jpg",
+      "macro_crimson_leaf_releasing_a_single_drop.jpg",
+      "macro_rainkissed_rhododendron_in_bloom.jpg",
+      "macro_the_last_drop_before_falling.jpg",
+      "macro_shadow_resting_on_translucent_leaf.jpg",
+      "macro_a_world_held_in_one_drop.jpg",
+      "macro_rainkissed_impatiens_after_the_storm.jpg",
+      "macro_rainkissed_purple_blooms_after_shower.jpg",
+      "macro_lavender_petals_after_the_rain.jpg",
+      "macro_mosquito_landing_on_hairy_skin.jpg",
+      "macro_a_single_drop_after_rain.jpg",
       "macro_pale_fungi_rising_from_mossy_bark.jpg",
-      "macro_pale_fungi_rising_from_mossy_bark_2.jpg",
       "macro_dead_mans_fingers_emerging_from_dark_soil.jpg",
-      "macro_crane_fly_on_rain_speckled_glass.jpg"
+      "macro_pale_fungi_rising_from_mossy_bark_2.jpg",
+      "macro_raindrop_crown_on_grey_ledge.jpg"
     ]
   },
   {
@@ -80,10 +30,10 @@
     "description": "Structures and spaces — cathedrals, bridges, and built geometry across Europe.",
     "coverPhoto": "architecture_eindhoven_netherlands_gothic_cathedral_rising_through_winter_snow.jpg",
     "photos": [
-      "architecture_eindhoven_netherlands_gothic_cathedral_rising_through_winter_snow.jpg",
-      "architecture_twin_spires_rising_through_overcast_skies.jpg",
+      "architecture_white_bridge_at_the_estate_gate.jpg",
       "architecture_stone_bridge_reflected_in_still_waters.jpg",
-      "architecture_white_bridge_at_the_estate_gate.jpg"
+      "architecture_twin_spires_rising_through_overcast_skies.jpg",
+      "architecture_eindhoven_netherlands_gothic_cathedral_rising_through_winter_snow.jpg"
     ]
   },
   {
@@ -93,8 +43,8 @@
     "coverPhoto": "still_life_weathered_guitar_resting_in_warm_shadow.jpg",
     "photos": [
       "still_life_weathered_guitar_resting_in_warm_shadow.jpg",
-      "still_life_golden_buddha_in_quiet_contemplation.jpg",
-      "still_life_golden_buddha_beside_a_persian_rug.jpg"
+      "still_life_golden_buddha_beside_a_persian_rug.jpg",
+      "still_life_golden_buddha_in_quiet_contemplation.jpg"
     ]
   },
   {
@@ -108,7 +58,85 @@
     "photos": [
       "astrophotography_starfield_breaking_through_storm_clouds.jpg",
       "astrophotography_moon_rising_through_wispy_night_clouds.jpg",
+      "astrophotography_meteor_streak_across_a_starlit_sky.jpg",
+      "astrophotography_meteor_streak_across_the_night_sky.jpg",
+      "astrophotography_milky_way_arching_over_silent_trees.jpg",
       "astrophotography_milky_way_stretching_over_silent_trees.jpg"
+    ]
+  },
+  {
+    "slug": "landscape",
+    "title": "Landscapes",
+    "description": "",
+    "coverPhoto": "landscape_storm_light_over_snow_capped_peaks.jpg",
+    "photos": [
+      "landscape_storm_light_over_snow_capped_peaks.jpg",
+      "landscape_golden_moon_rising_over_dark_treeline.jpg",
+      "landscape_silent_path_through_the_misty_grove.jpg",
+      "landscape_weathered_wooden_bridge_over_still_waters.jpg",
+      "landscape_storm_light_over_alpine_valley.jpg",
+      "landscape_storm_light_over_an_alpine_valley.jpg",
+      "landscape_storm_light_over_an_alpine_valley_2.jpg",
+      "landscape_lake_thun_switzerland_storm_light_over_alpine_lake.jpg",
+      "landscape_jotunheimen_norway_autumn_valley_between_snowcapped_peaks.jpg",
+      "landscape_nigardsbreen_jostedalen_norway_glacier_descending_through_autumn_valley.jpg",
+      "landscape_alpine_twilight_over_snow_dusted_peaks.jpg",
+      "landscape_golden_hour_beneath_the_storm.jpg",
+      "landscape_swiss_alps_switzerland_storm_light_over_an_alpine_valley.jpg",
+      "landscape_nigardsbreen_jostedalen_norway_glacial_mirror_in_autumn_stone.jpg",
+      "landscape_gstaad_valley_bernese_oberland_switzerland_golden_hour_over_an_alpine_valley.jpg",
+      "landscape_lake_thun_switzerland_storm_light_over_alpine_lake_2.jpg",
+      "landscape_swiss_alps_switzerland_golden_hour_over_alpine_valley.jpg",
+      "landscape_swiss_alps_switzerland_snow_crowned_peaks_above_alpine_forest.jpg",
+      "landscape_last_light_behind_silhouetted_trees.jpg",
+      "landscape_twilight_clouds_over_silent_wetlands.jpg",
+      "landscape_swiss_alps_switzerland_snow_capped_peaks_above_alpine_valley.jpg",
+      "landscape_dusk_breaks_through_turbulent_skies.jpg",
+      "landscape_storm_light_over_an_alpine_lake.jpg",
+      "landscape_golden_horizon_between_storm_and_stone.jpg",
+      "landscape_storm_light_over_the_alpine_valley.jpg",
+      "landscape_storm_light_over_an_alpine_valley_3.jpg"
+    ]
+  },
+  {
+    "slug": "urban_exploration",
+    "title": "Urban Exploration",
+    "description": "",
+    "coverPhoto": "urban_exploration_concrete_colonnade_reclaimed_by_silence.jpg",
+    "photos": [
+      "urban_exploration_concrete_colonnade_reclaimed_by_silence.jpg"
+    ]
+  },
+  {
+    "slug": "nature",
+    "title": "Nature",
+    "description": "",
+    "coverPhoto": "nature_lavender_rhododendron_in_misty_garden.jpg",
+    "photos": [
+      "nature_lavender_rhododendron_in_misty_garden.jpg"
+    ]
+  },
+  {
+    "slug": "urban",
+    "title": "Urban Photography",
+    "description": "",
+    "coverPhoto": "urban_shoes_on_a_wire_at_dusk.jpg",
+    "photos": [
+      "urban_shoes_on_a_wire_at_dusk.jpg",
+      "urban_netherlands_shadow_tree_on_sunlit_brick_wall.jpg",
+      "urban_eindhoven_netherlands_golden_hour_on_a_quiet_dutch_street.jpg",
+      "urban_eindhoven_netherlands_golden_hour_on_a_dutch_street.jpg",
+      "urban_lab1_film_music_events_facade.jpg",
+      "urban_eindhoven_netherlands_twin_spires_over_eindhoven_streets.jpg",
+      "urban_silhouette_and_sky_above_the_city.jpg",
+      "urban_tilburg_netherlands_old_town_meets_modern_tower.jpg",
+      "urban_overgrown_facade_with_barber_pole.jpg",
+      "urban_rain_ripples_on_weathered_white_rail.jpg",
+      "urban_rain_drops_on_a_weathered_railing.jpg",
+      "urban_eindhoven_netherlands_snowcovered_bicycles_outside_beursgebouw.jpg",
+      "urban_rain_splash_on_urban_railing.jpg",
+      "urban_netherlands_snowburied_bicycles_behind_glass.jpg",
+      "urban_eindhoven_centraal_eindhoven_netherlands_eindhoven_centraal_under_winter_snow.jpg"
     ]
   }
 ]
