@@ -6,8 +6,8 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
-const FROM_ADDRESS = "Julian Ruiz Burgos <orders@julianruizburgos.net>";
-const JULIAN_EMAIL = "printshop@julianruizburgos.net";
+const FROM_ADDRESS = "Julian Ruiz Burgos <orders@mail.julianruizburgos.net>";
+const PRINTSHOP_EMAIL = "printshop@julianruizburgos.net";
 
 function itemDescription(item: OrderItem, postcard?: PostcardDetail): string {
   if (item.product_type === "postcard" && postcard) {
@@ -68,7 +68,7 @@ Total: ${formatPrice(totalCents)}
 
 Julian will prepare and ship your order personally. You'll receive a follow-up email when it's on its way.
 
-If you have any questions, reply to this email or write to ${JULIAN_EMAIL}.
+If you have any questions, reply to this email or write to ${PRINTSHOP_EMAIL}.
 
 Thank you,
 Julian
@@ -114,13 +114,14 @@ Manage orders: https://julianruizburgos.net/admin/orders
   await Promise.allSettled([
     resend.emails.send({
       from: FROM_ADDRESS,
+      replyTo: PRINTSHOP_EMAIL,
       to: customerEmail,
       subject: `Order confirmed — ref. ${orderId.slice(0, 8).toUpperCase()}`,
       text: customerBody,
     }),
     resend.emails.send({
       from: FROM_ADDRESS,
-      to: JULIAN_EMAIL,
+      to: PRINTSHOP_EMAIL,
       subject: `New order from ${customerName} — ${formatPrice(totalCents)}`,
       text: julianBody,
     }),
