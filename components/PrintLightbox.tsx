@@ -479,13 +479,13 @@ function PrintSelector({
       <div className="border-t border-white/10 pt-3 flex flex-col gap-2">
         <button
           onClick={onPostcard}
-          className="text-sm text-stone-400 underline underline-offset-2 hover:text-white transition-colors text-left"
+          className="rounded border border-[#1068b6] px-4 py-2.5 text-sm font-semibold text-[#1068b6] transition-colors hover:bg-[#1068b6]/10"
         >
           Blank postcard (A6 · to keep) — {formatPrice(BLANK_POSTCARD_PRICE_CENTS)} each
         </button>
         <button
           onClick={onMailedPostcard}
-          className="text-sm text-stone-400 underline underline-offset-2 hover:text-white transition-colors text-left"
+          className="rounded border border-[#1068b6] px-4 py-2.5 text-sm font-semibold text-[#1068b6] transition-colors hover:bg-[#1068b6]/10"
         >
           Mail a postcard (A6 · to someone) — {formatPrice(POSTCARD_PRICE_CENTS)}
         </button>
@@ -682,13 +682,13 @@ export default function PrintLightbox({
                   </button>
                   <button
                     onClick={() => setView("blank-postcard")}
-                    className="text-sm text-stone-400 underline underline-offset-2 hover:text-white transition-colors"
+                    className="rounded border border-[#1068b6] px-4 py-2.5 text-sm font-semibold text-[#1068b6] transition-colors hover:bg-[#1068b6]/10"
                   >
                     Blank postcard (A6 · to keep) — {formatPrice(BLANK_POSTCARD_PRICE_CENTS)} each
                   </button>
                   <button
                     onClick={() => setView("postcard")}
-                    className="text-sm text-stone-400 underline underline-offset-2 hover:text-white transition-colors"
+                    className="rounded border border-[#1068b6] px-4 py-2.5 text-sm font-semibold text-[#1068b6] transition-colors hover:bg-[#1068b6]/10"
                   >
                     Mail a postcard (A6 · to someone) — {formatPrice(POSTCARD_PRICE_CENTS)}
                   </button>
