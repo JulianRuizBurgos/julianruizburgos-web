@@ -17,12 +17,15 @@ import {
   getAvailableSizes,
   getImageAreaMm,
   PRINT_SIZE_DIMS_MM,
+  getSizePackageCategory,
+  SHIPPING_COSTS_CENTS,
   type PaperType,
   type PresentationStyle,
   type PrintCartItem,
   type PostcardCartItem,
   type BlankPostcardCartItem,
   type TextStyle,
+  type ShippingZone,
 } from "@/lib/shop";
 import type { PrintSize } from "@/lib/photography";
 import { useCart } from "@/lib/cart";
@@ -310,6 +313,54 @@ function SizeLabel({
   return <span>{size}</span>;
 }
 
+// ── Shipping estimator ────────────────────────────────────────────────────────
+
+const ZONE_LABELS: { zone: ShippingZone; label: string; hint: string }[] = [
+  { zone: "NL",   label: "Netherlands",       hint: "" },
+  { zone: "BE",   label: "Belgium",           hint: "" },
+  { zone: "EUR1", label: "Germany, France, Spain, Italy…", hint: "Core EU" },
+  { zone: "EUR2", label: "Other EU countries", hint: "Poland, Czech Republic, Hungary…" },
+  { zone: "UK",   label: "United Kingdom",    hint: "" },
+  { zone: "US",   label: "USA / Canada",      hint: "" },
+  { zone: "ROW",  label: "Rest of World",     hint: "" },
+];
+
+function ShippingEstimator({ size }: { size: import("@/lib/photography").PrintSize | null }) {
+  const [open, setOpen] = useState(false);
+
+  const category = size ? getSizePackageCategory(size) : "small";
+
+  return (
+    <div className="mt-1">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="text-[11px] text-stone-500 underline underline-offset-2 hover:text-stone-300 transition-colors"
+      >
+        Estimate shipping costs
+      </button>
+      {open && (
+        <div className="mt-2 rounded border border-white/10 bg-white/5 px-3 py-2.5 flex flex-col gap-1.5">
+          {ZONE_LABELS.map(({ zone, label }) => {
+            const cents = SHIPPING_COSTS_CENTS[zone][category];
+            const isFree = zone === "NL";
+            return (
+              <div key={zone} className="flex items-center justify-between gap-3 text-[11px]">
+                <span className="text-stone-400">{label}</span>
+                <span className={isFree ? "text-stone-300 font-semibold" : "text-stone-400"}>
+                  {isFree ? "Free" : formatPrice(cents)}
+                </span>
+              </div>
+            );
+          })}
+          <p className="mt-1 text-[10px] text-stone-600 leading-relaxed">
+            Rates via PostNL track &amp; trace · based on {size ?? "selected"} print size
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Print selector ─────────────────────────────────────────────────────────────
 
 function PrintSelector({
@@ -456,6 +507,7 @@ function PrintSelector({
               <div>
                 <p className="font-serif text-2xl text-white">{formatPrice(price)}</p>
                 <p className="text-[11px] text-stone-500">excl. VAT &amp; shipping</p>
+                <ShippingEstimator size={size} />
                 <p className="mt-2 text-[11px] text-stone-500 leading-relaxed">
                   Outside your budget?{" "}
                   <a
